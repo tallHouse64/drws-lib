@@ -1,0 +1,10 @@
+//Maybe start using this templae for testing
+
+#include<stdio.h>
+#include"../d.h"
+
+int main(){
+    printf("function() test.\n\n");
+
+
+};
