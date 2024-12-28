@@ -32,5 +32,6 @@ test/fillandscaletest
 test/loadtest
 
 #ignore all platform tests
-sdltod/test/mouseeventtest
-sdltod/test/boxtest
+platform/test/getoutsurftest
+platform/test/mouseeventtest
+platform/test/boxtest
