@@ -953,6 +953,92 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     return 0;
 };
 
+/* This finds the number position of where a char
+ *  is on a charicter map.
+ *
+ * The width and height of a charicter on the
+ *  font map are the same, the surface's width
+ *  devided by 9. font->w / 9.
+ *
+ * c: The charicter.
+ * x: Gets filled in with the char x position on a font map.
+ * y: Gets filled in with the char y position on a font map.
+ * returns: 0 on sucess.
+ */
+int D_CharToMap(char c, int * x, int * y){
+    int n = -1;
+
+    switch(c){
+        case 'A': n = 0; break;
+        case 'B': n = 1; break;
+        case 'C': n = 2; break;
+        case 'D': n = 3; break;
+        case 'E': n = 4; break;
+        case 'F': n = 5; break;
+        case 'G': n = 6; break;
+        case 'H': n = 7; break;
+        case 'I': n = 8; break;
+        case 'J': n = 9; break;
+        case 'K': n = 10; break;
+        case 'L': n = 11; break;
+        case 'M': n = 12; break;
+        case 'N': n = 13; break;
+        case 'O': n = 14; break;
+        case 'P': n = 15; break;
+        case 'Q': n = 16; break;
+        case 'R': n = 17; break;
+        case 'S': n = 18; break;
+        case 'T': n = 19; break;
+        case 'U': n = 20; break;
+        case 'V': n = 21; break;
+        case 'W': n = 22; break;
+        case 'X': n = 23; break;
+        case 'Y': n = 24; break;
+        case 'Z': n = 25; break;
+    };
+
+    if(n == -1){
+        return -1;
+    };
+
+    *x = n % 9;
+    *y = n / 9;
+
+    return 0;
+};
+
+/* This writes text to a surface, it is very
+ *  simple, mono-space only.
+ *
+ * The reason this text support is so simple and
+ *  doesn't use tff fonts is because it would be
+ *  too much to maintain.
+ *
+ * s: The surface to write the string t to.
+ * font: A charicter map as a surface.
+ * p: A point on surface s of where to start
+ *  writing (top left of first charicter).
+ * height: The height to draw the characters,
+ *  characters are sqaures (width == height).
+ * t: The text, a string to write.
+ */
+int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, char * t){
+    int i = 0;
+    int x = p->x;
+    D_Rect fontRect = {0, 0, font->w / 9, font->w / 9};
+    D_Rect sRect = {p->x, p->y, height, height};
+
+    while(t[i] != '\0' && x < s->w){
+        D_CharToMap(t[i], &fontRect.x, &fontRect.y);
+
+        D_SurfCopyScale(font, &fontRect, s, &sRect);
+        sRect.x += sRect.w;
+        i++;
+    };
+
+    return 0;
+};
+
 #ifdef D_ALLOW_STB_IMAGE
 
 /*
@@ -966,7 +1052,6 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
  * path: The filename/filepath that of the image eg "pic.bmp" or "C:/users/me/pictures/tom.png"
  * returns: A pointer to a created surface, always in ABGR8888 format.
  */
-
 D_Surf * D_LoadImage(char * path){
 
     int w = 0, h = 0, n = 0;
