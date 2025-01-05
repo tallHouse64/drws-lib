@@ -1029,12 +1029,15 @@ int D_CharToMap(char c, int * x, int * y){
  */
 int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, char * t){
     int i = 0;
-    int x = p->x;
     D_Rect fontRect = {0, 0, font->w / 9, font->w / 9};
     D_Rect sRect = {p->x, p->y, height, height};
 
-    while(t[i] != '\0' && x < s->w){
-        D_CharToMap(t[i], &fontRect.x, &fontRect.y);
+    while(t[i] != '\0' && sRect.x < s->w){
+        if(D_CharToMap(t[i], &fontRect.x, &fontRect.y) < 0){
+            i++;
+            continue;
+        };
+
         fontRect.x *= font->w;
         fontRect.y *= font->h;
 

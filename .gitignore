@@ -31,6 +31,7 @@ test/maskshiftlentest
 test/fillandscaletest
 test/loadtest
 test/chartomaptest
+test/printtosurftest
 
 #ignore all platform tests
 platform/test/getoutsurftest
