@@ -30,6 +30,7 @@ test/findpixformattest
 test/maskshiftlentest
 test/fillandscaletest
 test/loadtest
+test/chartomaptest
 
 #ignore all platform tests
 platform/test/getoutsurftest

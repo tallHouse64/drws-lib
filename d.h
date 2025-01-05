@@ -957,8 +957,13 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
  *  is on a charicter map.
  *
  * The width and height of a charicter on the
- *  font map are the same, the surface's width
- *  devided by 9. font->w / 9.
+ *  font map are the same, it's the surface's
+ *  width devided by 9. font->w / 9.
+ *
+ * Also the result x and y need to be multiplied
+ *  by font->w / 9. This way they become real
+ *  coords that are the top left of the
+ *  charicter.
  *
  * c: The charicter.
  * x: Gets filled in with the char x position on a font map.
@@ -1030,6 +1035,8 @@ int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, char * t){
 
     while(t[i] != '\0' && x < s->w){
         D_CharToMap(t[i], &fontRect.x, &fontRect.y);
+        fontRect.x *= font->w;
+        fontRect.y *= font->h;
 
         D_SurfCopyScale(font, &fontRect, s, &sRect);
         sRect.x += sRect.w;
