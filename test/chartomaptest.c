@@ -17,8 +17,31 @@ int test(char c, int eX, int eY){
 };
 
 int main(){
+
+    printf("Test capital letters\n");
     test('A', 0, 0);
     test('B', 1, 0);
     test('F', 5, 0);
     test('Z', 7, 2);
+
+    printf("\nTest lower case letters\n");
+    test('a', 0, 3);
+    test('b', 1, 3);
+    test('n', 4, 4);
+    test('u', 2, 5);
+    test('z', 7, 5);
+
+    printf("\nTest numbers\n");
+    test('0', 0, 6);
+    test('1', 1, 6);
+    test('2', 2, 6);
+    test('7', 7, 6);
+    test('9', 0, 7);
+
+    printf("Test some symbols\n");
+    test('.', 1, 7);
+    test(',', 2, 7);
+    test('!', 8, 7);
+    test('"', 0, 8);
+    test('@', 7, 8);
 };
