@@ -3,6 +3,12 @@
 #define D_IMPLEMENTATION
 #include"../d.h"
 
+/* This tests D_CharToMap() in d.h. It does not
+ *  test every character but if some work they
+ *  should all work, especially the first and
+ *  last.
+ */
+
 int test(char c, int eX, int eY){
     int x = -1;
     int y = -1;
