@@ -8,6 +8,11 @@
 
 #include"../platform/sdld.h"
 
+/* This test is to make sure D_SurfCopyScale()
+ *  can copy part of a source surface (not using
+ *  null for r1) and that it can scale up.
+ */
+
 D_Surf * out = D_NULL;
 D_Surf * img = D_NULL;
 D_Rect r = {0, 0, 630, 360};
