@@ -1027,22 +1027,23 @@ int D_CharToMap(char c, int * x, int * y){
  *  characters are sqaures (width == height).
  * t: The text, a string to write.
  */
-int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, char * t){
+int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraSpacing, char * t){
     int i = 0;
     D_Rect fontRect = {0, 0, font->w / 9, font->w / 9};
     D_Rect sRect = {p->x, p->y, height, height};
 
     while(t[i] != '\0' && sRect.x < s->w){
         if(D_CharToMap(t[i], &fontRect.x, &fontRect.y) < 0){
+            sRect.x += (sRect.w + extraSpacing);
             i++;
             continue;
         };
 
-        fontRect.x *= font->w;
-        fontRect.y *= font->h;
+        fontRect.x *= fontRect.w;
+        fontRect.y *= fontRect.h;
 
         D_SurfCopyScale(font, &fontRect, s, &sRect);
-        sRect.x += sRect.w;
+        sRect.x += (sRect.w + extraSpacing);
         i++;
     };
 
