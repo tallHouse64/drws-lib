@@ -1025,6 +1025,8 @@ int D_CharToMap(char c, int * x, int * y){
  *  writing (top left of first charicter).
  * height: The height to draw the characters,
  *  characters are sqaures (width == height).
+ * extraSpacing: Extra space to put between
+ *  letters, in pixels. Can be negative.
  * t: The text, a string to write.
  */
 int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraSpacing, char * t){
