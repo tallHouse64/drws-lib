@@ -32,6 +32,7 @@ test/fillandscaletest
 test/loadtest
 test/chartomaptest
 test/printtosurftest
+test/scaletest2
 
 #ignore all platform tests
 platform/test/getoutsurftest
