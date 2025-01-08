@@ -101,7 +101,7 @@ typedef enum D_Key {
     D_KDown,
 
     D_KEscape,
-    D_KBackTick,
+    D_KBacktick,
     D_KTab,
     D_KCapLock,
     D_KLeftShift,
