@@ -207,6 +207,23 @@ char D_DKeyToChar(D_Key k){
         case D_K7: return '7';
         case D_K8: return '8';
         case D_K9: return '9';
+
+        case D_KBacktick: return '`';
+        case D_KTab: return '\t';
+        case D_KSpace: return ' ';
+        case D_KEnter: return '\n';
+        case D_KBackspace: return '\b';
+
+        case D_KMinus: return '-';
+        case D_KEqual: return '=';
+        case D_KLeftSquareBracket: return '[';
+        case D_KRightSquareBracket: return ']';
+        case D_KSemicolon: return ';';
+        case D_KQuote: return '\'';
+        case D_KTidle: return '~';
+        case D_KLessThan: return '<';
+        case D_KGreaterThan: return '>';
+        case D_KForwardSlash: return '/';
     };
 
     return '\0';
