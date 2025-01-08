@@ -168,6 +168,50 @@ int D_EventQueueFull;
 
 #define D_ISEVENTQUEUEEMPTY() (!(D_EventQueueFull) && (D_EventQueueBack == ((D_EventQueueFront - 1) + D_EVENT_QUEUE_LENGTH) % D_EVENT_QUEUE_LENGTH) )
 
+char D_DKeyToChar(D_Key k){
+    switch(k){
+        case D_Ka: return 'a';
+        case D_Kb: return 'b';
+        case D_Kc: return 'c';
+        case D_Kd: return 'd';
+        case D_Ke: return 'e';
+        case D_Kf: return 'f';
+        case D_Kg: return 'g';
+        case D_Kh: return 'h';
+        case D_Ki: return 'i';
+        case D_Kj: return 'j';
+        case D_Kk: return 'k';
+        case D_Kl: return 'l';
+        case D_Km: return 'm';
+        case D_Kn: return 'n';
+        case D_Ko: return 'o';
+        case D_Kp: return 'p';
+        case D_Kq: return 'q';
+        case D_Kr: return 'r';
+        case D_Ks: return 's';
+        case D_Kt: return 't';
+        case D_Ku: return 'u';
+        case D_Kv: return 'v';
+        case D_Kw: return 'w';
+        case D_Kx: return 'x';
+        case D_Ky: return 'y';
+        case D_Kz: return 'z';
+
+        case D_K0: return '0';
+        case D_K1: return '1';
+        case D_K2: return '2';
+        case D_K3: return '3';
+        case D_K4: return '4';
+        case D_K5: return '5';
+        case D_K6: return '6';
+        case D_K7: return '7';
+        case D_K8: return '8';
+        case D_K9: return '9';
+    };
+
+    return '\0';
+};
+
 int D_StartEvents(){
     D_EventQueue = D_CALLOC(sizeof(D_Event), D_EVENT_QUEUE_LENGTH);
     D_EventQueueFront = 0;
