@@ -45,6 +45,90 @@ typedef enum D_MouseButton {
     D_BUTTON2      = 0x10
 } D_MouseButton;
 
+/* In this keyboard enum, the meaning of the key
+ *  is used. If a "u" key is pressed, a D_Ku
+ *  keypress is the result.
+ *
+ * In the future there may be another enum for
+ *  scancodes, where key positions are used
+ *  instead of thair meanings.
+ *
+ * This is roughly based off a UK keyboard.
+ */
+typedef enum D_Key {
+    D_KNone = 0,
+    D_Ka,
+    D_Kb,
+    D_Kc,
+    D_Kd,
+    D_Ke,
+    D_Kf,
+    D_Kg,
+    D_Kh,
+    D_Ki,
+    D_Kj,
+    D_Kk,
+    D_Kl,
+    D_Km,
+    D_Kn,
+    D_Ko,
+    D_Kp,
+    D_Kq,
+    D_Kr,
+    D_Ks,
+    D_Kt,
+    D_Ku,
+    D_Kv,
+    D_Kw,
+    D_Kx,
+    D_Ky,
+    D_Kz,
+
+    D_K0,
+    D_K1,
+    D_K2,
+    D_K3,
+    D_K4,
+    D_K5,
+    D_K6,
+    D_K7,
+    D_K8,
+    D_K9,
+
+    D_KLeft,
+    D_KRight,
+    D_KUp,
+    D_KDown,
+
+    D_KEscape,
+    D_KBackTick,
+    D_KTab,
+    D_KCapLock,
+    D_KLeftShift,
+    D_KLeftCtrl,
+    D_KLeftSuper,
+    D_KAlt,
+    D_KSpace,
+    D_KAltGr,
+    D_KRightSuper,
+    D_KContextMenu,
+    D_KRightCtrl,
+    D_KRightShift,
+    D_KEnter,
+    D_KBackspace,
+
+    D_KMinus,
+    D_KEqual,
+    D_KLeftSquareBracket,
+    D_KRightSquareBracket,
+    D_KSemicolon,
+    D_KQuote,
+    D_KTidle,
+    D_KLessThan,
+    D_KGreaterThan,
+    D_KForwardSlash,
+} D_Key;
+
 typedef struct D_MouseEvent {
     int x, y;
     D_MouseButton button;
