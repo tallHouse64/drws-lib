@@ -429,27 +429,36 @@ D_uint32 D_rgbaToFormat(D_PixFormat f, int r, int g, int b, int a){
     return D_RawrgbaToFormat(f, (r * (f.rMask >> f.rMaskShift)) / (255), (g * (f.gMask >> f.gMaskShift)) / (255), (b * (f.bMask >> f.bMaskShift)) / (255), (a * (f.aMask >> f.aMaskShift)) / (255));
 };
 
-/* Unless you know what
- *  this does, you probabl need D_FormatTorgba().
+/* Unless you know what this does, you probably
+ *  need D_FormatTorgba().
  *
- * This does the opposite of D_RawrgbaToFormat(), it
- *  takes in a pixel p and it's format f, then it finds
- *  it's raw rgba colour but not in 0-255 form, instead
- *  it's in the pixel format's form. For example in
- *  "ABBB BBGG GGGR RRRR" format r, g and b would be 0-31
- *  and a would be 0-1. This is where D_FormatTorgba() is
- *  different, it converts these numbers to 0-255 instead.
+ * This does the opposite of D_RawrgbaToFormat(),
+ *  it takes in a pixel p and it's format f, then
+ *  it finds it's raw rgba colour but not in
+ *  0-255 form, instead it's in the pixel
+ *  format's form. For example in "ABBB BBGG GGGR
+ *  RRRR" format r, g and b would be 0-31 and a
+ *  would be 0-1. This is where D_FormatTorgba()
+ *  is different, it converts these numbers to
+ *  0-255 instead.
  *
- * Remember, if a pixel format you put in this function has
- *  0 for an alpa mask, a would always be 0 and may be
- *  invisab. (0 for rgb masks would do a similar thing).
+ * Remember, if a pixel format you put in this
+ *  function has 0 for an alpa mask, a would
+ *  always be 0 and may be invisab. (0 for rgb
+ *  masks would do a similar thing).
  *
  * p: The pixel. (You can take it from a surf)
- * f: The format of the pixel (usually surf->format)
- * r: A pointer to fill in with red part of the colour 0-?. Format dependant.
- * g: A pointer to fill in with green part of the colour 0-?. Format dependant.
- * b: A pointer to fill in with blue part of the colour 0-?. Format dependant.
- * a: A pointer to fill in with alpha part of the colour 0-?. Format dependant.
+ * f: The format of the pixel (usually
+ *  surf->format)
+ * r: A pointer to fill in with red part of the
+ *  colour 0-?. Format dependant (This is why you
+ *  probably want D_FormatTorgba()).
+ * g: A pointer to fill in with green part of the
+ *  colour 0-?. Format dependant.
+ * b: A pointer to fill in with blue part of the
+ *  colour 0-?. Format dependant.
+ * a: A pointer to fill in with alpha part of the
+ *  colour 0-?. Format dependant.
  */
 int D_RawFormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int * a){
 
