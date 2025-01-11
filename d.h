@@ -1089,6 +1089,51 @@ int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraS
     return 0;
 };
 
+/* This function finds the heighest point in an
+ *  array of points.
+ *
+ * This function assum that a small y is high,
+ *  bigger y is lower.
+ *
+ * p: An array of points to find the highest of.
+ * numPoints: The number of points in the array
+ *  (can aslo just be the number to test).
+ * returns:  The index of the highest point.
+ */
+int D_FindHighestPoint(D_Point * p, int numPoints){
+    if(numPoints < 0){
+        return -1;
+    }else if(numPoints == 1){
+        return 0;
+    };
+
+    int i = 1; //1 on purpose
+    int highest = 0;
+
+    while(i < numPoints){
+
+        if(p[i].y < p[highest].y){
+            highest = i;
+        };
+
+        i++;
+    };
+
+    return highest;
+};
+
+/* This function draws a triangle with any three
+ *  points to a surface. Don't expect it to be
+ *  fast enough for 3D.
+ *
+ * s: A surface to draw the tri to.
+ * p: A pointer to an array of at least 3
+ *  D_Points.
+ */
+/*int D_FillTri(D_Surf * s, D_Point * p){
+
+};*/
+
 #ifdef D_ALLOW_STB_IMAGE
 
 /*
