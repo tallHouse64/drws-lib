@@ -1101,7 +1101,7 @@ int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraS
  * returns:  The index of the highest point.
  */
 int D_FindHighestPoint(D_Point * p, int numPoints){
-    if(numPoints < 0){
+    if(numPoints <= 0){
         return -1;
     }else if(numPoints == 1){
         return 0;
