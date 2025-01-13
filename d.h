@@ -1089,37 +1089,48 @@ int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraS
     return 0;
 };
 
-/* This function finds the heighest point in an
- *  array of points.
+/* This function finds the heighest and lowest
+ *  points in an array of points.
  *
- * This function assum that a small y is high,
- *  bigger y is lower.
+ * This function assumes that as y gets smaller,
+ *  you go up the page. A negative y means you're
+ *  above the origin.
  *
- * p: An array of points to find the highest of.
+ * p: An array of points to find the highest and
+ *  lowest of.
  * numPoints: The number of points in the array
  *  (can aslo just be the number to test).
- * returns:  The index of the highest point.
+ * highest: Gets filled in with the index of the
+ *  highest point (smallest y).
+ * lowest: Gets filled in with the indes of the
+ *  lowest point (biggest y).
+ * returns:  0 on success, negative number
+ *  otherwise.
  */
-int D_FindHighestPoint(D_Point * p, int numPoints){
-    if(numPoints <= 0){
+int D_FindExtremePoints(D_Point * p, int numPoints, int * highest, int * lowest){
+    if(numPoints < 1){
         return -1;
-    }else if(numPoints == 1){
-        return 0;
     };
 
+    *highest = 0;
+    *lowest = 0;
+
     int i = 1; //1 on purpose
-    int highest = 0;
 
     while(i < numPoints){
 
         if(p[i].y < p[highest].y){
-            highest = i;
+            *highest = i;
+        };
+
+        if(p[i].y > p[lowest].y){
+            *lowest = i;
         };
 
         i++;
     };
 
-    return highest;
+    return 0;
 };
 
 /* This function draws a triangle with any three
@@ -1128,7 +1139,7 @@ int D_FindHighestPoint(D_Point * p, int numPoints){
  *
  * s: A surface to draw the tri to.
  * p: A pointer to an array of at least 3
- *  D_Points.
+ *  D_Points, the rest are ignored.
  */
 /*int D_FillTri(D_Surf * s, D_Point * p){
 
