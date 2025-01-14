@@ -1097,7 +1097,8 @@ int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraS
  *  above the origin.
  *
  * p: An array of points to find the highest and
- *  lowest of.
+ *  lowest of. It is safe to pass null, but the
+ *  function would return -2.
  * numPoints: The number of points in the array
  *  (can aslo just be the number to test).
  * highest: Gets filled in with the index of the
