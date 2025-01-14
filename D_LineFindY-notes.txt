@@ -1,0 +1,53 @@
+
+Inside of D_LineFindY(), there was a massive comment of equations and notes to help write the function.
+It has been moved here (below) to keep the code in d.h a bit cleaner.
+
+
+y = mx + c
+
+Find m.
+
+     b->y - a->y
+ m = -----------
+     b->x - a->x
+
+Find c.
+Step 1, sub in m above.
+
+       b->y - a->y
+ y = ( ----------- * x ) + c
+       b->x - a->x
+
+Step 2, sub in point a's or b's x and y
+ values.
+
+          b->y - a->y
+ a->y = ( ----------- * a->x ) + c
+          b->x - a->x
+
+Step 3, rearrange to find c.
+
+              b->y - a->y
+ c = a->y - ( ----------- * a->x )
+              b->x - a->x
+
+Sub m and c into y = mx + c.
+Below is the straight line equation.
+
+       b->y - a->y                    b->y - a->y
+ y = ( ----------- * x ) + ( a->y - ( ----------- * a->x ) )
+       b->x - a->x                    b->x - a->x
+
+Rearrange to have one division operation, no floats needed, neater code hopfuly.
+
+      (b->y - a->y) * x               (b->y - a->y) * a->x
+ y = ( ---------------- ) + ( a->y - ( ------------------ ) )
+       b->x - a->x                     b->x - a->x
+
+      (b->y - a->y) * x       (a->y * (b->x - a->x)) - ((b->y - a->y) * a->x)
+ y = ( ---------------- ) + ( ----------------------------------------------- )
+       b->x - a->x                              b->x - a->x
+
+     (((b->y - a->y) * x) * b->x - a->x) + (((a->y * (b->x - a->x)) - ((b->y - a->y) * a->x)) * b->x - a->x)
+ y = -------------------------------------------------------------------------------------------------------
+                                         (b->x - a->x) * (b->x - a->x)

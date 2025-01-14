@@ -1148,6 +1148,31 @@ int D_FindExtremePoints(D_Point * p, int numPoints, int * highest, int * lowest)
     return 0;
 };
 
+/* This function takes in a stright line equation
+ *  and finds y for any x value. The stright line
+ *  equation is in the form of two points a and
+ *  b.
+ *
+ * a: A point on the line.
+ * b: Anonther point on the line.
+ * x: The x position to find the y of.
+ * y: Gets filled in with the y positon found.
+ * returns: 0 on success, negative number otherwise.
+ */
+int D_LineFindY(D_Point * a, D_Point * b, int x, int * y){
+
+    if(a == D_NULL || b == D_NULL || y == D_NULL){
+        return -1;
+    };
+
+    //Notes and workings out for this are in
+    // D_LineFindY-notes.txt
+
+    *y = (((b->y - a->y) * x) * b->x - a->x) + (((a->y * (b->x - a->x)) - ((b->y - a->y) * a->x)) * b->x - a->x) / (b->x - a->x) * (b->x - a->x); //lol
+
+    return 0;
+};
+
 /* This function draws a triangle with any three
  *  points to a surface. Don't expect it to be
  *  fast enough for 3D.
@@ -1158,6 +1183,32 @@ int D_FindExtremePoints(D_Point * p, int numPoints, int * highest, int * lowest)
  */
 /*int D_FillTri(D_Surf * s, D_Point * p){
 
+    //Remember these are indexes in p
+
+    int highest = -1;
+    int lowest = -1;
+    int mid = 0; //0 on purpose
+
+
+    D_FindExtremePoints(p, 3, &highest, &lowest);
+
+
+    //Find which point in p is the middle
+    // (we know the highest and lowest)
+
+    if(highest == 0 || lowest == 0){
+        mid++;
+
+        if(highest == 1 || lowest == 1){
+            mid++;
+        };
+    };
+
+
+    //Is mid on the right side of the straight
+    // line equation made by the points higest
+    // and lowest
+    if(){};
 };*/
 
 #ifdef D_ALLOW_STB_IMAGE
