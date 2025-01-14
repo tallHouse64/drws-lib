@@ -1101,15 +1101,29 @@ int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraS
  * numPoints: The number of points in the array
  *  (can aslo just be the number to test).
  * highest: Gets filled in with the index of the
- *  highest point (smallest y).
+ *  highest point (smallest y). Can be null.
  * lowest: Gets filled in with the indes of the
- *  lowest point (biggest y).
+ *  lowest point (biggest y). Can be null.
  * returns:  0 on success, negative number
  *  otherwise.
  */
 int D_FindExtremePoints(D_Point * p, int numPoints, int * highest, int * lowest){
+    if(p == D_NULL){
+        return -2;
+    };
+
     if(numPoints < 1){
         return -1;
+    };
+
+    int tempHighest;
+    if(highest == D_NULL){
+        highest = &tempHighest;
+    };
+
+    int tempLowest;
+    if(lowest == D_NULL){
+        lowest = &tempLowest;
     };
 
     *highest = 0;
@@ -1119,11 +1133,11 @@ int D_FindExtremePoints(D_Point * p, int numPoints, int * highest, int * lowest)
 
     while(i < numPoints){
 
-        if(p[i].y < p[highest].y){
+        if(p[i].y < p[*highest].y){
             *highest = i;
         };
 
-        if(p[i].y > p[lowest].y){
+        if(p[i].y > p[*lowest].y){
             *lowest = i;
         };
 
