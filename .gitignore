@@ -34,6 +34,7 @@ test/chartomaptest
 test/printtosurftest
 test/scaletest2
 test/findextremepointstest
+test/linefindytest
 
 #ignore all platform tests
 platform/test/getoutsurftest

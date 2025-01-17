@@ -38,11 +38,17 @@ Below is the straight line equation.
  y = ( ----------- * x ) + ( a->y - ( ----------- * a->x ) )
        b->x - a->x                    b->x - a->x
 
+This is the same as the above.
+y = (((b->y - a->y) / (b->x - a->x)) * x) + (a->y - (((b->y - a->y) / (b->x - a->x)) * a->x))
+
 Rearrange to have one division operation, no floats needed, neater code hopfuly.
 
       (b->y - a->y) * x               (b->y - a->y) * a->x
  y = ( ---------------- ) + ( a->y - ( ------------------ ) )
        b->x - a->x                     b->x - a->x
+
+This is the same as the above. This equation is the one used in D_LineFindY().
+y = (((b->y - a->y) * x) / (b->x - a->x)) + (a->y - ( ( (b->y - a->y) * a->x ) / (b->x - a->x) ) )
 
       (b->y - a->y) * x       (a->y * (b->x - a->x)) - ((b->y - a->y) * a->x)
  y = ( ---------------- ) + ( ----------------------------------------------- )

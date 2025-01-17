@@ -1165,10 +1165,18 @@ int D_LineFindY(D_Point * a, D_Point * b, int x, int * y){
         return -1;
     };
 
+    if((b->x - a->x) == 0){
+        return -2;
+    };
+
     //Notes and workings out for this are in
     // D_LineFindY-notes.txt
 
-    *y = (((b->y - a->y) * x) * b->x - a->x) + (((a->y * (b->x - a->x)) - ((b->y - a->y) * a->x)) * b->x - a->x) / (b->x - a->x) * (b->x - a->x); //lol
+
+    //*y = (((((float)b->y) - a->y) / (((float)b->x) - a->x)) * x) + (a->y - (((((float)b->y) - a->y) / (((float)b->x) - a->x)) * a->x));
+    //*y = (((b->y - a->y) * x) * b->x - a->x) + (((a->y * (b->x - a->x)) - ((b->y - a->y) * a->x)) * b->x - a->x) / (b->x - a->x) * (b->x - a->x); //lol
+
+    *y = (((b->y - a->y) * x) / (b->x - a->x)) + (a->y - ( ( (b->y - a->y) * a->x ) / (b->x - a->x) ) );
 
     return 0;
 };
