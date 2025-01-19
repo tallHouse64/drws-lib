@@ -128,22 +128,22 @@ typedef enum D_Key {
     D_KGreaterThan,
     D_KForwardSlash,
 
-    D_KF1;
-    D_KF2;
-    D_KF3;
-    D_KF4;
-    D_KF5;
-    D_KF6;
-    D_KF7;
-    D_KF8;
-    D_KF9;
-    D_KF10;
-    D_KF11;
-    D_KF12;
+    D_KF1,
+    D_KF2,
+    D_KF3,
+    D_KF4,
+    D_KF5,
+    D_KF6,
+    D_KF7,
+    D_KF8,
+    D_KF9,
+    D_KF10,
+    D_KF11,
+    D_KF12,
 
-    D_KPrintScreen;
-    D_KScrollLock;
-    D_KPause;
+    D_KPrintScreen,
+    D_KScrollLock,
+    D_KPause,
 } D_Key;
 
 typedef struct D_MouseEvent {
