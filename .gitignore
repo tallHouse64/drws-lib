@@ -35,6 +35,7 @@ test/printtosurftest
 test/scaletest2
 test/findextremepointstest
 test/linefindytest
+test/includetest
 
 #ignore all platform tests
 platform/test/getoutsurftest

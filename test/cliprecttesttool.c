@@ -6,7 +6,7 @@
 #undef STB_IMAGE_IMPLEMENTATION
 #undef D_IMPLEMENTATION
 
-#include"../sdltod/tod.h"
+#include"../platform/sdld.h"
 
 
 #define DELAY 1000/15

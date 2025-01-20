@@ -205,6 +205,8 @@ D_Surf * D_LoadImage(char * path);
 
 //function defs
 #ifdef D_IMPLEMENTATION
+#ifndef D_ALREADY_IMPLEMENTED
+#define D_ALREADY_IMPLEMENTED
 
 /* This checks if a point is in a rectangle and returns 1
  *  if it is, otherwise it returns 0. If p or r are null
@@ -1259,4 +1261,5 @@ D_Surf * D_LoadImage(char * path){
 };
 #endif // D_ALLOW_STB_IMAGE
 
+#endif // D_ALREADY_IMPLEMENTED
 #endif // D_IMPLEMENTATION
