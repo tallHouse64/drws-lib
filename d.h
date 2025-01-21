@@ -664,15 +664,6 @@ int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
     return 0;
 };
 
-/*
- * Turns a rgba colour to ABGR8888 colour format.
- * !!!!Warning, it is ABGR not RGBA!!!! Just to help you not
- *  waste time thinking it's not working when you just typed it wrong.
- */
-D_uint32 D_rgbaToABGR8888(int r, int g, int b, int a){
-    return ((r & 255)<<0) | ((g & 255)<<8) | ((b & 255)<<16) | ((a & 255)<<24);
-};
-
 /* Cut off any sides of an inner rect that reach out of
  *  another rect (given by it's x, y, w, h).
  *
