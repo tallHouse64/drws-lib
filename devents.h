@@ -7,6 +7,9 @@
  *
  */
 
+#ifndef DEVENTS_H
+#define DEVENTS_H
+
 #ifndef D_DONT_USE_STDLIB
 #include<stdlib.h>
 #endif
@@ -158,6 +161,12 @@ typedef struct D_Event {
     };
 } D_Event;
 
+#endif // DEVENTS_H
+
+#ifdef DEVENTS_IMPLEMENTATION
+#ifndef DEVENTS_ALREADY_IMPLEMENTED
+#define DEVENTS_ALREADY_IMPLEMENTED
+
 /*
  * You join the back of the queue, and leave the front.
  */
@@ -285,3 +294,7 @@ int D_GetEvent(D_Event * e){
     };
     return -1;
 };
+
+#endif // DEVENTS_ALREADY_IMPLEMENTED
+
+#endif // DEVENTS_IMPLEMENTATION
