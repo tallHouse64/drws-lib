@@ -161,6 +161,13 @@ typedef struct D_Event {
     };
 } D_Event;
 
+
+char D_DKeyToChar(D_Key k);
+int D_StartEvents();
+int D_StopEvents();
+int D_CauseEvent(D_Event * e);
+int D_GetEvent(D_Event * e);
+
 #endif // DEVENTS_H
 
 #ifdef DEVENTS_IMPLEMENTATION
