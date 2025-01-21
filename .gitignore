@@ -37,6 +37,7 @@ test/findextremepointstest
 test/linefindytest
 test/includetest
 test/deventsincludetest/includetest
+test/dincludetest/includetest
 
 #ignore all platform tests
 platform/test/getoutsurftest
