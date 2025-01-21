@@ -2,6 +2,7 @@
 
 # The drwslib.
 Drws is Welsh for door and D is for draw.
+Important note, this project is in C, there is no C++, but I would like to add support for it to work in C++.
 The point of this library is to be the most cross platform library ever, as much as possible. If it has a screen I want to support it, (not sayong I will). It is a gorup of single header librarys with as few dependancies as possible, d.h has one optional dependacy on stdlib.h.
 The collection of libraries are drwslib, d.h and devents.h are the core of drwslib. Everything in platform is for platform specific input and output.
 You can use drwslib to make programs, including games. It is similar to SDL, but not nearly as good.
