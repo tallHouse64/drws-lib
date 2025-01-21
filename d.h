@@ -192,7 +192,6 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format);
 int D_FreeSurf(D_Surf * s);
 int D_BlendNone(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
 int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
-D_uint32 D_rgbaToABGR8888(int r, int g, int b, int a);
 int D_ClipRect(int x, int y, int w, int h, D_Rect * inner);
 int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col);
 int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2);
