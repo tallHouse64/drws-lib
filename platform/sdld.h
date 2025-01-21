@@ -2,6 +2,10 @@
 #include"../devents.h"
 #include"../d.h"
 
+#ifdef D_PLATFORM_IMPLEMENTATION
+#ifndef D_PLATFORM_ALREADY_IMPLEMENTED
+#define D_PLATFORM_ALREADY_IMPLEMENTED
+
 SDL_Window * sdlw[D_MAX_OUT_SURFS] = {NULL};
 SDL_Surface * sdls[D_MAX_OUT_SURFS] = {NULL};
 
@@ -148,3 +152,7 @@ int D_Delay(int ms){
     SDL_Delay(ms);
     return 0;
 };
+
+#endif // D_PLATFORM_ALREADY_IMPLEMENTED
+
+#endif // D_PLATFORM_IMPLEMENTATION
