@@ -1,3 +1,8 @@
+#include"../../dplatform.h"
+#include"../../dplatform.h"
+#include"../../dplatform.h"
+#include"../../dplatform.h"
+
 #include"../../sdld.h"
 #include"../../sdld.h"
 #include"../../sdld.h"
@@ -13,6 +18,8 @@
 #define DEVENTS_IMPLEMENTATION
 #include"../../../devents.h"
 
+#include"outsidefile.h"
+
 #include<stdio.h>
 
 int main(){
@@ -20,6 +27,7 @@ int main(){
     D_Surf * out = D_GetOutSurf(50, 50, 640, 480, "Include test for platform");
 
     D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 255, 170, 120, 255));
+    func(out);
     D_FlipOutSurf(out);
 
     D_Delay(3000);
