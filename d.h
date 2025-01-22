@@ -48,7 +48,7 @@
  *  to use instead. You would also have to define
  *  D_FREE as something equivalent.
  *
- * Limitations, this library only stores pixel data
+ * Limitations, this library only supports bit depth
  *  in sizes that are 8, 16 and 32 bits. If you want
  *  24 you just have to use 32 and ignore the other 8.
  *  When you use D_FindPixForm() you can give it
