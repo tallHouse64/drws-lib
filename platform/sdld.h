@@ -33,7 +33,7 @@ SDL_Surface * sdls[D_MAX_OUT_SURFS] = {NULL};
  * h: The height of the window.
  * title: What the top of the window should say.
  */
-D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title){
+D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags flags){
 
     //Find next unused (NULL) element in sdlw
     int i = 0;
@@ -47,7 +47,17 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title){
         return D_NULL;
     };
 
-    sdlw[i] = SDL_CreateWindow(title, x, y, w, h, 0);
+
+    //Translate the flags
+
+    SDL_WindowFlags windowFlags = 0;
+
+    if(flags & D_OUTSURFRESIZABLE){
+        windowflags = windowflags | SDL_WINDOW_RESIZABLE;
+    };
+
+
+    sdlw[i] = SDL_CreateWindow(title, x, y, w, h, windowFlags);
 
     sdls[i] = SDL_GetWindowSurface(sdlw[i]);
 

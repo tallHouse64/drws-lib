@@ -7,7 +7,7 @@ typedef enum D_OutSurfFlags {
     D_OUTSURFRESIZABLE = 0x01
 } D_OutSurfFlags;
 
-D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title);
+D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags flags);
 int D_FreeOutSurf(D_Surf * s);
 int D_FlipOutSurf(D_Surf * s);
 int D_PumpEvents();
