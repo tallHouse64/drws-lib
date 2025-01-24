@@ -4,7 +4,8 @@
 #define DPLATFORM_H
 
 typedef enum D_OutSurfFlags {
-    D_OUTSURFRESIZABLE = 0x01
+    D_OUTSURFRESIZABLE = 0x01,
+    D_OUTSURFFULLSCREEN = 0x02
 } D_OutSurfFlags;
 
 D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags flags);
