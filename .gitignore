@@ -39,6 +39,7 @@ test/includetest
 test/deventsincludetest/includetest
 test/dincludetest/includetest
 platform/test/includetest/includetest
+platform/test/resizableoutsurftest
 
 #ignore all platform tests
 platform/test/getoutsurftest
