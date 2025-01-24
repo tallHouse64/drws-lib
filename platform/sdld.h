@@ -57,6 +57,10 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
         windowFlags = windowFlags | SDL_WINDOW_RESIZABLE;
     };
 
+    if(flags & D_OUTSURFFULLSCREEN){
+        windowFlags = windowFlags | SDL_WINDOW_FULLSCREEN;
+    };
+
 
     sdlw[i] = SDL_CreateWindow(title, x, y, w, h, windowFlags);
 
