@@ -53,7 +53,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
     SDL_WindowFlags windowFlags = 0;
 
     if(flags & D_OUTSURFRESIZABLE){
-        windowflags = windowflags | SDL_WINDOW_RESIZABLE;
+        windowFlags = windowFlags | SDL_WINDOW_RESIZABLE;
     };
 
 

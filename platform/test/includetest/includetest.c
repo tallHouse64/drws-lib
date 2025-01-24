@@ -24,7 +24,7 @@
 
 int main(){
 
-    D_Surf * out = D_GetOutSurf(50, 50, 640, 480, "Include test for platform");
+    D_Surf * out = D_GetOutSurf(50, 50, 640, 480, "Include test for platform", 0);
 
     D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 255, 170, 120, 255));
     func(out);
