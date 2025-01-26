@@ -149,6 +149,10 @@ typedef enum D_Key {
     D_KPause,
 } D_Key;
 
+typedef struct D_KeyboardEvent {
+    D_Key key; //keycode (meaning of the key)
+} D_KeyboardEvent;
+
 typedef struct D_MouseEvent {
     int x, y;
     D_MouseButton button;
@@ -157,6 +161,7 @@ typedef struct D_MouseEvent {
 typedef struct D_Event {
     D_EventType type;
     union {
+        struct D_KeyboardEvent keyboard;
         struct D_MouseEvent mouse;
     };
 } D_Event;

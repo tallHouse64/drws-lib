@@ -1,15 +1,18 @@
-#include"../../d.h"
-#include"../sdld.h"
-
 #define D_IMPLEMENTATION
 #include "../../d.h"
+
+#define DEVENTS_IMPLEMENTATION
+#include"../../devents.h"
+
+#define D_PLATFORM_IMPLEMENTATION
+#include"../sdld.h"
 
 #define DELAY 1000/15
 
 int main(){
     D_StartEvents();
 
-    D_Surf * out = D_GetOutSurf(10, 10, 640, 480, "Mouse Event Test");
+    D_Surf * out = D_GetOutSurf(10, 10, 640, 480, "Mouse Event Test", 0);
     D_Rect r = {0, 0, 40, 40};
     D_Event e;
     int running = 1;
