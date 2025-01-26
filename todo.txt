@@ -1,0 +1,12 @@
+
+todo:
+add keyboard support.
+add "fromTouchscreen" to mouse events.
+add other surface blendmodes.
+add surface coverter function. (between different pixel formats).
+add triangle fill function.
+add line draw function.
+add nds support.
+add surface copy scale rotate.
+make a guide of how to use drws-lib.
+add event redirection, with reset.
