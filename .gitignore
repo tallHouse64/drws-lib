@@ -41,6 +41,7 @@ test/dincludetest/includetest
 platform/test/includetest/includetest
 platform/test/resizableoutsurftest
 platform/test/fullscreenoutsurftest
+test/dkeytochartest
 
 #ignore all platform tests
 platform/test/getoutsurftest
