@@ -120,6 +120,99 @@ int D_FlipOutSurf(D_Surf * s){
     return 0;
 };
 
+int D_SDLKToDKey(SDL_KeyCode s, D_Key k){
+
+    switch(s){
+        case SDLK_a: return D_Ka;
+        case SDLK_b: return D_Kb;
+        case SDLK_c: return D_Kc;
+        case SDLK_d: return D_Kd;
+        case SDLK_e: return D_Ke;
+        case SDLK_f: return D_Kf;
+        case SDLK_g: return D_Kg;
+        case SDLK_h: return D_Kh;
+        case SDLK_i: return D_Ki;
+        case SDLK_j: return D_Kj;
+        case SDLK_k: return D_Kk;
+        case SDLK_l: return D_Kl;
+        case SDLK_m: return D_Km;
+        case SDLK_n: return D_Kn;
+        case SDLK_o: return D_Ko;
+        case SDLK_p: return D_Kp;
+        case SDLK_q: return D_Kq;
+        case SDLK_r: return D_Kr;
+        case SDLK_s: return D_Ks;
+        case SDLK_t: return D_Kt;
+        case SDLK_u: return D_Ku;
+        case SDLK_v: return D_Kv;
+        case SDLK_w: return D_Kw;
+        case SDLK_x: return D_Kx;
+        case SDLK_y: return D_Ky;
+        case SDLK_z: return D_Kz;
+
+        case SDLK_0: return D_K0;
+        case SDLK_1: return D_K1;
+        case SDLK_2: return D_K2;
+        case SDLK_3: return D_K3;
+        case SDLK_4: return D_K4;
+        case SDLK_5: return D_K5;
+        case SDLK_6: return D_K6;
+        case SDLK_7: return D_K7;
+        case SDLK_8: return D_K8;
+        case SDLK_9: return D_K9;
+
+        case SDLK_LEFT: return D_KLeft;
+        case SDLK_RIGHT: return D_KRight;
+        case SDLK_UP: return D_KUp;
+        case SDLK_DOWN: return D_KDown;
+
+        case SDLK_ESCAPE: return D_KEscape;
+        case SDLK_BACKQUOTE: return D_KBacktick;
+        case SDLK_TAB: return D_KTab;
+        case SDLK_CAPSLOCK: return D_KCapLock;
+        case SDLK_LSHIFT: return D_KLeftShift;
+        case SDLK_LCTRL: return D_KLeftCtrl;
+        case SDLK_LGUI: return D_KLeftSuper;
+        case SDLK_LALT: return D_KAlt;
+        case SDLK_SPACE: return D_KSpace;
+        case SDLK_ALTERASE: return D_KAltGr;
+        case SDLK_RGUI: return D_KRightSuper;
+        case SDLK_MENU: return D_KContextMenu;
+        case SDLK_RCTRL: return D_KRightCtrl;
+        case SDLK_RSHIFT: return D_KRightShift;
+        case SDLK_RETURN: return D_KEnter;
+        case SDLK_BACKSPACE: return D_KBackspace;
+
+        case SDLK_MINUS: return D_KMinus;
+        case SDLK_EQUALS: return D_KEqual;
+        case SDLK_LEFTBRACKET: return D_KLeftSquareBracket;
+        case SDLK_RIGHTBRACKET: return D_KRightSquareBracket;
+        case SDLK_SEMICOLON: return D_KSemicolon;
+        case SDLK_QUOTE: return D_KQuote;
+        //case SDLK_TILDE: return D_KTidle;
+        case SDLK_LESS: return D_KLessThan;
+        case SDLK_GREATER: return D_KGreaterThan;
+        case SDLK_SLASH: return D_KForwardSlash;
+
+        case SDLK_F1: return D_KF1;
+        case SDLK_F2: return D_KF2;
+        case SDLK_F3: return D_KF3;
+        case SDLK_F4: return D_KF4;
+        case SDLK_F5: return D_KF5;
+        case SDLK_F6: return D_KF6;
+        case SDLK_F7: return D_KF7;
+        case SDLK_F8: return D_KF8;
+        case SDLK_F9: return D_KF9;
+        case SDLK_F10: return D_KF10;
+        case SDLK_F11: return D_KF11;
+        case SDLK_F12: return D_KF12;
+
+        case SDLK_PRINTSCREEN: return D_KPrintScreen;
+        case SDLK_SCROLLLOCK: return D_KScrollLock;
+        case SDLK_PAUSE: return D_KPause;
+    };
+};
+
 int D_PumpEvents(){
     SDL_PumpEvents();
     SDL_Event se;
@@ -148,6 +241,11 @@ int D_PumpEvents(){
                 e.mouse.y = se.motion.y;
                 D_CauseEvent(&e);
                 break;
+
+            case SDL_KEYDOWN:
+                e.type = D_KEYDOWN;
+                break;
+
             case SDL_QUIT:
                 e.type = D_QUIT;
                 D_CauseEvent(&e);
