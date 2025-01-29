@@ -98,16 +98,30 @@ typedef enum D_Key {
     D_K8,
     D_K9,
 
+    D_KExclamation,
+    D_KDoubleQuote,
+    D_KPound,
+    D_KDollar,
+    D_KPercentage,
+    D_KCaret,
+    D_KAmpersand,
+    D_KAsterisk,
+    D_KLeftParentheses,
+    D_KRightParentheses,
+
     D_KLeft,
     D_KRight,
     D_KUp,
     D_KDown,
 
+    //This moves anticlockwise around the edge of
+    // a uk keybaord.
     D_KEscape,
     D_KBacktick,
     D_KTab,
     D_KCapLock,
     D_KLeftShift,
+    D_KBackSlash,
     D_KLeftCtrl,
     D_KLeftSuper,
     D_KAlt,
@@ -120,16 +134,29 @@ typedef enum D_Key {
     D_KEnter,
     D_KBackspace,
 
+    D_KPipe, // This |
+
     D_KMinus,
     D_KEqual,
-    D_KLeftSquareBracket,
-    D_KRightSquareBracket,
+    D_KLeftBracket,
+    D_KRightBracket,
     D_KSemicolon,
     D_KQuote,
-    D_KTidle,
-    D_KLessThan,
-    D_KGreaterThan,
+    D_KHash,
+    D_KComma,
+    D_KPeriod,
     D_KForwardSlash,
+
+    D_KUnderscore,
+    D_KPlus,
+    D_KLeftBrace,
+    D_KRightBrace,
+    D_KColon,
+    D_KAt,
+    D_KTilde,
+    D_LessThan,
+    D_KGreaterThan,
+    D_KQuestion,
 
     D_KF1,
     D_KF2,
@@ -147,6 +174,13 @@ typedef enum D_Key {
     D_KPrintScreen,
     D_KScrollLock,
     D_KPause,
+
+    D_KInsert,
+    D_KHome,
+    D_KPageUp,
+    D_KDelete,
+    D_KEnd,
+    D_KPageDown
 } D_Key;
 
 typedef struct D_KeyboardEvent {
