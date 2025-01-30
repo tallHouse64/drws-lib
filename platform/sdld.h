@@ -262,12 +262,14 @@ int D_PumpEvents(){
                 e.mouse.y = se.button.y;
                 D_CauseEvent(&e);
                 break;
+
             case SDL_MOUSEBUTTONUP:
                 e.type = D_MOUSEUP;
                 e.mouse.x = se.button.x;
                 e.mouse.y = se.button.y;
                 D_CauseEvent(&e);
                 break;
+
             case SDL_MOUSEMOTION:
                 e.type = D_MOUSEMOVE;
                 e.mouse.x = se.motion.x;
@@ -277,6 +279,14 @@ int D_PumpEvents(){
 
             case SDL_KEYDOWN:
                 e.type = D_KEYDOWN;
+                e.keyboard.key = D_SDLKToDKey(se.keysym.sym);
+                D_CauseEvent(&e);
+                break;
+
+            case SDL_KEYUP:
+                e.type = D_KEYUP;
+                e.keyboard.key = D_SDLKToDKey(se.keysym.sym);
+                D_CauseEvent(&e);
                 break;
 
             case SDL_QUIT:
