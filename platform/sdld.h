@@ -279,13 +279,13 @@ int D_PumpEvents(){
 
             case SDL_KEYDOWN:
                 e.type = D_KEYDOWN;
-                e.keyboard.key = D_SDLKToDKey(se.keysym.sym);
+                e.keyboard.key = D_SDLKToDKey(se.key.keysym.sym);
                 D_CauseEvent(&e);
                 break;
 
             case SDL_KEYUP:
                 e.type = D_KEYUP;
-                e.keyboard.key = D_SDLKToDKey(se.keysym.sym);
+                e.keyboard.key = D_SDLKToDKey(se.key.keysym.sym);
                 D_CauseEvent(&e);
                 break;
 
