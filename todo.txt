@@ -1,6 +1,5 @@
 
 todo:
-add keyboard support.
 add "fromTouchscreen" to mouse events.
 add other surface blendmodes.
 add surface coverter function. (between different pixel formats).
@@ -11,3 +10,6 @@ add surface copy scale rotate.
 make a guide of how to use drws-lib.
 add event redirection, with reset.
 add controller support (at least for nds).
+
+done:
+add keyboard support. done.
