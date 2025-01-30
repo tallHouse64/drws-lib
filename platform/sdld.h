@@ -161,6 +161,17 @@ int D_SDLKToDKey(SDL_KeyCode s, D_Key k){
         case SDLK_8: return D_K8;
         case SDLK_9: return D_K9;
 
+        case SDLK_EXCLAIM: return D_KExclamation;
+        case SDLK_QUOTEDBL: return D_KDoubleQuote;
+        //case SDLK_POUND: return D_KPound;
+        case SDLK_DOLLAR: return D_KDollar;
+        case SDLK_PERCENT: return D_KPercentage;
+        case SDLK_CARET: return D_KCaret;
+        case SDLK_AMPERSAND: return D_KAmpersand;
+        case SDLK_ASTERISK: return D_KAsterisk;
+        case SDLK_LEFTPAREN: return D_KLeftParentheses;
+        case SDLK_RIGHTPAREN: return D_KRightParentheses;
+
         case SDLK_LEFT: return D_KLeft;
         case SDLK_RIGHT: return D_KRight;
         case SDLK_UP: return D_KUp;
@@ -183,16 +194,29 @@ int D_SDLKToDKey(SDL_KeyCode s, D_Key k){
         case SDLK_RETURN: return D_KEnter;
         case SDLK_BACKSPACE: return D_KBackspace;
 
+        //case SDLK_PIPE: return D_KPipe;
+
         case SDLK_MINUS: return D_KMinus;
         case SDLK_EQUALS: return D_KEqual;
-        case SDLK_LEFTBRACKET: return D_KLeftSquareBracket;
-        case SDLK_RIGHTBRACKET: return D_KRightSquareBracket;
+        case SDLK_LEFTBRACKET: return D_KLeftBracket;
+        case SDLK_RIGHTBRACKET: return D_KRightBracket;
         case SDLK_SEMICOLON: return D_KSemicolon;
         case SDLK_QUOTE: return D_KQuote;
-        //case SDLK_TILDE: return D_KTidle;
+        case SDLK_HASH: return D_KHash;
+        case SDLK_COMMA: return D_KComma;
+        case SDLK_PERIOD: return D_KPeriod;
+        case SDLK_SLASH: return D_KForwardSlash;
+
+        case SDLK_UNDERSCORE: return D_KUnderscore;
+        case SDLK_PLUS: return D_KPlus;
+        //case SDLK_LEFTBRACE: return D_KLeftBrace;
+        //case SDLK_RIGHTBRACE: return D_KRightBrace;
+        case SDLK_COLON: return D_KColon;
+        case SDLK_AT: return D_KAt;
+        //case SDLK_TIDLE: return D_KTilde;
         case SDLK_LESS: return D_KLessThan;
         case SDLK_GREATER: return D_KGreaterThan;
-        case SDLK_SLASH: return D_KForwardSlash;
+        case SDLK_QUESTION: return D_KQuestion;
 
         case SDLK_F1: return D_KF1;
         case SDLK_F2: return D_KF2;
@@ -210,7 +234,16 @@ int D_SDLKToDKey(SDL_KeyCode s, D_Key k){
         case SDLK_PRINTSCREEN: return D_KPrintScreen;
         case SDLK_SCROLLLOCK: return D_KScrollLock;
         case SDLK_PAUSE: return D_KPause;
+
+        case SDLK_INSERT: return D_KInsert;
+        case SDLK_HOME: return D_KHome;
+        case SDLK_PAGEUP: return D_KPageUp;
+        case SDLK_DELETE: return D_KDelete;
+        case SDLK_END: return D_KEnd;
+        case SDLK_PAGEDOWN: return D_KPageDown;
     };
+
+    return D_KNone;
 };
 
 int D_PumpEvents(){

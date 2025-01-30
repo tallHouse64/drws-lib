@@ -154,7 +154,7 @@ typedef enum D_Key {
     D_KColon,
     D_KAt,
     D_KTilde,
-    D_LessThan,
+    D_KLessThan,
     D_KGreaterThan,
     D_KQuestion,
 
@@ -271,11 +271,11 @@ char D_DKeyToChar(D_Key k){
 
         case D_KMinus: return '-';
         case D_KEqual: return '=';
-        case D_KLeftSquareBracket: return '[';
-        case D_KRightSquareBracket: return ']';
+        case D_KLeftBracket: return '[';
+        case D_KRightBracket: return ']';
         case D_KSemicolon: return ';';
         case D_KQuote: return '\'';
-        case D_KTidle: return '~';
+        case D_KTilde: return '~';
         case D_KLessThan: return '<';
         case D_KGreaterThan: return '>';
         case D_KForwardSlash: return '/';
