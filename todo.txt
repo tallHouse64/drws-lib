@@ -10,3 +10,4 @@ add nds support.
 add surface copy scale rotate.
 make a guide of how to use drws-lib.
 add event redirection, with reset.
+add controller support (at least for nds).
