@@ -120,7 +120,7 @@ int D_FlipOutSurf(D_Surf * s){
     return 0;
 };
 
-int D_SDLKToDKey(SDL_KeyCode s, D_Key k){
+D_Key D_SDLKToDKey(SDL_KeyCode s){
 
     switch(s){
         case SDLK_a: return D_Ka;
