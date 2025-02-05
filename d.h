@@ -669,6 +669,18 @@ int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
     return 0;
 };
 
+int D_Blend(D_BLENDMODE blend, int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
+    switch(blend){
+        case D_BLENDMODE_NONE:
+            D_BlendNone(sr, sg, sb, sa, dr, dg, db, da, r, g, b, a);
+            break;
+        case D_BLENDMODE_NORMAL:
+            D_BlendNormal(sr, sg, sb, sa, dr, dg, db, da, r, g, b, a);
+            break;
+    };
+    return 0;
+};
+
 /* Cut off any sides of an inner rect that reach out of
  *  another rect (given by it's x, y, w, h).
  *

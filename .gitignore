@@ -44,6 +44,7 @@ platform/test/fullscreenoutsurftest
 test/dkeytochartest
 platform/test/sdlktodkeytest
 platform/test/inputeventtest
+test/blendtest
 
 #ignore all platform tests
 platform/test/getoutsurftest
