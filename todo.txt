@@ -10,6 +10,9 @@ add surface copy scale rotate.
 make a guide of how to use drws-lib.
 add event redirection, with reset.
 add controller support (at least for nds).
+add c++ support.
+add outSurf flags like resizable, fullscreen, etc to surface struct.
+add D_CreateSurfaceFrom() to make surfaces using other memory.
 
 done:
 add keyboard support. done.
