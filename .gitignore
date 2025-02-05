@@ -45,6 +45,7 @@ test/dkeytochartest
 platform/test/sdlktodkeytest
 platform/test/inputeventtest
 test/blendtest
+test/surfcopyscaleblendmodetest
 
 #ignore all platform tests
 platform/test/getoutsurftest
