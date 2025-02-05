@@ -669,6 +669,27 @@ int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
     return 0;
 };
 
+/* This function blends colours using a
+ *  blendmode. The pointers r, g, b and a are
+ *  filled in with the result colour. It uses
+ *  other blend functions inside like
+ *  D_BlendNormal().
+ *
+ * blend: The blendmode to blend the colours
+ *  with.
+ * sr: Source red.
+ * sg: Source green.
+ * sb: Source blue.
+ * sa: Source alpha.
+ * dr: Destination red.
+ * dg: Destination green.
+ * db: Destination blue.
+ * da: Destination alpha.
+ * r: Filled in with result red.
+ * g: Filled in with result green.
+ * b: Filled in with result blue.
+ * a: Filled in with result alpha.
+ */
 int D_Blend(D_BLENDMODE blend, int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
     switch(blend){
         case D_BLENDMODE_NONE:
