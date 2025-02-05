@@ -9,14 +9,17 @@
  */
 
 #define D_ALLOW_STB_IMAGE
-#define STB_IMAGE_IMPLEMENTATION
 #define D_IMPLEMENTATION
 #include"../d.h"
-#undef D_ALLOW_STB_IMAGE
-#undef STB_IMAGE_IMPLEMENTATION
-#undef D_IMPLEMENTATION
 
-#include"../sdltod/tod.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include"../stb_image.h"
+
+#define DEVENTS_IMPLEMENTATION
+#include"../devents.h"
+
+#define D_PLATFORM_IMPLEMENTATION
+#include"../platform/sdld.h"
 
 
 #define DELAY 1000/15
@@ -97,7 +100,7 @@ int mouseDown(){
 };
 
 int main(){
-    out = D_GetOutSurf(50, 50, 640, 480, "Scale Test With Normal Blending");
+    out = D_GetOutSurf(50, 50, 640, 480, "Scale Test With Normal Blending", 0);
     fin = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32));
     pic1 = D_LoadImage("img/sta.png");
     pic2 = D_LoadImage("img/door.jpeg");
