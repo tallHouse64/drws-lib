@@ -1,7 +1,6 @@
 
 todo:
 add "fromTouchscreen" to mouse events.
-add other surface blendmodes.
 add surface coverter function. (between different pixel formats).
 add triangle fill function.
 add line draw function.
@@ -13,6 +12,8 @@ add controller support (at least for nds).
 add c++ support.
 add outSurf flags like resizable, fullscreen, etc to surface struct.
 add D_CreateSurfaceFrom() to make surfaces using other memory.
+add more blendmodes.
 
 done:
 add keyboard support. done.
+add other surface blendmodes. done.
