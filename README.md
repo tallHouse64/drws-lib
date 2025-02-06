@@ -18,7 +18,7 @@ This handles graphics. You can create and free surfaces, fill rectangles, scale 
 
 Here's a screenshot of testing the blendmodes so far there are just two (no blending and normal blending).
 
-<img src="https://raw.githubusercontent.com/tallHouse64/drws-lib/refs/heads/main/surfcopyscale-blendmode-test-screenshot.png" width="515" height="427" alt="A screenshot showing the supported blendmodes so far, no blending and normal blending."/>
+<img src="https://raw.githubusercontent.com/tallHouse64/drws-lib/refs/heads/main/surfcopyscale-blendmode-test-screenshot.png" alt="A screenshot showing the supported blendmodes so far, no blending and normal blending."/>
 
 You can use d.h by itself which you may want to do, it would mean you can't output to a display or take event input. It would mean the library only needs stdlib.h which you can turn off and redefine calloc and free.
 
