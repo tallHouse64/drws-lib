@@ -1,6 +1,8 @@
 
 
-# The drwslib.
+# The drws-lib.
+<img src="https://raw.githubusercontent.com/tallHouse64/drws-lib/refs/heads/main/drws-lib.png" width="210" height="210" alt="The logo for the drws-lib library." />
+
 Drws is Welsh for door and D is for draw.
 
 Important note, this project is in C, there is no C++, but I would like to add support for it to work in C++.
