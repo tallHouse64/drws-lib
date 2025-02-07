@@ -217,11 +217,24 @@ int D_GetEvent(D_Event * e);
  * You join the back of the queue, and leave the front.
  */
 D_Event * D_EventQueue;
-int D_EventQueueFront;
-int D_EventQueueBack;
+int D_EventQueueFront; //Starts as 0
+int D_EventQueueBack; //Starts as D_EVENT_QUEUE_LENGTH - 1
 int D_EventQueueFull;
 
 #define D_ISEVENTQUEUEEMPTY() (!(D_EventQueueFull) && (D_EventQueueBack == ((D_EventQueueFront - 1) + D_EVENT_QUEUE_LENGTH) % D_EVENT_QUEUE_LENGTH) )
+
+int D_GetNumberOfEventsInEventQueue(){
+
+    //Check if the queue is in the special full or empty state
+
+    if((D_EventQueueBack >= (D_EventQueueFront - 1) ? ((D_EventQueueBack - D_EventQueueFront) + 1) : (D_EVENT_QUEUE_LENGTH + ((D_EventQueueBack - D_EventQueueFront) + 1)) ) == D_EVENT_QUEUE_LENGTH){
+
+        return (D_EventQueueFull ? 32 : 0);
+    };
+
+    //Otherwise use the same number as the if statement above
+    return (D_EventQueueBack >= (D_EventQueueFront - 1) ? ((D_EventQueueBack - D_EventQueueFront) + 1) : (D_EVENT_QUEUE_LENGTH + ((D_EventQueueBack - D_EventQueueFront) + 1)) );
+};
 
 char D_DKeyToChar(D_Key k){
     switch(k){
