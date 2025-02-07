@@ -1,6 +1,6 @@
-#include"../../dplatform.h"
-#include"../../dplatform.h"
-#include"../../dplatform.h"
+#include"../../../dplatform.h"
+#include"../../../dplatform.h"
+#include"../../../dplatform.h"
 
 
 int func(D_Surf * s){

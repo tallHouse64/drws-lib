@@ -1,7 +1,7 @@
-#include"../../dplatform.h"
-#include"../../dplatform.h"
-#include"../../dplatform.h"
-#include"../../dplatform.h"
+#include"../../../dplatform.h"
+#include"../../../dplatform.h"
+#include"../../../dplatform.h"
+#include"../../../dplatform.h"
 
 #include"../../sdld.h"
 #include"../../sdld.h"
