@@ -1,4 +1,4 @@
-#include"../d.h"
+#include"d.h"
 
 #ifndef DPLATFORM_H
 #define DPLATFORM_H

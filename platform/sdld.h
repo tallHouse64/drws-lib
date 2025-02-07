@@ -1,7 +1,7 @@
 #include<SDL2/SDL.h>
 #include"../devents.h"
 #include"../d.h"
-#include"dplatform.h"
+#include"../dplatform.h"
 
 #ifdef D_PLATFORM_IMPLEMENTATION
 #ifndef D_PLATFORM_ALREADY_IMPLEMENTED
