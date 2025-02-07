@@ -200,7 +200,7 @@ typedef struct D_Event {
     };
 } D_Event;
 
-
+int D_GetNumberOfEventsInEventQueue();
 char D_DKeyToChar(D_Key k);
 int D_StartEvents();
 int D_StopEvents();
@@ -223,6 +223,11 @@ int D_EventQueueFull;
 
 #define D_ISEVENTQUEUEEMPTY() (!(D_EventQueueFull) && (D_EventQueueBack == ((D_EventQueueFront - 1) + D_EVENT_QUEUE_LENGTH) % D_EVENT_QUEUE_LENGTH) )
 
+/* This fuction is used to find how many events
+ *  are in the event queue.
+ *
+ * returns: The number of events in the queue.
+ */
 int D_GetNumberOfEventsInEventQueue(){
 
     //Check if the queue is in the special full or empty state
