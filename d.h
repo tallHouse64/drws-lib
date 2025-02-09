@@ -6,18 +6,19 @@
  *
  * The purpose of this lib is to make gmaes/programs
  *  that are very cross platform. As much as possible.
- *  Think Windows, Mac, Linux, NDS, GBA, WII, TI calcs,
- *  IPOD, PSP. I want it to be the most cross platform
+ *  Think Windows, Mac, Linux, NDS, TI calcs,
+ *  IPOD, PSP. Only Windows and Linux are tested and
+ *  work so far. I want it to be the most cross platform
  *  library ever because I want to make games that
  *  anyone can play no matter what device they have.
- *  This is why the library (at least mostly) is a
- *  single file and has as few dependancies as
+ *  This is why the library is not many single header
+ *  files and has as few dependancies as
  *  possible, I also have chosen to make it possible
  *  to remove all dependancies using C defines,
  *  including the C stadard library (you can give your
  *  own calloc and free for this library to use).
- *  Also it would be great to make a game engin with
- *  this library, even better if the engin itself
+ *  Also it would be great to make a game engine with
+ *  this library, even better if the engine itself
  *  runs on the library and works on everything it
  *  supports. Imagine making a real game for PC on DS!
  *  I want to do that as a joke, (making a PC game on
@@ -124,6 +125,11 @@
  */
 #define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
 //                                                                            32bits                  16bits                 8bi
+
+typedef enum D_OutSurfFlags {
+    D_OUTSURFRESIZABLE = 0x01,
+    D_OUTSURFFULLSCREEN = 0x02
+} D_OutSurfFlags;
 
 typedef enum D_BLENDMODE {
     D_BLENDMODE_NONE = 0,
