@@ -179,10 +179,11 @@ typedef struct D_Surf {
     int w, h;
     int outId;
     D_BLENDMODE blendMode;
+    D_OutSurfFlags outSurfFlags;
     D_PixFormat format;
 } D_Surf;
 
-//function protot
+//function prototypes
 
 //If you want to see the comments for each function to thair implementations
 
