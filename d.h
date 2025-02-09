@@ -607,6 +607,7 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
     s->h = h;
     s->outId = -1;
     s->blendMode = D_BLENDMODE_NORMAL;
+    s->outSurfFlags = 0;
     s->format = format;
     return s;
 };
