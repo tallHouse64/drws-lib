@@ -126,11 +126,25 @@
 #define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
 //                                                                            32bits                  16bits                 8bi
 
+/* D_OutSurfFlags are used to store qualities of
+ *  a surface used for output like weather it's
+ *  fullscreen. Bitwise OR "|" can be used to
+ *  combine flags like
+ *  "D_OUTSURFRESIZABLE | D_OUTSURFFULLSCREEN".
+ */
 typedef enum D_OutSurfFlags {
     D_OUTSURFRESIZABLE = 0x01,
     D_OUTSURFFULLSCREEN = 0x02
 } D_OutSurfFlags;
 
+/* D_BLENDMODE flags are used to store how a
+ *  source surface should be copied to another.
+ *  It can be used to enable and disable alpha
+ *  blending on a surface.
+ *
+ * If you don't know which one to use, you
+ *  probably want D_BLENDMODE_NORMAL.
+ */
 typedef enum D_BLENDMODE {
     D_BLENDMODE_NONE = 0,
     D_BLENDMODE_NORMAL
