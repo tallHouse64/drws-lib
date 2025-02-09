@@ -11,6 +11,7 @@ int main(){
     printf("h: %d\n", s->h);
     printf("outId: %d\n", s->outId);
     printf("blendMode: %d\n", s->blendMode);
+    printf("outSurfFlags: %d\n", s->outSurfFlags);
     printf("bitDepth: %d\n", s->format.bitDepth);
 
     D_FreeSurf(s);
