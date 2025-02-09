@@ -7,6 +7,7 @@
 #define D_PLATFORM_IMPLEMENTATION
 #include"../sdld.h"
 
+
 /*This tests if an outsurf can be fullscreen.
  * Click to close when running the test.
  */
