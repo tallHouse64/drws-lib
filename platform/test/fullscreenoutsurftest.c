@@ -7,6 +7,8 @@
 #define D_PLATFORM_IMPLEMENTATION
 #include"../sdld.h"
 
+#include<stdio.h>
+
 
 /*This tests if an outsurf can be fullscreen.
  * Click to close when running the test.
@@ -16,6 +18,9 @@ int main(){
     D_Surf * out = D_GetOutSurf(50, 50, 640, 480, "Fullscreen outSurf test", D_OUTSURFFULLSCREEN);
     D_Event e;
     int running = 1;
+
+    printf("blendMode: %d\n", out->blendMode);
+    printf("outSurfFlags %d\n", out->outSurfFlags);
 
     D_StartEvents();
 
