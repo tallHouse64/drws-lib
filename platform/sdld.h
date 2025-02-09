@@ -71,6 +71,8 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
     s->w = sdls[i]->w;
     s->h = sdls[i]->h;
     s->outId = i;
+    s->blendMode = D_BLENDMODE_NORMAL;
+    s->outSurfFlags = flags;
 
     //From looking at SDL_Pixels.h, because SDL_PixelFormat
     //has a BytesPerPixel it makes me think that all SDL
