@@ -221,9 +221,7 @@ int D_CharToMap(char c, int * x, int * y);
 int D_PrintToSurf(D_Surf * s, D_Surf * font, D_Point * p, int height, int extraSpacing, char * t);
 int D_FindExtremePoints(D_Point * p, int numPoints, int * highest, int * lowest);
 int D_LineFindY(D_Point * a, D_Point * b, int x, int * y);
-#ifdef D_ALLOW_STB_IMAGE
 D_Surf * D_LoadImage(char * path);
-#endif
 
 #endif // D_H
 
@@ -1272,8 +1270,6 @@ int D_LineFindY(D_Point * a, D_Point * b, int x, int * y){
     if(){};
 };*/
 
-#ifdef D_ALLOW_STB_IMAGE
-
 /*
  * This loads an image using stb_image and creates a
  *  surface, which it then returns. You can free the
@@ -1287,10 +1283,10 @@ int D_LineFindY(D_Point * a, D_Point * b, int x, int * y){
  */
 D_Surf * D_LoadImage(char * path){
 
-    int w = 0, h = 0, n = 0;
     D_Surf * s = D_NULL;
 
-
+#ifdef D_ALLOW_STB_IMAGE
+    int w = 0, h = 0, n = 0;
 
     void * dat = stbi_load(path, &w, &h, &n, 4);
 
@@ -1306,11 +1302,14 @@ D_Surf * D_LoadImage(char * path){
     stbi_image_free(dat);
     dat = D_NULL;
 
+#else
 
+    //Run D_SetError() when implemented.
+
+#endif // D_ALLOW_STB_IMAGE
 
     return s;
 };
-#endif // D_ALLOW_STB_IMAGE
 
 #endif // D_ALREADY_IMPLEMENTED
 #endif // D_IMPLEMENTATION
