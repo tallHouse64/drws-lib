@@ -32,8 +32,10 @@ int main(){
 
     D_Delay(3000);
 
-    D_FreeSurf(img);
-    img = D_NULL;
+    if(img != D_NULL){
+        D_FreeSurf(img);
+        img = D_NULL;
+    };
 
     return 0;
 };
