@@ -24,4 +24,10 @@ int main(){
     printf("dst:    r: %d g: %d b: %d a: %d\n", dr, dg, db, da);
     printf("result: r: %d g: %d b: %d a: %d\n", r, g, b, a);
 
+    D_Blend(D_BLENDMODE_ADD, sr, sg, sb, sa, dr, dg, db, da, &r, &g, &b, &a);
+    printf("\nD_BLENDMODE_Add test\n");
+    printf("source: r: %d g: %d b: %d a: %d\n", sr, sg, sb, sa);
+    printf("dst:    r: %d g: %d b: %d a: %d\n", dr, dg, db, da);
+    printf("result: r: %d g: %d b: %d a: %d\n", r, g, b, a);
+
 };
