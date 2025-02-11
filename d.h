@@ -147,7 +147,8 @@ typedef enum D_OutSurfFlags {
  */
 typedef enum D_BLENDMODE {
     D_BLENDMODE_NONE = 0,
-    D_BLENDMODE_NORMAL
+    D_BLENDMODE_NORMAL,
+    D_BLENDMODE_ADD
 } D_BLENDMODE;
 
 /* This uses masks for rgba
