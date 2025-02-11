@@ -690,6 +690,29 @@ int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
     return 0;
 };
 
+/*
+ * dstRGB = (srcRGB * srcA) + dstRGB
+ * dstA = dstA
+ */
+int D_BlendAdd(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
+    //The equation for dstRGB in 0-255 form.
+    //
+    // dstRGB     srcRGB   srcA     dstRGB
+    // ------ = ( ------ * ---- ) + ------
+    //  255        255     255       255
+
+    *r = ((sr * sa) / 255) + dr;
+    if(*r > 255){*r = 255;};
+
+    *g = ((sg * sa) / 255) + dg;
+    if(*g > 255){*g = 255;};
+
+    *b = ((sb * sa) / 255) + db;
+    if(*b > 255){*b = 255;};
+
+    *a = da;
+};
+
 /* This function blends colours using a
  *  blendmode. The pointers r, g, b and a are
  *  filled in with the result colour. It uses
