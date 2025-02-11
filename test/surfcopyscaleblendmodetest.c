@@ -11,40 +11,54 @@
 #define D_PLATFORM_IMPLEMENTATION
 #include"../platform/sdld.h"
 
+/* This tests the blendmodes using
+ *  D_SurfCopyScale().
+ *
+ * This test has a screenshot on the drws-lib
+ *  front page to show the blendmodes drws-lib
+ *  supports.
+ */
+
 D_Surf * out = D_NULL;
 D_Surf * img1 = D_NULL;
-//D_Surf * img2 = D_NULL;
+D_Surf * img2 = D_NULL;
 D_Surf * font = D_NULL;
 D_Rect r = {10, 10, 192, 108};
 D_Point p = {0, 0};
+
+int test(D_BLENDMODE blend, char * s){
+
+    D_SurfCopyScale(img2, D_NULL, out, &r);
+
+    img1->blendMode = blend;
+    D_SurfCopyScale(img1, D_NULL, out, &r);
+    D_PrintToSurf(out, font, &p, 30, -10, s);
+
+    r.y = r.y + r.h + 5; //Move rect down
+
+    //Move point so it's next to the rect
+    p.x = r.x + r.w + 15;
+    p.y = (r.y + (r.h / 2)) - 15;
+
+};
 
 int main(){
     out = D_GetOutSurf(50, 50, 640, 480, "Testing blendmodes in D_SurfCopyScale()", 0);
     D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 0, 0, 0, 255));
 
-    img1 = D_LoadImage("img/ye2.png");
-    //img2 = D_LoadImage("img/sta.png");
-    font = D_LoadImage("img/fontwhite.png");
+    img1 = D_LoadImage("img/blendTestFront.png");
+    img2 = D_LoadImage("img/blendTestBack.png");
+    font = D_LoadImage("img/fontWhite.png");
 
-    //Move point
+    //Move point so it is next to the rect
     p.x = r.x + r.w + 15;
     p.y = (r.y + (r.h / 2)) - 15;
 
-    img1->blendMode = D_BLENDMODE_NONE;
-    D_SurfCopyScale(img1, D_NULL, out, &r);
-    D_PrintToSurf(out, font, &p, 30, -10, "No blending");
+    test(D_BLENDMODE_NONE, "No blending");
 
+    test(D_BLENDMODE_NORMAL, "Normal blending");
 
-
-    r.y = r.y + r.h + 5; //Move rect down
-
-    //Move point
-    p.x = r.x + r.w + 15;
-    p.y = (r.y + (r.h / 2)) - 15;
-
-    img1->blendMode = D_BLENDMODE_NORMAL;
-    D_SurfCopyScale(img1, D_NULL, out, &r);
-    D_PrintToSurf(out, font, &p, 30, -10, "Normal blending");
+    test(D_BLENDMODE_ADD, "Additive blending");
 
 
     D_FlipOutSurf(out);
