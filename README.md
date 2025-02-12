@@ -20,9 +20,9 @@ d.h is part of the drwslib core.
 
 This handles graphics. You can create and free surfaces, fill rectangles, scale copy part of one surface to part of another with scaling, use stb_image to load images.
 
-So far there are three blendmodes supported, here's a screenshot of them being tested.
+So far four are three blendmodes supported, here's a screenshot of them being tested.
 
-<img src="https://raw.githubusercontent.com/tallHouse64/drws-lib/refs/heads/main/surfcopyscale-blendmode-test-screenshot.png" alt="A screenshot showing the supported blendmodes so far, no blending, normal blending and additive blending."/>
+<img src="https://raw.githubusercontent.com/tallHouse64/drws-lib/refs/heads/main/surfcopyscale-blendmode-test-screenshot.png" alt="A screenshot showing the supported blendmodes so far, no blending, normal, additive and multiplication blending."/>
 
 You can use d.h by itself which you may want to do, it would mean you can't output to a display or take event input. It would mean the library only needs stdlib.h which you can turn off and redefine calloc and free.
 
