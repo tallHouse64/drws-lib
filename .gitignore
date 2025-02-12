@@ -49,6 +49,7 @@ test/surfcopyscaleblendmodetest
 test/getnumberofeventsineventqueue
 test/loadtest2
 test/blendaddtest
+test/blendmultiplytest
 
 #ignore all platform tests
 platform/test/getoutsurftest

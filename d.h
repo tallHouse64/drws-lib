@@ -725,8 +725,14 @@ int D_BlendMultiply(int sr, int sg, int sb, int sa, int dr, int dg, int db, int 
     //  255        255      255          255             255
 
     *r = ((sr * dr) / 255) + (( dr * (255 - sa) ) / 255);
+    if(*r > 255){*r = 255;};
+
     *g = ((sg * dg) / 255) + (( dg * (255 - sa) ) / 255);
+    if(*g > 255){*g = 255;};
+
+
     *b = ((sb * db) / 255) + (( db * (255 - sa) ) / 255);
+    if(*b > 255){*b = 255;};
 
     *a = da;
 };
