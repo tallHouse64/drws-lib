@@ -766,6 +766,9 @@ int D_Blend(D_BLENDMODE blend, int sr, int sg, int sb, int sa, int dr, int dg, i
         case D_BLENDMODE_NORMAL:
             D_BlendNormal(sr, sg, sb, sa, dr, dg, db, da, r, g, b, a);
             break;
+        case D_BLENDMODE_MULTIPLY:
+            D_BlendMultiply(sr, sg, sb, sa, dr, dg, db, da, r, g, b, a);
+            break;
         case D_BLENDMODE_ADD:
             D_BlendAdd(sr, sg, sb, sa, dr, dg, db, da, r, g, b, a);
             break;
