@@ -713,6 +713,23 @@ int D_BlendAdd(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, i
     *a = da;
 };
 
+/*
+ * dstRGB = (srcRGB * dstRGB) + (dstRGB * (1-srcA))
+ * dstA = dstA
+ */
+int D_BlendMultiply(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
+    //
+    // dstRGB     srcRGB   dstRGB       dstRGB           srcA
+    // ------ = ( ------ * ------ ) + ( ------ * ( 255 - ---- ))
+    //  255        255      255          255             255
+
+    *r = ((sr * dr) / 255) + (( dr * (255 - sa) ) / 255);
+    *g = ((sg * dg) / 255) + (( dg * (255 - sa) ) / 255);
+    *b = ((sb * db) / 255) + (( db * (255 - sa) ) / 255);
+
+    *a = da;
+};
+
 /* This function blends colours using a
  *  blendmode. The pointers r, g, b and a are
  *  filled in with the result colour. It uses
