@@ -32,7 +32,12 @@ int test(D_BLENDMODE blend, char * s){
 
     img1->blendMode = blend;
     D_SurfCopyScale(img1, D_NULL, out, &r);
-    D_PrintToSurf(out, font, &p, 30, -10, s);
+
+    if(blend == D_BLENDMODE_MULTIPLY){
+        D_PrintToSurf(out, font, &p, 30, -12, s);
+    }else{
+        D_PrintToSurf(out, font, &p, 30, -10, s);
+    };
 
     r.y = r.y + r.h + 5; //Move rect down
 
@@ -59,6 +64,8 @@ int main(){
     test(D_BLENDMODE_NORMAL, "Normal blending");
 
     test(D_BLENDMODE_ADD, "Additive blending");
+
+    test(D_BLENDMODE_MULTIPLY, "Multiplication blending");
 
 
     D_FlipOutSurf(out);
