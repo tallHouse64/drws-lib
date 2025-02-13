@@ -281,11 +281,25 @@ char D_DKeyToChar(D_Key k){
         case D_K8: return '8';
         case D_K9: return '9';
 
+        case D_KExclamation: return '!';
+        case D_KDoubleQuote: return '"';
+        //case D_KPound: return 0;
+        case D_KDollar: return '$';
+        case D_KPercentage: return '%';
+        case D_KCaret: return '^';
+        case D_KAmpersand: return '&';
+        case D_KAsterisk: return '*';
+        case D_KLeftParentheses: return '(';
+        case D_KRightParentheses: return ')';
+
         case D_KBacktick: return '`';
         case D_KTab: return '\t';
+        case D_BackSlash: return '\\';
         case D_KSpace: return ' ';
         case D_KEnter: return '\n';
         case D_KBackspace: return '\b';
+
+        case D_KPipe: return '|';
 
         case D_KMinus: return '-';
         case D_KEqual: return '=';
@@ -293,10 +307,21 @@ char D_DKeyToChar(D_Key k){
         case D_KRightBracket: return ']';
         case D_KSemicolon: return ';';
         case D_KQuote: return '\'';
+        case D_KHash: return '#';
+        case D_KComma: return ',';
+        case D_Period: return '.';
+        case D_ForwardSlash: return '/';
+
+        case D_KUnderscore: return '_';
+        case D_KPlus: return '+';
+        case D_KLeftBrace: return '{';
+        case D_KRightBrace: return '}';
+        case D_KColon: return ':';
+        case D_KAt: return: '@';
         case D_KTilde: return '~';
         case D_KLessThan: return '<';
         case D_KGreaterThan: return '>';
-        case D_KForwardSlash: return '/';
+        case D_KQuestion: return '?';
     };
 
     return '\0';
