@@ -20,7 +20,7 @@ d.h is part of the drwslib core.
 
 This handles graphics. You can create and free surfaces, fill rectangles, scale copy part of one surface to part of another with scaling, use stb_image to load images.
 
-So far four are three blendmodes supported, here's a screenshot of them being tested.
+So far there are four blendmodes supported, here's a screenshot of them being tested.
 
 <img src="https://raw.githubusercontent.com/tallHouse64/drws-lib/refs/heads/main/surfcopyscale-blendmode-test-screenshot.png" alt="A screenshot showing the supported blendmodes so far, no blending, normal, additive and multiplication blending."/>
 
