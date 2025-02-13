@@ -2,6 +2,7 @@
 todo:
 add "fromTouchscreen" to mouse events.
 add surface coverter function. (between different pixel formats).
+add duplicate surfaces function.
 add triangle fill function.
 add line draw function.
 add nds support.
