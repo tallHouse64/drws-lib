@@ -294,7 +294,7 @@ char D_DKeyToChar(D_Key k){
 
         case D_KBacktick: return '`';
         case D_KTab: return '\t';
-        case D_BackSlash: return '\\';
+        case D_KBackSlash: return '\\';
         case D_KSpace: return ' ';
         case D_KEnter: return '\n';
         case D_KBackspace: return '\b';
@@ -309,15 +309,15 @@ char D_DKeyToChar(D_Key k){
         case D_KQuote: return '\'';
         case D_KHash: return '#';
         case D_KComma: return ',';
-        case D_Period: return '.';
-        case D_ForwardSlash: return '/';
+        case D_KPeriod: return '.';
+        case D_KForwardSlash: return '/';
 
         case D_KUnderscore: return '_';
         case D_KPlus: return '+';
         case D_KLeftBrace: return '{';
         case D_KRightBrace: return '}';
         case D_KColon: return ':';
-        case D_KAt: return: '@';
+        case D_KAt: return '@';
         case D_KTilde: return '~';
         case D_KLessThan: return '<';
         case D_KGreaterThan: return '>';
