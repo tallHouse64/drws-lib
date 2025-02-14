@@ -131,7 +131,7 @@
  *  together.
  */
 typedef enum D_SurfFlags {
-    D_SURF_PREALLOCATED = 0x1;
+    D_SURF_PREALLOCATED = 0x1
 } D_SurfFlags;
 
 /* D_OutSurfFlags are used to store qualities of
@@ -625,23 +625,72 @@ D_uint32 D_ConvertPixel(D_PixFormat from, D_PixFormat to, D_uint32 p){
 D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
     //todo: handle errors
     D_Surf * s = D_CALLOC(1, sizeof(D_Surf));
+    if(s == D_NULL){
+        return D_NULL;
+    };
+
     s->pix = D_CALLOC(w * h, D_BITDEPTHTOBYTES(format.bitDepth));
+    if(s->pix == D_NULL){
+        D_FREE(s);
+        s = D_NULL;
+        return D_NULL;
+    };
+
     s->w = w;
     s->h = h;
     s->outId = -1;
     s->blendMode = D_BLENDMODE_NORMAL;
+    s->flags = 0;
     s->outSurfFlags = 0;
     s->format = format;
     return s;
 };
 
-/* This frees a surface created with D_CreateSurf().
+/* This function can be used to create a surface
+ *  with pixel data that is already allocated,
+ *  which is passed into it with a void pointer.
  *
+ * The surface can be freed with D_FreeSurf().
+ *
+ * w: The width of the surface.
+ * h: The height of the surface.
+ * format: The format of the pixel data.
+ * pix: A pointer to the pixel data to put in the surface.
+ */
+D_Surf * D_CreateSurfaceFrom(int w, int h, D_PixFormat format, void * pix){
+    D_Surf * s = D_CALLOC(1, sizeof(D_Surf));
+    if(s == D_NULL){
+        return D_NULL;
+    };
+
+    s->pix = pix;
+    s->w = w;
+    s->h = h;
+    s->outId = -1;
+    s->blendMode = D_BLENDMODE_NORMAL;
+    s->flags = D_SURF_PREALLOCATED;
+    s->outSurfFlags = 0;
+    s->format = format;
+    return s;
+};
+
+/* This frees a surface created with
+ *  D_CreateSurf().
+ *
+ * s: The surface to free.
  */
 int D_FreeSurf(D_Surf * s){
     //todo: deal with errors
-    D_FREE(s->pix);
+
+    //If the surface pixel data is not preallocated
+    if(!(s->flags & D_SURF_PREALLOCATED)){
+
+        //Free the pixel data
+        D_FREE(s->pix);
+    };
+
     D_FREE(s);
+
     return 0;
 };
 
