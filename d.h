@@ -754,9 +754,20 @@ int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
     return 0;
 };
 
-/*
- * dstRGB = (srcRGB * srcA) + dstRGB
- * dstA = dstA
+/* This function combines two colours using
+ *  additive blending. It takes in the colours as
+ *  rgba values between 0 and 255. The r, g, b, a
+ *  pointers are filled in with the result
+ *  colour.
+ *
+ * This is the equation:
+ *  dstRGB = (srcRGB * srcA) + dstRGB
+ *  dstA = dstA
+ *
+ * sr, sg, sb, sa: Source rgba values to blend with.
+ * dr, dg, db, da: Destination rgba values to blend with.
+ * r, g, b, a: Pointers to fill with the result of blending.
+ * returns: Always 0.
  */
 int D_BlendAdd(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
     //The equation for dstRGB in 0-255 form.
@@ -777,9 +788,20 @@ int D_BlendAdd(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, i
     *a = da;
 };
 
-/*
- * dstRGB = (srcRGB * dstRGB) + (dstRGB * (1-srcA))
- * dstA = dstA
+/* This function combines two colours using
+ *  multiplication blending. It takes in the
+ *  colours as rgba values between 0 and 255. The
+ *  r, g, b, a pointers are filled in with the
+ *  result colour.
+ *
+ * This is the equation:
+ *  dstRGB = (srcRGB * dstRGB) + (dstRGB * (1-srcA))
+ *  dstA = dstA
+ *
+ * sr, sg, sb, sa: Source rgba values to blend with.
+ * dr, dg, db, da: Destination rgba values to blend with.
+ * r, g, b, a: Pointers to fill with the result of blending.
+ * returns: Always 0.
  */
 int D_BlendMultiply(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
     //
