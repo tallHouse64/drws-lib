@@ -650,6 +650,11 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
  *  with pixel data that is already allocated,
  *  which is passed into it with a void pointer.
  *
+ * The pix pointer must point to allocated memory
+ *  that has a length in bytes that is at least
+ *  w * h * bitDepthInBytes. Otherwise you may
+ *  get a segfault.
+ *
  * The surface can be freed with D_FreeSurf().
  *
  * w: The width of the surface.
@@ -657,7 +662,7 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
  * format: The format of the pixel data.
  * pix: A pointer to the pixel data to put in the surface.
  */
-D_Surf * D_CreateSurfaceFrom(int w, int h, D_PixFormat format, void * pix){
+D_Surf * D_CreateSurfFrom(int w, int h, D_PixFormat format, void * pix){
     D_Surf * s = D_CALLOC(1, sizeof(D_Surf));
     if(s == D_NULL){
         return D_NULL;
