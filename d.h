@@ -126,6 +126,14 @@
 #define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
 //                                                                            32bits                  16bits                 8bi
 
+/* D_SurfFlags are for storing qualities of a
+ *  surface. They can be combined bitwise "|"
+ *  together.
+ */
+typedef enum D_SurfFlags {
+    D_SURF_PREALLOCATED = 0x1;
+} D_SurfFlags;
+
 /* D_OutSurfFlags are used to store qualities of
  *  a surface used for output like weather it's
  *  fullscreen. Bitwise OR "|" can be used to
@@ -195,6 +203,7 @@ typedef struct D_Surf {
     int w, h;
     int outId;
     D_BLENDMODE blendMode;
+    D_SurfFlags flags;
     D_OutSurfFlags outSurfFlags;
     D_PixFormat format;
 } D_Surf;
