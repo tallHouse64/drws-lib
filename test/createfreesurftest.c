@@ -1,10 +1,21 @@
 #include<stdlib.h>
+#include<stdio.h>
+
+void myFree(void * ptr){
+    static int numCalls = 0;
+    numCalls++;
+
+    printf("myFree() called, %dth time\n", numCalls);
+    free(ptr);
+    return;
+};
 
 void * (*myCalloc)(size_t nmemb, size_t size) = calloc;
 
 #define D_CALLOC myCalloc
 
-#include<stdio.h>
+#define D_FREE myFree
+
 #define D_IMPLEMENTATION
 #include"../d.h"
 
@@ -35,7 +46,7 @@ void * partlyBrokenCalloc(size_t nmemb, size_t size){
 int main(){
     D_Surf * s = D_CreateSurf(256, 196, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 17));
 
-    printf("Testing normally.\n\n");
+    printf("Testing normally, should call myFree() twice at the end.\n\n");
 
     //not much to test right now
     printf("pix pointer: %p\n", s->pix);
@@ -53,7 +64,7 @@ int main(){
 
 
 
-    printf("\n\nTesting with a broken D_CALLOC\n\n");
+    printf("\n\nTesting with a broken D_CALLOC, shouldn't call myFree().\n\n");
 
     myCalloc = brokenCalloc;
 
@@ -63,7 +74,7 @@ int main(){
 
 
 
-    printf("\n\nTesting with partly broken D_CALLOC\n\n");
+    printf("\n\nTesting with partly broken D_CALLOC, should call myFree() once.\n\n");
 
     myCalloc = partlyBrokenCalloc;
 
