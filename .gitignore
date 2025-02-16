@@ -51,6 +51,7 @@ test/loadtest2
 test/blendaddtest
 test/blendmultiplytest
 test/createfreesurffromtest
+test/blendsubtracttest
 
 #ignore all platform tests
 platform/test/getoutsurftest

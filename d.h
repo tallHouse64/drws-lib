@@ -843,13 +843,13 @@ int D_BlendSubtract(int sr, int sg, int sb, int sa, int dr, int dg, int db, int 
     //  255      255      255     255
 
     *r = (dr - ((sr * sa) / 255));
-    if(*r < 0){*r = 0};
+    if(*r < 0){*r = 0;};
 
-    *g = (dr - ((sr * sa) / 255));
-    if(*g < 0){*g = 0};
+    *g = (dg - ((sg * sa) / 255));
+    if(*g < 0){*g = 0;};
 
-    *b = (dr - ((sr * sa) / 255));
-    if(*b < 0){*b = 0};
+    *b = (db - ((sb * sa) / 255));
+    if(*b < 0){*b = 0;};
 
     *a = da;
 
