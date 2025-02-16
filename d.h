@@ -822,6 +822,39 @@ int D_BlendMultiply(int sr, int sg, int sb, int sa, int dr, int dg, int db, int 
     *a = da;
 };
 
+/* This function blends two colours, subtracting
+ *  them. It takes in the colours as rgba values
+ *  between 0 and 255. The r, g, b, a pointers
+ *  are filled with the result colour.
+ *
+ * dstRGB = dstRGB - (srcRGB * srcA)
+ * dstA = dstA
+ *
+ * sr, sg, sb, sa: Source rgba values to blend with.
+ * dr, dg, db, da: Destination rgba values to blend with.
+ * r, g, b, a: Pointers to fill with the result of blending.
+ * returns: Always 0.
+ */
+int D_BlendSubtract(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
+    //This is the equation in 0 to 255 form.
+    //
+    // dstRGB   dstRGB   srcRGB   srcA
+    // ------ = ------ ( ------ * ---- )
+    //  255      255      255     255
+
+    *r = (dr - ((sr * sa) / 255));
+    if(*r < 0){*r = 0};
+
+    *g = (dr - ((sr * sa) / 255));
+    if(*g < 0){*g = 0};
+
+    *b = (dr - ((sr * sa) / 255));
+    if(*b < 0){*b = 0};
+
+    *a = da;
+
+};
+
 /* This function blends colours using a
  *  blendmode. The pointers r, g, b and a are
  *  filled in with the result colour. It uses
