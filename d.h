@@ -158,7 +158,8 @@ typedef enum D_BLENDMODE {
     D_BLENDMODE_NORMAL,
     D_BLENDMODE_ADD,
     D_BLENDMODE_MULTIPLY,
-    D_BLENDMODE_SUBTRACT
+    D_BLENDMODE_SUBTRACT,
+    D_BLENDMODE_DIVIDE
 } D_BLENDMODE;
 
 /* This uses masks for rgba
@@ -931,6 +932,9 @@ int D_Blend(D_BLENDMODE blend, int sr, int sg, int sb, int sa, int dr, int dg, i
             break;
         case D_BLENDMODE_SUBTRACT:
             D_BlendSubtract(sr, sg, sb, sa, dr, dg, db, da, r, g, b, a);
+            break;
+        case D_BLENDMODE_DIVIDE:
+            D_BlendDivide(sr, sg, sb, sa, dr, dg, db, da, r, g, b, a);
             break;
     };
     return 0;
