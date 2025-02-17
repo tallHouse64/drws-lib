@@ -47,6 +47,19 @@ int test(D_BLENDMODE blend, char * s){
 
 };
 
+int resetTest(){
+    D_FlipOutSurf(out);
+    D_Delay(10000);
+
+    D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 0, 0, 0, 255));
+
+    r.y = 10;
+
+    //Move point so it's next to the rect
+    p.x = r.x + r.w + 15;
+    p.y = (r.y + (r.h / 2)) - 15;
+};
+
 int main(){
     out = D_GetOutSurf(50, 50, 640, 480, "Testing blendmodes in D_SurfCopyScale()", 0);
     D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 0, 0, 0, 255));
@@ -59,17 +72,16 @@ int main(){
     p.x = r.x + r.w + 15;
     p.y = (r.y + (r.h / 2)) - 15;
 
+
     test(D_BLENDMODE_NONE, "No blending");
-
     test(D_BLENDMODE_NORMAL, "Normal blending");
-
     test(D_BLENDMODE_ADD, "Additive blending");
-
     test(D_BLENDMODE_MULTIPLY, "Multiplication blending");
+    resetTest();
 
 
-    D_FlipOutSurf(out);
-    D_Delay(30000);
+    test(D_BLENDMODE_SUBTRACT, "Subtration blending");
+    resetTest();
 
 
     D_FreeOutSurf(out);
