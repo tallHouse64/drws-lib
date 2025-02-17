@@ -856,6 +856,44 @@ int D_BlendSubtract(int sr, int sg, int sb, int sa, int dr, int dg, int db, int 
 
 };
 
+/*
+ *
+ */
+int D_BlendDivide(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
+    //
+    //
+    //                           (srcRGB + 1)
+    // dstRGB = min( W, dstRGB / ------------ )
+    //                                256
+    //
+    //Rearrange so information is not lost in
+    // dividing by 256.
+    //
+    //                                256
+    // dstRGB = min( W, dstRGB * ( ---------- ) )
+    //                             srcRGB + 1
+    //
+    //                    dstRGB * 256
+    // dstRGB = min( W, ( ------------ ) )
+    //                     srcRGB + 1
+    //
+    // W here means white, r: 255 g: 255 b: 255.
+    //
+    //This page was a great help for this:
+    // https://www.linuxtopia.org/online_books/graphics_tools/gimp_advanced_guide/gimp_guide_node55_002.html
+
+    *r = (dr * 256) / (sr + 1);
+    if(*r > 255){*r = 255;};
+
+    *g = (dg * 256) / (sg + 1);
+    if(*g > 255){*g = 255;};
+
+    *b = (db * 256) / (sb + 1);
+    if(*b > 255){*b = 255;};
+
+    *a = da;
+};
+
 /* This function blends colours using a
  *  blendmode. The pointers r, g, b and a are
  *  filled in with the result colour. It uses
