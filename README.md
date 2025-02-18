@@ -26,11 +26,13 @@ So far there are six blendmodes supported, here are screenshots of them being te
 
 <img src="https://raw.githubusercontent.com/tallHouse64/drws-lib/refs/heads/main/surfcopyscale-blendmode-test-screenshot-2.png" alt="A screenshot showing the fith and sixth supported blendmodes, subtraction and division blending."/>
 
-You can use d.h by itself which you may want to do, it would mean you can't output to a display or take event input. It would mean the library only needs stdlib.h which you can turn off and redefine calloc and free.
+You can use d.h by itself which you may want to do, it would mean you can do graphics operations on the CPU with very little dependencies. You would not be able to take event input using drws-lib without devents.h, dplatform.h and at least one platform library.
 
-d.h has another optional dependency that is turned off by default, stb_image.h. It can be used to load images onto a surface but it doesn't save them.
+d.h only relies on stdlib.h, this can be turned off if calloc and free are redefined.
 
-This library can be implemented in your project using #define D_IMPLEMENTATION
+d.h has another optional dependency that is turned off by default, stb_image.h. It can be used to load images onto a surface but it doesn't save them. This can be turned on by adding the line #define D_ALLOW_STB_IMAGE before implementing the library.
+
+This library can be implemented in your project by adding the line #define D_IMPLEMENTATION before the line #include"d.h". You need to make sure that the library is only implemented in one file, every other file would have the line #include"d.h" without #define D_IMPLEMENTATION.
 
 # devents.h
 This is a single header file library for taking inputs, so far from the mouse and keyboard.
