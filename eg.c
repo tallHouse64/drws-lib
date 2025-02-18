@@ -1,38 +1,46 @@
+#define D_IMPLEMENTATION
 #include"d.h"
-#include<SDL2/SDL.h>
 
-int showSurf(D_Surf * s){
+#define DEVENTS_IMPLEMENTATION
+#include"devents.h"
 
-    SDL_Init(SDL_INIT_VIDEO);
+#define D_PLATFORM_IMPLEMENTATION
+#include"platform/sdld.h"
 
-    SDL_Window * w = SDL_CreateWindow("test", 10, 10, 640, 480, 0);
-    SDL_Surface * ws = SDL_GetWindowSurface(w);
-    SDL_Surface * sdls = SDL_CreateRGBSurfaceFrom(s->pix, s->w, s->h, 32, s->w * 4, 0xFF, 0xFF00, 0xFF0000, 0xFF000000);
+/* This file is an example of how to use the
+ *  drws-lib in a single file. It is very short
+ *  to make it simple and easy to learn. Drws-lib
+ *  has more features that are not used in this
+ *  file.
+ *
+ * You can read d.h, which has it's own
+ *  documentation inside it. You can also read
+ *  the documentation in devents.h and
+ *  platform/sdld.h.
+ *
+ * All this example does is create an "outSurf",
+ *  which is a window. Then draws a green
+ *  rectangle and shows the surface.
+ */
 
-    SDL_FillRect(ws, NULL, 0);
-    SDL_BlitScaled(sdls, NULL, ws, NULL);
-
-
-    SDL_UpdateWindowSurface(w);
-
-    SDL_Delay(3000);
-
-    SDL_DestroyWindow(w);
-    ws = NULL;
-    w = NULL;
-    SDL_FreeSurface(sdls);
-    sdls = NULL;
-
-    return 0;
-};
+D_Surf * out = D_NULL;
 
 int main(){
-    D_Surf * s = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32));
 
+    //Create the outSurf, (window).
+    out = D_GetOutSurf(50, 50, 640, 480, "Example of drws-lib", 0);
+
+    //Draw a green rectangle
     D_Rect r = {20, 20, 600, 440};
-    D_FillRect(s, &r, D_rgbaToFormat(s->format, 100, 200, 100, 255));
+    D_FillRect(out, &r, D_rgbaToFormat(out->format, 100, 200, 100, 255));
 
-    showSurf(s);
+    //Show the surface on screen
+    D_FlipOutSurf(out);
 
-    D_FreeSurf(s);
+    //Wait 3 seconds
+    D_Delay(3000);
+
+    //Free the outSurf, (the window is destroyed)
+    D_FreeOutSurf(out);
+    out = D_NULL;
 };
