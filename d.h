@@ -899,7 +899,7 @@ int D_BlendDivide(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
 
     *b = (db * 256) / (sb + 1);
     if(*b > 255){*b = 255;};
-    *b = ((*b * sa) / 255) + ((dr * (255 - sa)) / 255);
+    *b = ((*b * sa) / 255) + ((db * (255 - sa)) / 255);
 
     *a = da;
 };
