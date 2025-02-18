@@ -882,21 +882,24 @@ int D_BlendDivide(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
     //
     //Factor in srcA.
     //
-    //                      dstRGB * 256       srcA
-    // dstRGB = ( min( W, ( ------------ ) ) * ---- )
-    //                       srcRGB + 1        255
+    //                      dstRGB * 256       srcA       dstRGB   255 - srcA
+    // dstRGB = ( min( W, ( ------------ ) ) * ---- ) + ( ------ * ---------- )
+    //                       srcRGB + 1        255         255        255
     //
     //This page was a great help for this:
     // https://www.linuxtopia.org/online_books/graphics_tools/gimp_advanced_guide/gimp_guide_node55_002.html
 
     *r = (dr * 256) / (sr + 1);
     if(*r > 255){*r = 255;};
+    *r = ((*r * sa) / 255) + ((dr * (255 - sa)) / 255);
 
     *g = (dg * 256) / (sg + 1);
     if(*g > 255){*g = 255;};
+    *g = ((*g * sa) / 255) + ((dg * (255 - sa)) / 255);
 
     *b = (db * 256) / (sb + 1);
     if(*b > 255){*b = 255;};
+    *b = ((*b * sa) / 255) + ((dr * (255 - sa)) / 255);
 
     *a = da;
 };
