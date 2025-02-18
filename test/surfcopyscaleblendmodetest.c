@@ -60,12 +60,12 @@ int resetTest(){
     p.y = (r.y + (r.h / 2)) - 15;
 };
 
-int main(){
+int main(int argc, char ** argv){
     out = D_GetOutSurf(50, 50, 640, 480, "Testing blendmodes in D_SurfCopyScale()", 0);
     D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 0, 0, 0, 255));
 
     img1 = D_LoadImage("img/blendTestFront.png");
-    img2 = D_LoadImage("img/blendTestBack.png");
+    img2 = D_LoadImage(argc >= 2 ? argv[1] : "img/blendTestBack.png");
     font = D_LoadImage("img/fontWhite.png");
 
     //Move point so it is next to the rect
@@ -81,6 +81,7 @@ int main(){
 
 
     test(D_BLENDMODE_SUBTRACT, "Subtration blending");
+    test(D_BLENDMODE_DIVIDE, "Division blending");
     resetTest();
 
 
