@@ -15,6 +15,8 @@ Drws-lib also has platform specific code separated from the core in the platform
 
 You can use drwslib to make programs, including games. It is similar to SDL, but not nearly as good.
 
+Documentation can be found in the header file libraries themselves. You can use ctrl + F to find any function, structure, enum and read it's documentation above it. Note that there may be more than one use of the name you search for, you are looking for the definition which starts at the farthest left margin.
+
 # d.h
 d.h is part of the drwslib core.
 
