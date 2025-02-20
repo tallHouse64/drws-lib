@@ -11,7 +11,6 @@ make a guide of how to use drws-lib.
 add event redirection, with reset.
 add controller support (at least for nds).
 add c++ support.
-add more blendmodes.
 add D_GetError().
 add a "do nothing" D_LoadImage() function for when D_ALLOW_STB_IMAGE is not defined, using D_GetError().
 make a project that makes heavier use of drws-lib to see if it needs optimisation.
@@ -21,3 +20,4 @@ add keyboard support. done.
 add other surface blendmodes. done.
 add outSurf flags like resizable, fullscreen, etc to surface struct. Done.
 add D_CreateSurfFrom() to make surfaces using other memory. Done.
+add more blendmodes. Done.
