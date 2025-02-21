@@ -334,6 +334,9 @@ char D_DKeyToChar(D_Key k){
     return '\0';
 };
 
+/* This function allocates memory for the event
+ *  queue.
+ */
 int D_StartEvents(){
     D_EventQueue = D_CALLOC(sizeof(D_Event), D_EVENT_QUEUE_LENGTH);
     D_EventQueueFront = 0;
