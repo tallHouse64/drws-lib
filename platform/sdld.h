@@ -122,6 +122,14 @@ int D_FlipOutSurf(D_Surf * s){
     return 0;
 };
 
+/* This function converts an SDL keycode to a
+ *  D_Key and returns it. If the key code is not
+ *  recognized then D_KNone is returned.
+ *
+ * s: The SDL_KeyCode to convert.
+ * returns: The converted D_Key or D_KNone if
+ *  it's not recognized.
+ */
 D_Key D_SDLKToDKey(SDL_KeyCode s){
 
     switch(s){
