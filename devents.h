@@ -344,6 +344,12 @@ int D_StartEvents(){
     D_EventQueueFull = 0;
 };
 
+/* This function frees the memory allocated for
+ *  the event queue. After calling it, don't call
+ *  D_GetEvent() or D_CauseEvent() unless you
+ *  call D_StartEvents() again. (You would get a
+ *  segfault).
+ */
 int D_StopEvents(){
     D_FREE(D_EventQueue);
     D_EventQueue = D_NULL;
