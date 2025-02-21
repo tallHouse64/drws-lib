@@ -248,6 +248,18 @@ D_Key D_SDLKToDKey(SDL_KeyCode s){
     return D_KNone;
 };
 
+/* This function fills the event queue with the
+ *  events that happened since the last call to
+ *  D_PumpEvents(). Use D_GetEvent() to read take
+ *  them off the queue.
+ *
+ * If this function causes a segfault, it's
+ *  probably because D_StartEvents() has not been
+ *  called. Remember to to also use
+ *  D_StopEvents().
+ *
+ * returns: 0.
+ */
 int D_PumpEvents(){
     SDL_PumpEvents();
     SDL_Event se;
