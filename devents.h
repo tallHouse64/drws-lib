@@ -241,6 +241,13 @@ int D_GetNumberOfEventsInEventQueue(){
     return (D_EventQueueBack >= (D_EventQueueFront - 1) ? ((D_EventQueueBack - D_EventQueueFront) + 1) : (D_EVENT_QUEUE_LENGTH + ((D_EventQueueBack - D_EventQueueFront) + 1)) );
 };
 
+/* This function converts a D_Key to a char. If
+ *  the key has no char value (like the shift
+ *  key) it returns null.
+ *
+ * k: The D_Key to convert.
+ * returns: A char value from the D_Key.
+ */
 char D_DKeyToChar(D_Key k){
     switch(k){
         case D_Ka: return 'a';
