@@ -16,6 +16,19 @@
 
 #define D_EVENT_QUEUE_LENGTH 32
 
+/* If you choose to define any of the below,
+ *  replacing them (D_NULL, D_CALLOC, etc). Make
+ *  sure they are defined in the same way
+ *  everywhere devents.h is included.
+ *
+ * You could do this by either making a small
+ *  header file that includes devents.h and other
+ *  drws-lib libraries with define lines before
+ *  the include lines and include that file in
+ *  all project files, or (if you use make) add a
+ *  -D flag to every use of the compiler in a
+ *  FLAGS variable for example.
+ */
 #ifndef D_NULL
 #define D_NULL 0x0
 #endif
@@ -28,6 +41,10 @@
 #define D_FREE free
 #endif
 
+#ifndef D_CUSTOMEVENT_SIZE
+#define D_CUSTOMEVENT_SIZE 32
+#endif
+
 typedef enum D_EventType {
     D_NOEVENT = 0,
     D_KEYDOWN,
@@ -35,7 +52,8 @@ typedef enum D_EventType {
     D_MOUSEDOWN,
     D_MOUSEUP,
     D_MOUSEMOVE,
-    D_QUIT
+    D_QUIT,
+    D_CUSTOMEVENT
 } D_EventType;
 
 //Bit masks that can be combin using bitwis or |
@@ -192,11 +210,16 @@ typedef struct D_MouseEvent {
     D_MouseButton button;
 } D_MouseEvent;
 
+typedef struct D_CustomEvent {
+    char data[D_CUSTOMEVENT_SIZE];
+} D_CustomEvent;
+
 typedef struct D_Event {
     D_EventType type;
     union {
         struct D_KeyboardEvent keyboard;
         struct D_MouseEvent mouse;
+        struct D_CustomEvent custom;
     };
 } D_Event;
 
