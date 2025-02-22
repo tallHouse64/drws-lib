@@ -53,7 +53,8 @@ typedef enum D_EventType {
     D_MOUSEUP,
     D_MOUSEMOVE,
     D_QUIT,
-    D_CUSTOMEVENT
+    D_FIRSTCUSTOMEVENT,
+    D_LASTEVENT = 255
 } D_EventType;
 
 //Bit masks that can be combin using bitwis or |
@@ -245,6 +246,26 @@ int D_EventQueueBack; //Starts as D_EVENT_QUEUE_LENGTH - 1
 int D_EventQueueFull;
 
 #define D_ISEVENTQUEUEEMPTY() (!(D_EventQueueFull) && (D_EventQueueBack == ((D_EventQueueFront - 1) + D_EVENT_QUEUE_LENGTH) % D_EVENT_QUEUE_LENGTH) )
+
+/* This function gives unique custom event type
+ *  numbers. Each time it is called it adds one
+ *  to a counter and returns the number before
+ *  adding one. (Use this to make your own
+ *  event.type number).
+ *
+ * The number of custom events you can register
+ *  is (D_FIRSTCUSTOMEVENT - D_LASTEVENT) + 1.
+ */
+D_EventType D_RegisterCustomEvent(){
+    static int nextFreeEvent = D_FIRSTCUSTOMEVENT;
+
+    if(nextFreeEvent == D_LASTEVENT + 1){
+        return 0;
+    };
+
+    nextCustomEvent += 1;
+    return nextCustomEvent - 1;
+};
 
 /* This fuction is used to find how many events
  *  are in the event queue.
