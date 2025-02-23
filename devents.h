@@ -224,6 +224,7 @@ typedef struct D_Event {
     };
 } D_Event;
 
+D_EventType D_RegisterCustomEvent();
 int D_GetNumberOfEventsInEventQueue();
 char D_DKeyToChar(D_Key k);
 int D_StartEvents();
@@ -254,17 +255,18 @@ int D_EventQueueFull;
  *  event.type number).
  *
  * The number of custom events you can register
- *  is (D_FIRSTCUSTOMEVENT - D_LASTEVENT) + 1.
+ *  is (D_LASTEVENT - D_FIRSTCUSTOMEVENT) + 1.
  */
 D_EventType D_RegisterCustomEvent(){
     static int nextFreeEvent = D_FIRSTCUSTOMEVENT;
 
-    if(nextFreeEvent == D_LASTEVENT + 1){
-        return 0;
+    if(nextFreeEvent >= D_LASTEVENT + 1){
+        nextFreeEvent = D_LASTEVENT + 1;
+        return D_NOEVENT;
     };
 
-    nextCustomEvent += 1;
-    return nextCustomEvent - 1;
+    nextFreeEvent += 1;
+    return nextFreeEvent - 1;
 };
 
 /* This fuction is used to find how many events

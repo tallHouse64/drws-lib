@@ -53,6 +53,7 @@ test/blendmultiplytest
 test/createfreesurffromtest
 test/blendsubtracttest
 test/blenddividetest
+test/registercustomeventtest
 
 #ignore all platform tests
 platform/test/getoutsurftest
