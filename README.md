@@ -5,7 +5,7 @@
 
 Drws is Welsh for door and D is for draw.
 
-The point of this library is to be the most cross platform library ever, as much as possible. If it has a screen I want to support it, (not saying I will).
+The point of this library is to be the most cross platform library possible, using as few dependencies as possible. It is open source using the MIT licnece.
 
 Important note, this project is in C, there is no C++, but I would like to add support for it to work in C++.
 
@@ -74,3 +74,4 @@ It uses an older version of the library and needs updating, plus more features b
 
 I'm very happy with how it turned out.
 
+Drws-lib is open source under the MIT licence, see LICENCE.txt.
