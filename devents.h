@@ -41,6 +41,7 @@
 #define D_FREE free
 #endif
 
+//D_CUSTOMEVENT_SIZE is in bytes
 #ifndef D_CUSTOMEVENT_SIZE
 #define D_CUSTOMEVENT_SIZE 32
 #endif
