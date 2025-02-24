@@ -8,7 +8,6 @@ add line draw function.
 add nds support.
 add surface copy scale rotate.
 make a guide of how to use drws-lib.
-add custom events, with D_Event resizing.
 add controller support (at least for nds).
 add c++ support.
 add D_GetError().
@@ -21,6 +20,7 @@ add other surface blendmodes. done.
 add outSurf flags like resizable, fullscreen, etc to surface struct. Done.
 add D_CreateSurfFrom() to make surfaces using other memory. Done.
 add more blendmodes. Done.
+add custom events, with D_Event resizing. Done.
 
 decided against:
 add event redirection, with reset.
