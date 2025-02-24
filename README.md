@@ -43,6 +43,8 @@ This library gives useful event functions and even has an event queue, but it do
 
 This library can be used by itself and only uses stdlib.h which can be turned of like d.h (you would have to redefine calloc and free).
 
+devents.h now supports custom events, use D_RegisterCustomEvent() to make your own event.type number.
+
 This library can be implemented in your project using #define DEVENTS_IMPLEMENTATION
 
 # dplatform.h
