@@ -1,6 +1,8 @@
 
 todo:
 add "fromTouchscreen" to mouse events.
+add SDL3 support.
+add multiple mouse and keyboard support.
 add surface coverter function. (between different pixel formats).
 add duplicate surfaces function.
 add triangle fill function.

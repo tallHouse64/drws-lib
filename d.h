@@ -4,25 +4,28 @@
  *
  * project started Tue 12/11/2024
  *
- * The purpose of this lib is to make gmaes/programs
- *  that are very cross platform. As much as possible.
- *  Think Windows, Mac, Linux, NDS, TI calcs,
- *  IPOD, PSP. Only Windows and Linux are tested and
- *  work so far. I want it to be the most cross platform
- *  library ever because I want to make games that
- *  anyone can play no matter what device they have.
- *  This is why the library is not many single header
- *  files and has as few dependancies as
- *  possible, I also have chosen to make it possible
- *  to remove all dependancies using C defines,
- *  including the C stadard library (you can give your
- *  own calloc and free for this library to use).
- *  Also it would be great to make a game engine with
- *  this library, even better if the engine itself
- *  runs on the library and works on everything it
- *  supports. Imagine making a real game for PC on DS!
- *  I want to do that as a joke, (making a PC game on
- *  DS I mean).
+ * The purpose of this library is to make
+ *  gmaes/programs that are very cross platform.
+ *  As many platforms as possible, this is the
+ *  main goal of the library. Think Windows, Mac,
+ *  Linux, NDS, TI calcs, IPOD, PSP. Only Windows
+ *  and Linux are tested and work so far. This
+ *  way anyone can play games I make no matter
+ *  what device they have. This is why the
+ *  library is a group of single header files and
+ *  has as few dependancies as possible, all
+ *  dependencies (with few exeptions) and
+ *  platform specific code are separated away
+ *  into the platform single header file
+ *  libraries (sdld.h for sdl2 and ndsd.h for DS)
+ *  one file per platform, I also have chosen to
+ *  make it possible to remove all drws-lib core
+ *  dependancies using C defines, (you can give
+ *  your own calloc and free for this library to
+ *  use). Also it would be great to make a game
+ *  engine with this library, even better if the
+ *  engine itself runs on the library and works
+ *  on everything it supports.
  *
  * You can use this lib to create surfaces, draw
  *  to them and copy one surface to another with at
@@ -37,10 +40,9 @@
  *  library, it just works.
  *
  * Things to add.
- * I want to add events and sound out. This way the
+ * I hoping to add sound out. This way the
  *  library can be used to make games and other
- *  programs. I also want to add blending, (NONE,
- *  NORMAL, MULTIPLY and others plus hopfuly cutom).
+ *  programs. I also want to add custom blending.
  *
  * Using stdlib
  *  This library uses calloc, you can turn this off.
@@ -124,7 +126,7 @@
  * returns: The bitDepth converted to bytes.
  */
 #define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
-//                                                                            32bits                  16bits                 8bi
+//                                                                            32bits                  16bits                 8bits
 
 /* D_SurfFlags are for storing qualities of a
  *  surface. They can be combined bitwise "|"
@@ -607,12 +609,19 @@ D_uint32 D_ConvertPixel(D_PixFormat from, D_PixFormat to, D_uint32 p){
     return D_rgbaToFormat(to, r, g, b, a);
 };
 
-/* Does what it says. This creates a surface (shortened
- *  to surf). W and h are width and height. Format is
- *  what format the rgba values are arranged in and thair sizes,
- *  if your not sure what this should be just use
+/* Does what it says. This creates a surface
+ *  (shortened to surf). W and h are width and
+ *  height. Format is what format the rgba values
+ *  are arranged in and thair sizes, if your not
+ *  sure what this should be just use
  *  D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32)
- *  in the place of format. It returns an address to the surface.
+ *  in the place of format. D_CreateSurf()
+ *  returns an address (pointer) to the surface
+ *  or null on error.
+ *
+ * You can use D_SurfCopyScale() to copy part of
+ *  one surface to another and D_FillRect() to
+ *  fill an area with a colour.
  *
  * Free the surface with D_FreeSurf();
  *
@@ -625,7 +634,6 @@ D_uint32 D_ConvertPixel(D_PixFormat from, D_PixFormat to, D_uint32 p){
  * Returns: The address of the created surface.
  */
 D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
-    //todo: handle errors
     D_Surf * s = D_CALLOC(1, sizeof(D_Surf));
     if(s == D_NULL){
         return D_NULL;
@@ -682,7 +690,11 @@ D_Surf * D_CreateSurfFrom(int w, int h, D_PixFormat format, void * pix){
 };
 
 /* This frees a surface created with
- *  D_CreateSurf().
+ *  D_CreateSurf() or D_CreateSurfFrom(). If the
+ *  surface is preallocated (made using
+ *  D_CreateSurfaceFrom()), it only frees the
+ *  surface struct but not the allocated
+ *  preallocated pixel data.
  *
  * s: The surface to free.
  */
