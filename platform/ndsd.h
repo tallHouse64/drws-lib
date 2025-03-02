@@ -2,51 +2,54 @@
 #include"../d.h"
 #include"devents.h"
 
-#define NDS_SCREENS 2
-#define NDS_FORMAT D_FindPixFormat(0x001F, 0x03E0, 0x7C00, 0x8000, 16)
+#define D_NDS_SCREENS 2
+#define D_NDS_FORMAT D_FindPixFormat(0x001F, 0x03E0, 0x7C00, 0x8000, 16)
 
-int outSurfs[NDS_SCREENS] = {0, 0}; //Use as bool
-D_uint32 lastKeysHeld = 0; //Keys held from last D_PumpEvents() call
-touchPosition lastTouch = {0}; //Touch from last D_PumpEvents() call
+int D_D_UsedOutSurfs[NDS_SCREENS] = {0, 0}; //Use as bool
+D_uint32 D_D_LastKeysHeld = 0; //Keys held from last D_PumpEvents() call
+touchPosition D_D_LastTouch = {0}; //Touch from last D_PumpEvents() call
 
 
-int D_GetOutSurf(int x, int y, int w, int h, char * title){
+D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title){
 
-    int i = 0;
-    while(i < NDS_SCREENS && usedOutSurfs[i]){
-        i++;
-    };
-
-    if(i == NDS_SCREENS){
-        //No screens left
-        return -1;
-    };
 
     //Make the surface use the backbuffer of
     // the top screen (VRAM_A, frontbuffer is VRAM_B)
-    if(numOutSurfs == 0){
+    if(!D_D_UsedOutSurfs[0]){
         videoSetMode(MODE_FB1);
         vramSetBankA(VRAM_A_LCD);
         vramSetBankB(VRAM_B_LCD);
 
-        D_Surf * s1 = D_CALLOC(1, sizeof(D_Surf));
-        s1->pix = VRAM_A;
-        s1->w = SCREEN_WIDTH;
-        s1->h = SCREEN_HEIGHT;
+        lcdMainOnBottom();
+
+        D_Surf * s1 = D_CreateSurfFrom(SCREEN_WIDTH, SCREEN_HEIGHT, D_NDS_FORMAT, VRAM_A);
+
+        if(s1 == D_NULL){
+            return D_NULL;
+        };
+
         s1->outId = 0;
-        s1->format = NDS_FORMAT;
+
+        D_D_UsedOutSurfs[0] = 1;
+        return s1;
     };
 
-    numOutSurfs++;
+    return D_NULL;
 };
 
 int D_FreeOutSurf(D_Surf * s){
     if(s->outId == 0){
-        D_FREE(s);
+
+        D_D_UsedOutSurfs[0] = 0;
+        D_FreeSurf(s);
         s = D_NULL;
+
     }else if(s->outId == 1){
-        D_FREE(s);
+
+        D_D_UsedOutSurfs[1] = 0;
+        D_FreeSurf(s);
         s = D_NULL;
+
     }else {
         return -1;
     };
