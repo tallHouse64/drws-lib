@@ -111,3 +111,18 @@ int D_PumpEvents(){
     lastTouch = touch;
     lastKeysHeld = held;
 };
+
+void D_D_DoNothing(void){
+    return;
+};
+
+#define D_D_TIMERSPEED (BUS_CLOCK/1024)
+#define D_D_TIMER 0
+
+int D_Delay(int ms){
+    irqEnable(IRQ_TIMER(TIMER));
+    timerStart(TIMER, ClockDivider_1024, 65535 - ((TIMERSPEED * ms) / 1000), D_D_DoNothing);
+    swiIntrWait(1, IRQ_TIMER(TIMER));
+    timerStop(TIMER);
+    return 0;
+};
