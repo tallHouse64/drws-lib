@@ -1,11 +1,11 @@
 #include<nds.h>
 #include"../d.h"
-#include"devents.h"
+#include"../devents.h"
 
 #define D_NDS_SCREENS 2
 #define D_NDS_FORMAT D_FindPixFormat(0x001F, 0x03E0, 0x7C00, 0x8000, 16)
 
-int D_D_UsedOutSurfs[NDS_SCREENS] = {0, 0}; //Use as bool
+int D_D_UsedOutSurfs[D_NDS_SCREENS] = {0, 0}; //Use as bool
 D_uint32 D_D_LastKeysHeld = 0; //Keys held from last D_PumpEvents() call
 touchPosition D_D_LastTouch = {0}; //Touch from last D_PumpEvents() call
 
@@ -84,27 +84,27 @@ int D_PumpEvents(){
 
     //Handle touch events
 
-    if((held & KEY_TOUCH) && !(lastKeysHeld & KEY_TOUCH)){
+    if((held & KEY_TOUCH) && !(D_D_LastKeysHeld & KEY_TOUCH)){
 
         //Touch just started (like mousedown)
-        e.mouse.x = touch.x;
-        e.mouse.y = touch.y;
+        e.mouse.x = touch.px;
+        e.mouse.y = touch.py;
         e.type = D_MOUSEDOWN;
         D_CauseEvent(&e);
 
-    }else if((held & KEY_TOUCH) && (lastKeysHeld & KEY_TOUCH) && (touch.x != lastTouch.x && touch.y != lastTouch.y)){
+    }else if((held & KEY_TOUCH) && (D_D_LastKeysHeld & KEY_TOUCH) && (touch.px != D_D_LastTouch.px && touch.py != D_D_LastTouch.py)){
 
         //Touch moved
-        e.mouse.x = touch.x;
-        e.mouse.y = touch.y;
+        e.mouse.x = touch.px;
+        e.mouse.y = touch.py;
         e.type = D_MOUSEMOVE;
         D_CauseEvent(&e);
 
     }else if(!(held & KEY_TOUCH) && (lastKeysHeld & KEY_TOUCH)){
 
         //Touch end (like mouseup)
-        e.mouse.x = lastTouch.x;
-        e.mouse.y = lastTouch.y;
+        e.mouse.x = lastTouch.px;
+        e.mouse.y = lastTouch.py;
         e.type = D_MOUSEUP;
         D_CauseEvent(&e);
 
@@ -123,9 +123,9 @@ void D_D_DoNothing(void){
 #define D_D_TIMER 0
 
 int D_Delay(int ms){
-    irqEnable(IRQ_TIMER(TIMER));
-    timerStart(TIMER, ClockDivider_1024, 65535 - ((TIMERSPEED * ms) / 1000), D_D_DoNothing);
-    swiIntrWait(1, IRQ_TIMER(TIMER));
-    timerStop(TIMER);
+    irqEnable(IRQ_TIMER(D_D_TIMER));
+    timerStart(D_D_TIMER, ClockDivider_1024, 65535 - ((D_D_TIMERSPEED * ms) / 1000), D_D_DoNothing);
+    swiIntrWait(1, IRQ_TIMER(D_D_TIMER));
+    timerStop(D_D_TIMER);
     return 0;
 };
