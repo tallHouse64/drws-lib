@@ -9,8 +9,33 @@ int D_D_UsedOutSurfs[D_NDS_SCREENS] = {0, 0}; //Use as bool
 D_uint32 D_D_LastKeysHeld = 0; //Keys held from last D_PumpEvents() call
 touchPosition D_D_LastTouch = {0}; //Touch from last D_PumpEvents() call
 
-
-D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title){
+/* This function gets a surface that is used to
+ *  read/write directly to the NDS vram, it can
+ *  be used to draw to the bottom screen. Call
+ *  D_FlipOutSurf() after drawing to show it on
+ *  screen.
+ *
+ * This implementation of D_GetOutSurf() ignores
+ *  all it's parameters, it will only return a
+ *  surface with a width of 256 and height of
+ *  192.
+ *
+ * This function uses double buffering.
+ *
+ * x: The x coordinate of where the surface would
+ *  appear on screen (ignored).
+ * y: The y coordinate of where the surface would
+ *  appear on screen (ignored).
+ * w: The width of the surface (ignored, 256 used
+ *  instead).
+ * h: The height of the surface (ignored, 192
+ *  used instead).
+ * title: A title that would be used for the
+ *  window if there was one (ignored).
+ * flags: Unused, may be used in the future
+ *  (ignored). D_OUTSURFFULLSCREEN used instead.
+ */
+D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags flags){
 
 
     //Make the surface use the backbuffer of
@@ -29,6 +54,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title){
         };
 
         s1->outId = 0;
+        s1->flags = D_OUTSURFFULLSCREEN;
 
         D_D_UsedOutSurfs[0] = 1;
         return s1;
@@ -100,19 +126,19 @@ int D_PumpEvents(){
         e.type = D_MOUSEMOVE;
         D_CauseEvent(&e);
 
-    }else if(!(held & KEY_TOUCH) && (lastKeysHeld & KEY_TOUCH)){
+    }else if(!(held & KEY_TOUCH) && (D_D_LastKeysHeld & KEY_TOUCH)){
 
         //Touch end (like mouseup)
-        e.mouse.x = lastTouch.px;
-        e.mouse.y = lastTouch.py;
+        e.mouse.x = D_D_LastTouch.px;
+        e.mouse.y = D_D_LastTouch.py;
         e.type = D_MOUSEUP;
         D_CauseEvent(&e);
 
     };
 
 
-    lastTouch = touch;
-    lastKeysHeld = held;
+    D_D_LastTouch = touch;
+    D_D_LastKeysHeld = held;
 };
 
 void D_D_DoNothing(void){
