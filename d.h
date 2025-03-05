@@ -216,6 +216,8 @@ typedef struct D_Surf {
 
 //If you want to see the comments for each function to thair implementations
 
+void D_SetError(const char * error);
+const char * D_GetError(void);
 int D_PointInRect(D_Point * p, D_Rect * r);
 int D_GetMaskShift(D_uint32 m);
 int D_GetMaskLen(D_uint32 m);
@@ -245,6 +247,17 @@ D_Surf * D_LoadImage(char * path);
 #ifdef D_IMPLEMENTATION
 #ifndef D_ALREADY_IMPLEMENTED
 #define D_ALREADY_IMPLEMENTED
+
+const char D_D_NoError[] = "";
+char * D_ErrorString = D_D_NoError;
+
+void D_SetError(const char * error){
+    D_ErrorString = error;
+};
+
+const char * D_GetError(void){
+    return D_ErrorString;
+};
 
 /* This checks if a point is in a rectangle and returns 1
  *  if it is, otherwise it returns 0. If p or r are null
