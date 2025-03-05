@@ -249,7 +249,7 @@ D_Surf * D_LoadImage(char * path);
 #define D_ALREADY_IMPLEMENTED
 
 const char D_D_NoError[] = "";
-char * D_ErrorString = D_D_NoError;
+const char * D_ErrorString = D_D_NoError;
 
 void D_SetError(const char * error){
     D_ErrorString = error;

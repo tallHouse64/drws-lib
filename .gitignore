@@ -55,6 +55,7 @@ test/blendsubtracttest
 test/blenddividetest
 test/registercustomeventtest
 test/bigcustomeventtest
+test/setgeterrortest
 
 #ignore all platform tests
 platform/test/getoutsurftest
