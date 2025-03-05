@@ -251,10 +251,27 @@ D_Surf * D_LoadImage(char * path);
 const char D_D_NoError[] = "";
 const char * D_ErrorString = D_D_NoError;
 
+/* This function can be used to set the error
+ *  that is returned by D_GetError(). When it is
+ *  called the old error string is removed.
+ *
+ * This function does not copy the string, make
+ *  sure the string will stay allocated after
+ *  your function returns.
+ *
+ * error: The string to set the current error to.
+ */
 void D_SetError(const char * error){
     D_ErrorString = error;
 };
 
+/* This function can be used after running a
+ *  function to see if an error happened. Read
+ *  the documentation of a function to see if it
+ *  will set an error before using it.
+ *
+ * returns: A string of the last error set.
+ */
 const char * D_GetError(void){
     return D_ErrorString;
 };
