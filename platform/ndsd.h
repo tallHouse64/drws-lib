@@ -1,52 +1,81 @@
 #include<nds.h>
 #include"../d.h"
-#include"devents.h"
+#include"../devents.h"
 
-#define NDS_SCREENS 2
-#define NDS_FORMAT D_FindPixFormat(0x001F, 0x03E0, 0x7C00, 0x8000, 16)
+#define D_NDS_SCREENS 2
+#define D_NDS_FORMAT D_FindPixFormat(0x001F, 0x03E0, 0x7C00, 0x8000, 16)
 
-int outSurfs[NDS_SCREENS] = {0, 0}; //Use as bool
-D_uint32 lastKeysHeld = 0; //Keys held from last D_PumpEvents() call
-touchPosition lastTouch = {0}; //Touch from last D_PumpEvents() call
+int D_D_UsedOutSurfs[D_NDS_SCREENS] = {0, 0}; //Use as bool
+D_uint32 D_D_LastKeysHeld = 0; //Keys held from last D_PumpEvents() call
+touchPosition D_D_LastTouch = {0}; //Touch from last D_PumpEvents() call
 
+/* This function gets a surface that is used to
+ *  read/write directly to the NDS vram, it can
+ *  be used to draw to the bottom screen. Call
+ *  D_FlipOutSurf() after drawing to show it on
+ *  screen.
+ *
+ * This implementation of D_GetOutSurf() ignores
+ *  all it's parameters, it will only return a
+ *  surface with a width of 256 and height of
+ *  192.
+ *
+ * This function uses double buffering.
+ *
+ * x: The x coordinate of where the surface would
+ *  appear on screen (ignored).
+ * y: The y coordinate of where the surface would
+ *  appear on screen (ignored).
+ * w: The width of the surface (ignored, 256 used
+ *  instead).
+ * h: The height of the surface (ignored, 192
+ *  used instead).
+ * title: A title that would be used for the
+ *  window if there was one (ignored).
+ * flags: Unused, may be used in the future
+ *  (ignored). D_OUTSURFFULLSCREEN used instead.
+ */
+D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags flags){
 
-int D_GetOutSurf(int x, int y, int w, int h, char * title){
-
-    int i = 0;
-    while(i < NDS_SCREENS && usedOutSurfs[i]){
-        i++;
-    };
-
-    if(i == NDS_SCREENS){
-        //No screens left
-        return -1;
-    };
 
     //Make the surface use the backbuffer of
     // the top screen (VRAM_A, frontbuffer is VRAM_B)
-    if(numOutSurfs == 0){
+    if(!D_D_UsedOutSurfs[0]){
         videoSetMode(MODE_FB1);
         vramSetBankA(VRAM_A_LCD);
         vramSetBankB(VRAM_B_LCD);
 
-        D_Surf * s1 = D_CALLOC(1, sizeof(D_Surf));
-        s1->pix = VRAM_A;
-        s1->w = SCREEN_WIDTH;
-        s1->h = SCREEN_HEIGHT;
+        lcdMainOnBottom();
+
+        D_Surf * s1 = D_CreateSurfFrom(SCREEN_WIDTH, SCREEN_HEIGHT, D_NDS_FORMAT, VRAM_A);
+
+        if(s1 == D_NULL){
+            return D_NULL;
+        };
+
         s1->outId = 0;
-        s1->format = NDS_FORMAT;
+        s1->flags = D_OUTSURFFULLSCREEN;
+
+        D_D_UsedOutSurfs[0] = 1;
+        return s1;
     };
 
-    numOutSurfs++;
+    return D_NULL;
 };
 
 int D_FreeOutSurf(D_Surf * s){
     if(s->outId == 0){
-        D_FREE(s);
+
+        D_D_UsedOutSurfs[0] = 0;
+        D_FreeSurf(s);
         s = D_NULL;
+
     }else if(s->outId == 1){
-        D_FREE(s);
+
+        D_D_UsedOutSurfs[1] = 0;
+        D_FreeSurf(s);
         s = D_NULL;
+
     }else {
         return -1;
     };
@@ -81,33 +110,48 @@ int D_PumpEvents(){
 
     //Handle touch events
 
-    if((held & KEY_TOUCH) && !(lastKeysHeld & KEY_TOUCH)){
+    if((held & KEY_TOUCH) && !(D_D_LastKeysHeld & KEY_TOUCH)){
 
         //Touch just started (like mousedown)
-        e.mouse.x = touch.x;
-        e.mouse.y = touch.y;
+        e.mouse.x = touch.px;
+        e.mouse.y = touch.py;
         e.type = D_MOUSEDOWN;
         D_CauseEvent(&e);
 
-    }else if((held & KEY_TOUCH) && (lastKeysHeld & KEY_TOUCH) && (touch.x != lastTouch.x && touch.y != lastTouch.y)){
+    }else if((held & KEY_TOUCH) && (D_D_LastKeysHeld & KEY_TOUCH) && (touch.px != D_D_LastTouch.px && touch.py != D_D_LastTouch.py)){
 
         //Touch moved
-        e.mouse.x = touch.x;
-        e.mouse.y = touch.y;
+        e.mouse.x = touch.px;
+        e.mouse.y = touch.py;
         e.type = D_MOUSEMOVE;
         D_CauseEvent(&e);
 
-    }else if(!(held & KEY_TOUCH) && (lastKeysHeld & KEY_TOUCH)){
+    }else if(!(held & KEY_TOUCH) && (D_D_LastKeysHeld & KEY_TOUCH)){
 
         //Touch end (like mouseup)
-        e.mouse.x = lastTouch.x;
-        e.mouse.y = lastTouch.y;
+        e.mouse.x = D_D_LastTouch.px;
+        e.mouse.y = D_D_LastTouch.py;
         e.type = D_MOUSEUP;
         D_CauseEvent(&e);
 
     };
 
 
-    lastTouch = touch;
-    lastKeysHeld = held;
+    D_D_LastTouch = touch;
+    D_D_LastKeysHeld = held;
+};
+
+void D_D_DoNothing(void){
+    return;
+};
+
+#define D_D_TIMERSPEED (BUS_CLOCK/1024)
+#define D_D_TIMER 0
+
+int D_Delay(int ms){
+    irqEnable(IRQ_TIMER(D_D_TIMER));
+    timerStart(D_D_TIMER, ClockDivider_1024, 65535 - ((D_D_TIMERSPEED * ms) / 1000), D_D_DoNothing);
+    swiIntrWait(1, IRQ_TIMER(D_D_TIMER));
+    timerStop(D_D_TIMER);
+    return 0;
 };

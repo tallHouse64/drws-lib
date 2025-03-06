@@ -18,6 +18,15 @@ void myFree(void * ptr){
 #define D_IMPLEMENTATION
 #include"../d.h"
 
+/* This file tests if the D_CreateSurfFrom()
+ *  function works.
+ *
+ * When a preallocated surface (made by
+ *  D_CreateSurfFrom()) is freed, it should only
+ *  call D_FREE() once. This file also tests to
+ *  make sure this happens.
+ */
+
 D_uint32 pixels[(256 * 196)] = {0};
 
 int main(){
