@@ -1,7 +1,7 @@
 
 todo:
 add "fromTouchscreen" to mouse events.
-add surface mod (surface opacity).
+add surface alpha modulation (surface opacity).
 add SDL3 support.
 add multiple mouse and keyboard support.
 add surface coverter function. (between different pixel formats).
