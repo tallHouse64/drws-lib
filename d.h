@@ -206,6 +206,7 @@ typedef struct D_Surf {
     void * pix;
     int w, h;
     int outId;
+    D_uint8 alphaMod;
     D_BLENDMODE blendMode;
     D_SurfFlags flags;
     D_OutSurfFlags outSurfFlags;
@@ -680,6 +681,7 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
     s->w = w;
     s->h = h;
     s->outId = -1;
+    s->alphaMod = 255;
     s->blendMode = D_BLENDMODE_NORMAL;
     s->flags = 0;
     s->outSurfFlags = 0;
