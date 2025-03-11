@@ -1148,8 +1148,28 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
     return 0;
 };
 
-//Used for D_SurfCopyScale(), it may change at any time.
-#define D_D_SCSPIXEL(from, to) {D_FormatTorgba((to)[(y * s2->w) + x], s2->format, &dr, &dg, &db, &da); D_FormatTorgba((from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)], s1->format, &sr, &sg, &sb, &sa); D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &r, &g, &b, &a); (to)[(y * s2->w) + x] = D_rgbaToFormat(s2->format, r, g, b, a);}
+/* This macro is used for D_SurfCopyScale(), it
+ *  may change or be removed at any time.
+ *
+ * First the destination pixel's rgba and put
+ *  them in dr, dg, db, da.
+ *
+ * Then take the source pixel's rgba and put them
+ *  in sr, sg, sb, sa.
+ *
+ * Then multiply the source surface's alphaMod
+ *  with sa and store that in sa.
+ *
+ * Then blend the source and destination pixels
+ *  rgba values using the source surface's blend
+ *  mode, putting those new values in the rgba
+ *  variables.
+ *
+ * Finally write the blended values to the
+ *  destination pixel.
+ */
+#define D_D_SCSPIXEL(from, to) {D_FormatTorgba((to)[(y * s2->w) + x], s2->format, &dr, &dg, &db, &da); D_FormatTorgba((from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)], s1->format, &sr, &sg, &sb, &sa); sa = (sa * from->alphaMod) / 255; D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &r, &g, &b, &a); (to)[(y * s2->w) + x] = D_rgbaToFormat(s2->format, r, g, b, a);}
+
 //#define D_D_SCSPIXEL(from, to) (to)[(y * s2->w) + x] = D_ConvertPixel(s1->format, s2->format, (from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)])
 
 /*
