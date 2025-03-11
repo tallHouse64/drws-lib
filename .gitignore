@@ -57,6 +57,7 @@ test/registercustomeventtest
 test/bigcustomeventtest
 test/setgeterrortest
 test/setsurfalphamodtest
+test/surfcopyscalealphamodtest
 
 #ignore all platform tests
 platform/test/getoutsurftest
