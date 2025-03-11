@@ -995,6 +995,28 @@ int D_Blend(D_BLENDMODE blend, int sr, int sg, int sb, int sa, int dr, int dg, i
     return 0;
 };
 
+/* This function sets the alpha modulation number
+ *  of a surface. This number can be between 0
+ *  and 255.
+ *
+ * While blending two surfaces (copying one onto
+ *  another) this alphaMod number is multiplied
+ *  by the source pixels. Think of it as the
+ *  source surface's opacity. Use 255 to make it
+ *  fully opaque and 0 to make it fully
+ *  transparent.
+ *
+ * s: The surface to change the alpha modulation
+ *  of.
+ * alphaMod: The new aplha modulation number, can
+ *  be 0 to 255. Think of it as the surface's
+ *  opacity.
+ */
+void D_SetSurfAlphaMod(D_Surf * s, D_uint8 alphaMod){
+    s->alphaMod = alphaMod;
+    return;
+};
+
 /* Cut off any sides of an inner rect that reach out of
  *  another rect (given by it's x, y, w, h).
  *
