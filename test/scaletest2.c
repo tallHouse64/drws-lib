@@ -2,15 +2,17 @@
 #define D_ALLOW_STB_IMAGE
 #define STB_IMAGE_IMPLEMENTATION
 #include"../d.h"
-#undef D_IMPLEMENTATION
-#undef D_ALLOW_STB_IMAGE
-#undef STB_IMAGE_IMPLEMENTATION
 
+#define DEVENTS_IMPLEMENTATION
+#include"../devents.h"
+
+#define D_PLATFORM_IMPLEMENTATION
 #include"../platform/sdld.h"
 
 /* This test is to make sure D_SurfCopyScale()
  *  can copy part of a source surface (not using
- *  null for r1) and that it can scale up.
+ *  null for r1) and that it can scale up and
+ *  down.
  */
 
 D_Surf * out = D_NULL;
@@ -20,7 +22,7 @@ D_Rect r2 = {400, 70, 200, 100};
 
 int main(){
     img = D_LoadImage("img/scale.png");
-    out = D_GetOutSurf(50, 50, 640, 480, "D_SurfCopyScale() test 2");
+    out = D_GetOutSurf(50, 50, 640, 480, "D_SurfCopyScale() test 2", 0);
 
     //Scale up part of s1 test
     D_SurfCopyScale(img, &r, out, D_NULL);
