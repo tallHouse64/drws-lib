@@ -5,6 +5,11 @@
 
 #define WAIT 1000
 
+/* This file tests D_SurfCopyScale() between 3
+ *  different pixel formats. Copying to and from
+ *  each format meaning there are 9 tests.
+ */
+
 int showSurf(D_Surf * s){
 
     SDL_Init(SDL_INIT_VIDEO);
