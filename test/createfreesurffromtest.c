@@ -39,6 +39,7 @@ int main(){
     printf("w: %d\n", s->w);
     printf("h: %d\n", s->h);
     printf("outId: %d\n", s->outId);
+    printf("alphaMod: %d\n", s->alphaMod);
     printf("blendMode: %d\n", s->blendMode);
     printf("flags: %d\n", s->flags);
     printf("outSurfFlags: %d\n", s->outSurfFlags);

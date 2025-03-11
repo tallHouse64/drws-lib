@@ -715,7 +715,7 @@ D_Surf * D_CreateSurfFrom(int w, int h, D_PixFormat format, void * pix){
     s->w = w;
     s->h = h;
     s->outId = -1;
-    s->aplhaMod = 255;
+    s->alphaMod = 255;
     s->blendMode = D_BLENDMODE_NORMAL;
     s->flags = D_SURF_PREALLOCATED;
     s->outSurfFlags = 0;
