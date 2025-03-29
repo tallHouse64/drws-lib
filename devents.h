@@ -54,6 +54,7 @@ typedef enum D_EventType {
     D_MOUSEUP,
     D_MOUSEMOVE,
     D_QUIT,
+    D_OUTSURFRESIZE,
     D_FIRSTCUSTOMEVENT,
     D_LASTEVENT = 255
 } D_EventType;
@@ -212,6 +213,21 @@ typedef struct D_MouseEvent {
     D_MouseButton button;
 } D_MouseEvent;
 
+/* This structure is used for the D_OUTSURFRESIZE
+ *  event.
+ *
+ * Use event.outsurf to access this structure.
+ *
+ * If an event fires with the D_OUTSURFRESIZE
+ *  type, then data1 is the new width and data2
+ *  is the new height.
+ */
+typedef struct D_OutSurfEvent {
+    int outId;
+    int data1;
+    int data2;
+} D_OutSurfEvent;
+
 typedef struct D_CustomEvent {
     char data[D_CUSTOMEVENT_SIZE];
 } D_CustomEvent;
@@ -221,6 +237,7 @@ typedef struct D_Event {
     union {
         struct D_KeyboardEvent keyboard;
         struct D_MouseEvent mouse;
+        struct D_OutSurfEvent outSurf;
         struct D_CustomEvent custom;
     };
 } D_Event;
