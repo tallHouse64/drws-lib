@@ -7,8 +7,18 @@
 #ifndef D_PLATFORM_ALREADY_IMPLEMENTED
 #define D_PLATFORM_ALREADY_IMPLEMENTED
 
+
+/* These arrays are here so that their (platform
+ *  specific) data does not have to be stored in
+ *  the D_Surf structure.
+ *
+ * You can use a D_Surf's outId as an index in
+ *  these arrays to get it's window and
+ *  SDL_Surface.
+ */
 SDL_Window * sdlw[D_MAX_OUT_SURFS] = {NULL};
 SDL_Surface * sdls[D_MAX_OUT_SURFS] = {NULL};
+
 
 /* This creates a window that can be drawn
  *  to, remember call D_FlipOutSurf() on
@@ -315,6 +325,19 @@ int D_PumpEvents(){
                 e.type = D_QUIT;
                 D_CauseEvent(&e);
                 break;
+
+            case SDL_WINDOWEVENT:
+
+                if(se.window.event == SDL_WINDOWEVENT_RESIZED){
+                    e.type = D_OUTSURFRESIZE;
+                    e.outSurf.data1 = se.window.data1;
+                    e.outSurf.data2 = se.window.data2;
+                    //e.outSurf.outId =
+                    D_CauseEvent(&e);
+                };
+
+                break;
+
         };
 
     };
