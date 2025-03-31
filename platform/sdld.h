@@ -16,8 +16,9 @@
  *  these arrays to get it's window and
  *  SDL_Surface.
  */
-SDL_Window * sdlw[D_MAX_OUT_SURFS] = {NULL};
+SDL_Window * sdlw[D_MAX_OUT_SURFS]  = {NULL};
 SDL_Surface * sdls[D_MAX_OUT_SURFS] = {NULL};
+D_Surf * outSurfs[D_MAX_OUT_SURFS]  = {NULL}; //This array makes it possible to find a D_Surf address from an outId.
 
 
 /* This creates a window that can be drawn
@@ -84,6 +85,8 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
     s->blendMode = D_BLENDMODE_NORMAL;
     s->outSurfFlags = flags;
 
+    outSurfs[i] = s;
+
     //From looking at SDL_Pixels.h, because SDL_PixelFormat
     //has a BytesPerPixel it makes me think that all SDL
     //surfaces store pixels like d.h does,only storing
@@ -109,6 +112,7 @@ int D_FreeOutSurf(D_Surf * s){
     SDL_DestroyWindow(sdlw[s->outId]);
     sdlw[s->outId] = NULL;
     sdls[s->outId] = NULL;
+    outSurfs[s->outId] = NULL;
     D_FREE(s);
     s = D_NULL;
 
