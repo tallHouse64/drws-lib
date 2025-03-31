@@ -63,3 +63,4 @@ test/surfcopyscalealphamodtest
 platform/test/getoutsurftest
 platform/test/mouseeventtest
 platform/test/boxtest
+platform/test/outsurfsarraytest
