@@ -119,6 +119,30 @@ int D_FreeOutSurf(D_Surf * s){
     return 0;
 };
 
+/* This function finds the outId of an outSurf
+ *  from it's SDL_Window address.
+ *
+ * If it can't find an outId, it returns a
+ *  negative number.
+ *
+ * w: The window to find the outId of.
+ * returns: The outId found or a negative number
+ *  on failure.
+ */
+int D_WindowToOutId(SDL_Window * w){
+    int i = 0;
+    while(i < D_MAX_OUT_SURFS){
+
+        if(sdlw[i] == w){
+            return i;
+        };
+
+        i++;
+    };
+
+    return -1;
+};
+
 /* This takes the an outSurf created by
  *  D_GetOutSurf() and shows it onto the
  *  screen.
