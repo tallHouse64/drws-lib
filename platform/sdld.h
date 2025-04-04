@@ -143,6 +143,23 @@ int D_WindowToOutId(SDL_Window * w){
     return -1;
 };
 
+/* This function finds the outSurf from it's
+ *  outId.
+ *
+ * outId: The id of the outSurf.
+ * returns: The address of the outSurf.
+ */
+D_Surf * D_OutIdToOutSurf(int outId){
+
+    //Is outId a valid index
+    if(outId < 0 || outId >= D_MAX_OUT_SURFS){
+        //no
+        return D_NULL;
+    };
+
+    return outSurfs[outId];
+};
+
 /* This function frees and recreates an outSurf
  *  without destroying it's window. This is to
  *  make window resizing easier.
