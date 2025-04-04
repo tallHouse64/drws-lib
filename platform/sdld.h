@@ -178,7 +178,7 @@ D_Surf * D_OutIdToOutSurf(int outId){
  * returns: A new outSurf with the same window,
  *  now resized.
  */
-D_Surf * D_GetResizedOutSurf(D_Surf * s){
+/*D_Surf * D_GetResizedOutSurf(D_Surf * s){
 
     //The SDL_Surface should now be invalid
     s->pix = D_NULL;
@@ -207,7 +207,7 @@ D_Surf * D_GetResizedOutSurf(D_Surf * s){
     outSurfs[temp.outId]->outSurfFlags = temp.outSurfFlags;
 
     return outSurfs[temp.outId];
-};
+};*/
 
 /* This takes the an outSurf created by
  *  D_GetOutSurf() and shows it onto the

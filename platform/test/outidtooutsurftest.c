@@ -9,8 +9,11 @@
 
 #include<stdio.h>
 
-/* This file tests if the outSurfs[] array in
- *  sdld.h maps outsurfs to their outIds
+/* This file tests the D_OutIdToOutSurf()
+ *  function with normal use and invalid input.
+ *
+ * This file also tests if the outSurfs[] array
+ *  in sdld.h maps outIds to their outSurfs
  *  correctly. It also tests if an out surf that
  *  is freed and recreated has the same outId it
  *  did before.
@@ -43,14 +46,14 @@ void printIds(){
 
 int main(){
 
-    printf("Testing outSurfs[] array.\n\n");
+    printf("Testing D_OutIdToOutSurf() function.\n\n");
 
     printIds();
 
     printf("\nCreating out surfs\n\n");
-    out1 = D_GetOutSurf(50, 50, 640, 480, "outSurfs[] array test win 1", 0);
-    out2 = D_GetOutSurf(50, 50, 640, 480, "outSurfs[] array test win 2", 0);
-    out3 = D_GetOutSurf(50, 50, 640, 480, "outSurfs[] array test win 3", 0);
+    out1 = D_GetOutSurf(50, 50, 640, 480, "D_OutIdToOutSurf() test win 1", 0);
+    out2 = D_GetOutSurf(50, 50, 640, 480, "D_OutIdToOutSurf() test win 2", 0);
+    out3 = D_GetOutSurf(50, 50, 640, 480, "D_OutIdToOutSurf() test win 3", 0);
     printIds();
 
     int outSurf2OldId = out2->outId;
@@ -61,7 +64,7 @@ int main(){
     printIds();
 
     printf("\nCreating outSurf 2 again\n\n");
-    out2 = D_GetOutSurf(50, 50, 640, 480, "outSurfs[] array test win 2 recreated", 0);
+    out2 = D_GetOutSurf(50, 50, 640, 480, "D_OutIdToOutSurf() test win 2 recreated", 0);
     printIds();
 
     printf("\nTest 1, does the recreated outSurf 2 have the same id it used to have?\n");
@@ -76,6 +79,45 @@ int main(){
         printf("Yes, (success)\n");
     }else{
         printf("No, (fail)\n");
+    };
+
+
+    printf("\nTest 3, does the D_OutIdToOutSurf() function return the correct surfaces from thair outIds?\n\n");
+
+    printf("out1\n");
+    if(D_OutIdToOutSurf(out1->outId) == out1){
+        printf("Match (success)\n\n");
+    }else{
+        printf("Doesn't match (fail)\n\n");
+    };
+
+    printf("out2\n");
+    if(D_OutIdToOutSurf(out2->outId) == out2){
+        printf("Match (success)\n\n");
+    }else{
+        printf("Doesn't match (fail)\n\n");
+    };
+
+    printf("out3\n");
+    if(D_OutIdToOutSurf(out3->outId) == out3){
+        printf("Match (success)\n\n");
+    }else{
+        printf("Doesn't match (fail)\n\n");
+    };
+
+    printf("Test 4, does the D_OutIdToOutSurf() function return null for invalid input?\n\n");
+    printf("Trying -1\n");
+    if(D_OutIdToOutSurf(-1) == D_NULL){
+        printf("Success\n\n");
+    }else{
+        printf("Fail\n\n");
+    };
+
+    printf("trying D_MAX_OUT_SURFS\n");
+    if(D_OutIdToOutSurf(D_MAX_OUT_SURFS) == D_NULL){
+        printf("Success\n\n");
+    }else{
+        printf("Fail\n\n");
     };
 
 
