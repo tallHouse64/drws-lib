@@ -143,6 +143,55 @@ int D_WindowToOutId(SDL_Window * w){
     return -1;
 };
 
+/* This function frees and recreates an outSurf
+ *  without destroying it's window. This is to
+ *  make window resizing easier.
+ *
+ * When a window is resized, a D_OUTSURFRESIZE
+ *  event should fire. After it fires the outSurf
+ *  becomes invalid. The event tells you which
+ *  using the outId. At this point you can call
+ *  this function with the invalid outSurf to
+ *  free it, it returns a new one with the same
+ *  window but new size.
+ *
+ * The new outSurf keeps the same outId.
+ *
+ * s: The old outSurf to free.
+ * returns: A new outSurf with the same window,
+ *  now resized.
+ */
+D_Surf * D_GetResizedOutSurf(D_Surf * s){
+
+    //The SDL_Surface should now be invalid
+    s->pix = D_NULL;
+    sdls[s->outId] = D_NULL;
+
+    //Temporarily keep the old D_Surf info and the window
+    D_Surf temp = *s;
+    SDL_Window * window = sdlw[s->outId];
+
+    sdlw[s->outId] = D_NULL; //Stop D_FreeOutSurf() destroying the window.
+    D_FreeOutSurf(s);
+    s = D_NULL;
+
+    sdlw[temp.outId] = window;
+    sdls[temp.outId] = SDL_GetWindowSurfacae(window);
+
+    outSurfs[temp.outId] = D_CreateSurfFrom(
+        sdls[temp.outId]->w,
+        sdls[temp.outId]->h,
+        D_FindPixFormat(sdls[temp.outId]->format->Rmask, sdls[temp.outId]->format->Gmask, sdls[temp.outId]->format->Bmask, sdls[temp.outId]->format->Amask, sdls[temp.outId]->format->BitsPerPixel),
+        sdls[temp.outId]->pixels);
+
+    //Bring back some info we want to keep from temp
+    outSurfs[temp.outId]->outId = temp.outId;
+    outSurfs[temp.outId]->flags = temp.flags;
+    outSurfs[temp.outId]->outSurfFlags = temp.outSurfFlags;
+
+    return outSurfs[temp.outId];
+};
+
 /* This takes the an outSurf created by
  *  D_GetOutSurf() and shows it onto the
  *  screen.
@@ -360,7 +409,7 @@ int D_PumpEvents(){
                     e.type = D_OUTSURFRESIZE;
                     e.outSurf.data1 = se.window.data1;
                     e.outSurf.data2 = se.window.data2;
-                    //e.outSurf.outId =
+                    //e.outSurf.outId = D_WindowToOutId(SDL_GetWindowFromId(se.window.windowID));
                     D_CauseEvent(&e);
                 };
 
