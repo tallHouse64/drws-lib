@@ -178,7 +178,7 @@ D_Surf * D_OutIdToOutSurf(int outId){
  * returns: A new outSurf with the same window,
  *  now resized.
  */
-/*D_Surf * D_GetResizedOutSurf(D_Surf * s){
+D_Surf * D_GetResizedOutSurf(D_Surf * s){
 
     //The SDL_Surface should now be invalid
     s->pix = D_NULL;
@@ -193,7 +193,7 @@ D_Surf * D_OutIdToOutSurf(int outId){
     s = D_NULL;
 
     sdlw[temp.outId] = window;
-    sdls[temp.outId] = SDL_GetWindowSurfacae(window);
+    sdls[temp.outId] = SDL_GetWindowSurface(window);
 
     outSurfs[temp.outId] = D_CreateSurfFrom(
         sdls[temp.outId]->w,
@@ -207,7 +207,7 @@ D_Surf * D_OutIdToOutSurf(int outId){
     outSurfs[temp.outId]->outSurfFlags = temp.outSurfFlags;
 
     return outSurfs[temp.outId];
-};*/
+};
 
 /* This takes the an outSurf created by
  *  D_GetOutSurf() and shows it onto the
@@ -426,7 +426,7 @@ int D_PumpEvents(){
                     e.type = D_OUTSURFRESIZE;
                     e.outSurf.data1 = se.window.data1;
                     e.outSurf.data2 = se.window.data2;
-                    //e.outSurf.outId = D_WindowToOutId(SDL_GetWindowFromId(se.window.windowID));
+                    e.outSurf.outId = D_WindowToOutId(SDL_GetWindowFromID(se.window.windowID));
                     D_CauseEvent(&e);
                 };
 
