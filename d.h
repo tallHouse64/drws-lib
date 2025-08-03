@@ -92,6 +92,10 @@
 #define D_CALLOC calloc
 #endif
 
+#ifndef D_REALLOC
+#define D_REALLOC realloc
+#endif
+
 #ifndef D_FREE
 #define D_FREE free
 #endif
