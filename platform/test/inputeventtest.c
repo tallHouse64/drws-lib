@@ -9,7 +9,7 @@
 
 #define DELAY 1000/15
 
-int main(){
+int main(int argc, char ** argv){
     D_StartEvents();
 
     D_Surf * out = D_GetOutSurf(10, 10, 640, 480, "Keyboard Event Test", 0);

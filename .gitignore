@@ -44,6 +44,7 @@ platform/test/fullscreenoutsurftest
 test/dkeytochartest
 platform/test/sdlktodkeytest
 platform/test/inputeventtest
+platform/test/inputeventtest.exe
 test/blendtest
 test/surfcopyscaleblendmodetest
 test/getnumberofeventsineventqueue
