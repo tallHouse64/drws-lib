@@ -1,0 +1,29 @@
+
+To run the tests in this folder (and to build
+ anything for nds) you need to install the
+ devkitpro nds tools. There are instructions here
+ (https://devkitpro.org/wiki/Main_Page) to get
+ them (Click the "Getting Started" link). They
+ are hard to follow.
+
+The tests in this folder are special because all
+ nds projects in C or C++ have to built using one
+ special very complicated makefile. Because of
+ this, I can't test how I normally do, using my
+ own makefile.
+
+To get around this I made my own makefile which
+ creates a tiny project (like the devkitpro nds
+ example projects) and copies the test into it
+ with the complicated makefile plus any other
+ files needed for the test. My makefile then runs
+ the complicated makefile in that folder to build
+ the .nds file which can then be run in an
+ emulator or on a real DS. Running "make clean"
+ in this folder deletes all the tiny projects
+ (which is normal, they can all be rebuilt again
+ by running "make" which may take a while).
+
+The file "exampleMakefile" is the complicated
+ makefile which my makefile called "Makefile"
+ copies into the tiny projects.
