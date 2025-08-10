@@ -34,6 +34,7 @@ touchPosition D_D_LastTouch = {0}; //Touch from last D_PumpEvents() call
  *  window if there was one (ignored).
  * flags: Unused, may be used in the future
  *  (ignored). D_OUTSURFFULLSCREEN used instead.
+ * returns: An output surface.
  */
 D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags flags){
 
@@ -63,6 +64,12 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
     return D_NULL;
 };
 
+/* This function frees an out surf created by
+ *  (returned by) D_GetOutSurf().
+ *
+ * s: The surface to free.
+ * returns: 0 on success.
+ */
 int D_FreeOutSurf(D_Surf * s){
     if(s->outId == 0){
 
@@ -83,6 +90,18 @@ int D_FreeOutSurf(D_Surf * s){
     return 0;
 };
 
+
+/* This function shows onscreen what has been
+ *  drawn to a backbuffer surface, it also
+ *  changes the surface to so that it's pixel
+ *  data pointer points to another backbuffer
+ *  (which was onscreen).
+ *
+ * Only pass in a surface that was returned by
+ *  D_GetOutSurf().
+ *
+ * s: The surface to show on screen.
+ */
 int D_FlipOutSurf(D_Surf * s){
     if(s->outId == 0){
         if(s->pix == VRAM_A){
@@ -99,6 +118,14 @@ int D_FlipOutSurf(D_Surf * s){
     };
 };
 
+/* This function fills the event queue with
+ *  events that happened since the last call to
+ *  D_PumpEvents().
+ *
+ * This function uses the D_CauseEvent() function
+ *  to add events to the queue according to the
+ *  input on the ds.
+ */
 int D_PumpEvents(){
     D_Event e;
 
@@ -148,6 +175,15 @@ void D_D_DoNothing(void){
 #define D_D_TIMERSPEED (BUS_CLOCK/1024)
 #define D_D_TIMER 0
 
+/* This function waits "ms" milliseconds. It
+ *  stops code running for that amount of time
+ *  (it's a blocking function).
+ *
+ * 1000 milliseconds is 1 second.
+ *
+ * ms: The number of milliseconds to wait.
+ * returns: 0 on success.
+ */
 int D_Delay(int ms){
     irqEnable(IRQ_TIMER(D_D_TIMER));
     timerStart(D_D_TIMER, ClockDivider_1024, 65535 - ((D_D_TIMERSPEED * ms) / 1000), D_D_DoNothing);
