@@ -65,3 +65,6 @@ platform/test/getoutsurftest
 platform/test/mouseeventtest
 platform/test/boxtest
 platform/test/outidtooutsurftest
+
+#ignore all platform nds tests
+platform/ndstest/getoutsurftest
