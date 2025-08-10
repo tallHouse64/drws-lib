@@ -90,6 +90,17 @@ int D_FreeOutSurf(D_Surf * s){
     return 0;
 };
 
+/* This implementation of D_GetResizedOutSurf()
+ *  doesn't do anything except return the surface
+ *  that is passed in. This is because an output
+ *  surface should never change size on a ds.
+ *
+ * s: The surface that was resized (not really).
+ * returns: The resized surface.
+ */
+D_Surf * D_GetResizedOutSurf(D_Surf * s){
+    return s;
+};
 
 /* This function shows onscreen what has been
  *  drawn to a backbuffer surface, it also
