@@ -69,3 +69,4 @@ platform/test/outidtooutsurftest
 #ignore all platform nds tests
 platform/ndstest/getoutsurftest
 platform/ndstest/delaytest
+platform/ndstest/pumpeventstest

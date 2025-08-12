@@ -23,5 +23,17 @@ delaytest: delaytest.c ../ndsd.h ../../d.h ../../devents.h ../../dplatform.h exa
 	cp -f exampleMakefile delaytest/Makefile
 	$(MAKE) -C delaytest
 
+pumpeventstest: pumpeventstest.c ../ndsd.h ../../d.h ../../devents.h ../../dplatform.h exampleMakefile
+	-mkdir pumpeventstest
+	-mkdir pumpeventstest/source
+	-mkdir pumpeventstest/source/platform
+	cp -f pumpeventstest.c pumpeventstest/source/main.c
+	cp -f ../ndsd.h pumpeventstest/source/platform
+	cp -f ../../d.h pumpeventstest/source
+	cp -f ../../devents.h pumpeventstest/source
+	cp -f ../../dplatform.h pumpeventstest/source
+	cp -f exampleMakefile pumpeventstest/Makefile
+	$(MAKE) -C pumpeventstest
+
 clean:
-	-rm -r getoutsurftest delaytest
+	-rm -r getoutsurftest delaytest pumpeventstest

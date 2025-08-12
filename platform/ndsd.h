@@ -153,6 +153,7 @@ int D_PumpEvents(){
         //Touch just started (like mousedown)
         e.mouse.x = touch.px;
         e.mouse.y = touch.py;
+        e.mouse.button = D_LEFTBUTTON;
         e.type = D_MOUSEDOWN;
         D_CauseEvent(&e);
 
@@ -161,6 +162,7 @@ int D_PumpEvents(){
         //Touch moved
         e.mouse.x = touch.px;
         e.mouse.y = touch.py;
+        e.mouse.button = D_LEFTBUTTON;
         e.type = D_MOUSEMOVE;
         D_CauseEvent(&e);
 
@@ -169,6 +171,7 @@ int D_PumpEvents(){
         //Touch end (like mouseup)
         e.mouse.x = D_D_LastTouch.px;
         e.mouse.y = D_D_LastTouch.py;
+        e.mouse.button = D_LEFTBUTTON;
         e.type = D_MOUSEUP;
         D_CauseEvent(&e);
 
