@@ -130,7 +130,7 @@
  * returns: The bitDepth converted to bytes.
  */
 #define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
-//                                                                            32bits                  16bits                 8bits
+/*                                                                            32bits                  16bits                 8bits*/
 
 /* D_SurfFlags are for storing qualities of a
  *  surface. They can be combined bitwise "|"
@@ -195,7 +195,7 @@ typedef struct D_PixFormat {
     D_uint32 gMask;
     D_uint32 bMask;
     D_uint32 aMask;
-    int bitDepth; //in bits
+    int bitDepth; /*in bits*/
 } D_PixFormat;
 
 typedef struct D_Rect {
@@ -217,9 +217,9 @@ typedef struct D_Surf {
     D_PixFormat format;
 } D_Surf;
 
-//function prototypes
+/*function prototypes*/
 
-//If you want to see the comments for each function to thair implementations
+/*If you want to see the comments for each function to thair implementations*/
 
 void D_SetError(const char * error);
 const char * D_GetError(void);
@@ -246,10 +246,10 @@ int D_FindExtremePoints(D_Point * p, int numPoints, int * highest, int * lowest)
 int D_LineFindY(D_Point * a, D_Point * b, int x, int * y);
 D_Surf * D_LoadImage(char * path);
 
-#endif // D_H
+#endif
+/* endif D_H */
 
-
-//function defs
+/* function defs */
 #ifdef D_IMPLEMENTATION
 #ifndef D_ALREADY_IMPLEMENTED
 #define D_ALREADY_IMPLEMENTED
@@ -500,7 +500,7 @@ D_uint32 D_rgbaToFormat(D_PixFormat f, int r, int g, int b, int a){
     a = (a > 255) ? 255 : ((a < 0) ? 0 : a);
 
 
-    //(f.rMask >> f.rShift) is the max number that the pixel format's r can store not necessarily 255, 0 is the min
+    /*(f.rMask >> f.rShift) is the max number that the pixel format's r can store not necessarily 255, 0 is the min*/
 
     return D_RawrgbaToFormat(f, (r * (f.rMask >> f.rMaskShift)) / (255), (g * (f.gMask >> f.gMaskShift)) / (255), (b * (f.bMask >> f.bMaskShift)) / (255), (a * (f.aMask >> f.aMaskShift)) / (255));
 };
@@ -1140,7 +1140,7 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
                     break;
                 default:
                     //Maybe add error message here, like "bitDepth not supported."
-                    //Like SDL's SDL_GetError()
+                    //Like SDLs SDL_GetError()
                     return -1;
                     break;
             };
@@ -1315,7 +1315,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
                     };
 
                 default:
-                    //Error s1 bitdepth not supported (it's possible s2 bitdepth is also not supported)
+                    //Error s1 bitdepth not supported (its possible s2 bitdepth is also not supported)
                     break;
             };
 
@@ -1630,5 +1630,8 @@ D_Surf * D_LoadImage(char * path){
     return s;
 };
 
-#endif // D_ALREADY_IMPLEMENTED
-#endif // D_IMPLEMENTATION
+#endif
+/* endif D_ALREADY_IMPLEMENTED */
+
+#endif
+/* endif D_IMPLEMENTATION */
