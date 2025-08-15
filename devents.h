@@ -45,7 +45,7 @@
 #define D_FREE free
 #endif
 
-//D_CUSTOMEVENT_SIZE is in bytes
+/* D_CUSTOMEVENT_SIZE is in bytes */
 #ifndef D_CUSTOMEVENT_SIZE
 #define D_CUSTOMEVENT_SIZE 32
 #endif
@@ -63,7 +63,7 @@ typedef enum D_EventType {
     D_LASTEVENT = 255
 } D_EventType;
 
-//Bit masks that can be combin using bitwis or |
+/* Bit masks that can be combin using bitwis or | */
 typedef enum D_MouseButton {
     D_NOBUTTON     = 0x00,
     D_LEFTBUTTON   = 0x01,
@@ -139,8 +139,9 @@ typedef enum D_Key {
     D_KUp,
     D_KDown,
 
-    //This moves anticlockwise around the edge of
-    // a uk keybaord.
+    /* This moves anticlockwise around the edge
+     *  of a uk keybaord.
+     */
     D_KEscape,
     D_KBacktick,
     D_KTab,
@@ -159,7 +160,7 @@ typedef enum D_Key {
     D_KEnter,
     D_KBackspace,
 
-    D_KPipe, // This |
+    D_KPipe, /* This means | */
 
     D_KMinus,
     D_KEqual,
@@ -209,7 +210,7 @@ typedef enum D_Key {
 } D_Key;
 
 typedef struct D_KeyboardEvent {
-    D_Key key; //keycode (meaning of the key)
+    D_Key key; /*keycode (meaning of the key)*/
 } D_KeyboardEvent;
 
 typedef struct D_MouseEvent {
@@ -254,7 +255,8 @@ int D_StopEvents();
 int D_CauseEvent(D_Event * e);
 int D_GetEvent(D_Event * e);
 
-#endif // DEVENTS_H
+#endif
+/* DEVENTS_H */
 
 #ifdef DEVENTS_IMPLEMENTATION
 #ifndef DEVENTS_ALREADY_IMPLEMENTED
@@ -264,8 +266,8 @@ int D_GetEvent(D_Event * e);
  * You join the back of the queue, and leave the front.
  */
 D_Event * D_EventQueue;
-int D_EventQueueFront; //Starts as 0
-int D_EventQueueBack; //Starts as D_EVENT_QUEUE_LENGTH - 1
+int D_EventQueueFront; /*Starts as 0*/
+int D_EventQueueBack; /*Starts as D_EVENT_QUEUE_LENGTH - 1*/
 int D_EventQueueFull;
 
 #define D_ISEVENTQUEUEEMPTY() (!(D_EventQueueFull) && (D_EventQueueBack == ((D_EventQueueFront - 1) + D_EVENT_QUEUE_LENGTH) % D_EVENT_QUEUE_LENGTH) )
@@ -298,14 +300,14 @@ D_EventType D_RegisterCustomEvent(){
  */
 int D_GetNumberOfEventsInEventQueue(){
 
-    //Check if the queue is in the special full or empty state
+    /*Check if the queue is in the special full or empty state*/
 
     if((D_EventQueueBack >= (D_EventQueueFront - 1) ? ((D_EventQueueBack - D_EventQueueFront) + 1) : (D_EVENT_QUEUE_LENGTH + ((D_EventQueueBack - D_EventQueueFront) + 1)) ) == D_EVENT_QUEUE_LENGTH){
 
         return (D_EventQueueFull ? 32 : 0);
     };
 
-    //Otherwise use the same number as the if statement above
+    /*Otherwise use the same number as the if statement above*/
     return (D_EventQueueBack >= (D_EventQueueFront - 1) ? ((D_EventQueueBack - D_EventQueueFront) + 1) : (D_EVENT_QUEUE_LENGTH + ((D_EventQueueBack - D_EventQueueFront) + 1)) );
 };
 
@@ -358,7 +360,7 @@ char D_DKeyToChar(D_Key k){
 
         case D_KExclamation: return '!';
         case D_KDoubleQuote: return '"';
-        //case D_KPound: return 0;
+        /*case D_KPound: return 0;*/
         case D_KDollar: return '$';
         case D_KPercentage: return '%';
         case D_KCaret: return '^';
@@ -439,7 +441,7 @@ int D_CauseEvent(D_Event * e){
     D_EventQueueBack %= D_EVENT_QUEUE_LENGTH;
     D_EventQueue[D_EventQueueBack] = *e;
 
-    //If the back of the queue is to the left of the front (-1) after adding an event, the queue must be full.
+    /*If the back of the queue is to the left of the front (-1) after adding an event, the queue must be full.*/
     if( (D_EventQueueBack == ((D_EventQueueFront - 1) + D_EVENT_QUEUE_LENGTH) % D_EVENT_QUEUE_LENGTH) ){
         D_EventQueueFull = 1;
     };
@@ -459,7 +461,7 @@ int D_GetEvent(D_Event * e){
         D_EventQueueFront++;
         D_EventQueueFront %= D_EVENT_QUEUE_LENGTH;
 
-        //After removing an event, the queue cannot be full
+        /*After removing an event, the queue cannot be full*/
         D_EventQueueFull = 0;
 
         *e = (D_EventQueue[D_EventQueueFront - 1]);
@@ -468,6 +470,8 @@ int D_GetEvent(D_Event * e){
     return -1;
 };
 
-#endif // DEVENTS_ALREADY_IMPLEMENTED
+#endif
+/* endif DEVENTS_ALREADY_IMPLEMENTED */
 
-#endif // DEVENTS_IMPLEMENTATION
+#endif
+/* endif DEVENTS_IMPLEMENTATION */
