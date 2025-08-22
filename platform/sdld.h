@@ -427,7 +427,6 @@ int D_PumpEvents(){
         switch(se.type){
             case SDL_MOUSEBUTTONDOWN:
                 e.type = D_MOUSEDOWN;
-                printf("SDL button %d\n", se.button.state);
                 e.mouse.button = D_D_SDLButtonToDButton(SDL_GetMouseState(&e.mouse.x, &e.mouse.y));
                 /*e.mouse.x = se.button.x;*/
                 /*e.mouse.y = se.button.y;*/
@@ -436,7 +435,6 @@ int D_PumpEvents(){
 
             case SDL_MOUSEBUTTONUP:
                 e.type = D_MOUSEUP;
-                printf("SDL button %d\n", se.button.state);
                 e.mouse.button = D_D_SDLButtonToDButton(SDL_GetMouseState(&e.mouse.x, &e.mouse.y));
                 /*e.mouse.x = se.button.x;*/
                 /*e.mouse.y = se.button.y;*/
@@ -445,7 +443,6 @@ int D_PumpEvents(){
 
             case SDL_MOUSEMOTION:
                 e.type = D_MOUSEMOVE;
-                printf("SDL button %d\n", se.button.state);
                 e.mouse.button = D_D_SDLButtonToDButton(SDL_GetMouseState(&e.mouse.x, &e.mouse.y));
                 /*e.mouse.x = se.button.x;*/
                 /*e.mouse.y = se.button.y;*/
