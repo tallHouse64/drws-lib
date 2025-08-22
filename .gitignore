@@ -67,6 +67,8 @@ platform/test/getoutsurftest
 platform/test/mouseeventtest
 platform/test/boxtest
 platform/test/outidtooutsurftest
+platform/test/a.out
+platform/test/a.exe
 
 #ignore all platform nds tests
 platform/ndstest/getoutsurftest

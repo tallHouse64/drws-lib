@@ -360,6 +360,49 @@ D_Key D_SDLKToDKey(SDL_KeyCode s){
     return D_KNone;
 };
 
+/* This function converts an SDL2 mouse button
+ *  state to a D_MouseButton.
+ *
+ * In an event from SDL you can find a mouse's
+ *  button state here "event.button.state" which
+ *  can then be passed to this function.
+ *
+ * This function can accept:
+ *  SDL_BUTTON_LEFT,
+ *  SDL_BUTTON_RIGHT,
+ *  SDL_BUTTON_MIDDLE,
+ *  SDL_BUTTON_X1,
+ *  SDL_BUTTON_X2
+ *
+ * button: The SDL button state to convert.
+ * returns: The converted D_MouseButton.
+ */
+D_MouseButton D_D_SDLButtonToDButton(int button){
+
+
+    if      (button & SDL_BUTTON_LMASK){
+        return D_LEFTBUTTON;
+
+    }else if(button & SDL_BUTTON_RMASK){
+        return D_RIGHTBUTTON;
+
+    }else if(button & SDL_BUTTON_MMASK){
+        return D_MIDDLEBUTTON;
+
+    }else if(button & SDL_BUTTON_X1MASK){
+        return D_BUTTON1;
+
+    }else if(button & SDL_BUTTON_X2MASK){
+        return D_BUTTON2;
+
+    }else{
+        return D_NOBUTTON;
+
+    };
+
+    return D_NOBUTTON;
+};
+
 /* This function fills the event queue with the
  *  events that happened since the last call to
  *  D_PumpEvents(). Use D_GetEvent() to read take
@@ -384,22 +427,28 @@ int D_PumpEvents(){
         switch(se.type){
             case SDL_MOUSEBUTTONDOWN:
                 e.type = D_MOUSEDOWN;
-                e.mouse.x = se.button.x;
-                e.mouse.y = se.button.y;
+                printf("SDL button %d\n", se.button.state);
+                e.mouse.button = D_D_SDLButtonToDButton(SDL_GetMouseState(&e.mouse.x, &e.mouse.y));
+                /*e.mouse.x = se.button.x;*/
+                /*e.mouse.y = se.button.y;*/
                 D_CauseEvent(&e);
                 break;
 
             case SDL_MOUSEBUTTONUP:
                 e.type = D_MOUSEUP;
-                e.mouse.x = se.button.x;
-                e.mouse.y = se.button.y;
+                printf("SDL button %d\n", se.button.state);
+                e.mouse.button = D_D_SDLButtonToDButton(SDL_GetMouseState(&e.mouse.x, &e.mouse.y));
+                /*e.mouse.x = se.button.x;*/
+                /*e.mouse.y = se.button.y;*/
                 D_CauseEvent(&e);
                 break;
 
             case SDL_MOUSEMOTION:
                 e.type = D_MOUSEMOVE;
-                e.mouse.x = se.motion.x;
-                e.mouse.y = se.motion.y;
+                printf("SDL button %d\n", se.button.state);
+                e.mouse.button = D_D_SDLButtonToDButton(SDL_GetMouseState(&e.mouse.x, &e.mouse.y));
+                /*e.mouse.x = se.button.x;*/
+                /*e.mouse.y = se.button.y;*/
                 D_CauseEvent(&e);
                 break;
 
@@ -430,6 +479,10 @@ int D_PumpEvents(){
                     D_CauseEvent(&e);
                 };
 
+                break;
+
+            default:
+                e.type = D_NOEVENT;
                 break;
 
         };
