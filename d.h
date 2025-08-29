@@ -1332,22 +1332,38 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     return 0;
 };
 
-/* This finds the number position of where a char
- *  is on a charicter map.
+/* This finds the number position of where a
+ *  character is on a character map.
  *
- * The width and height of a charicter on the
+ * The width and height of a character on the
  *  font map are the same, it's the surface's
- *  width devided by 9. font->w / 9.
+ *  width divided by 9. font->w / 9.
  *
  * Also the result x and y need to be multiplied
  *  by font->w / 9. This way they become real
- *  coords that are the top left of the
- *  charicter.
+ *  pixel coordinates that are relative to the
+ *  the top left of the surface.
  *
- * c: The charicter.
- * x: Gets filled in with the char x position on a font map.
- * y: Gets filled in with the char y position on a font map.
- * returns: 0 on sucess.
+ * This tool (https://stmn.itch.io/font2bitmap)
+ *  is great for converting a font to a png image
+ *  for this function. If you use this tool,
+ *  these are some good default options:
+ * - Per row: 9
+ * - Grid width: 30
+ * - Grid height: 30
+ * - Font size: 24
+ * - String: ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789.,;:$#'!"/?%&()@ ^*-_+=|\{}[]<>~`
+ *
+ * The only important options are a "Per row" of
+ *  9 and the string.
+ *
+ * c: The character.
+ * x: Gets filled in with the char x position on
+ *  a font map.
+ * y: Gets filled in with the char y position on
+ *  a font map.
+ * returns: 0 on success or -1 if the character is
+ *  not recognised by the function.
  */
 int D_CharToMap(char c, int * x, int * y){
     int n = -1;
@@ -1379,6 +1395,7 @@ int D_CharToMap(char c, int * x, int * y){
         case 'X': n = 23; break; case 'x': n = 50; break;
         case 'Y': n = 24; break; case 'y': n = 51; break;
         case 'Z': n = 25; break; case 'z': n = 52; break;
+        case ' ': n = 26; break;
 
         case '0': n = 54; break;
         case '1': n = 55; break;
@@ -1407,7 +1424,27 @@ int D_CharToMap(char c, int * x, int * y){
         case '(': n = 77; break;
         case ')': n = 78; break;
         case '@': n = 79; break;
+
+        case '^': n = 81; break;
+        case '*': n = 82; break;
+        case '-': n = 83; break;
+        case '_': n = 84; break;
+        case '+': n = 85; break;
+        case '=': n = 86; break;
+        case '|': n = 87; break;
+        case '\\': n = 88; break;
+        case '{': n = 89; break;
+        case '}': n = 90; break;
+        case '[': n = 91; break;
+        case ']': n = 92; break;
+        case '<': n = 93; break;
+        case '>': n = 94; break;
+        case '~': n = 95; break;
+        case '`': n = 96; break;
+
+        default:  n = -1; break;
     };
+    /*ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789.,;:$#'!"/?%&()@ ^*-_+=|\{}[]<>~` */
 
     if(n == -1){
         return -1;
