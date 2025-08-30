@@ -3,6 +3,8 @@ endiantest
 eg
 
 #ignore all test executables
+test/autotest
+test/autotest.exe
 test/fillcliptest
 test/cliprecttesttool
 test/cliprecttest
