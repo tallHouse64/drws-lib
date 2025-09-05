@@ -593,6 +593,7 @@ int D_RawFormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int 
  * g: A pointer to fill in with green part of the colour 0-255.
  * b: A pointer to fill in with blue part of the colour 0-255.
  * a: A pointer to fill in with alpha part of the colour 0-255.
+ * returns: 0 on success.
  */
 int D_FormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int * a){
     D_RawFormatTorgba(p, f, r, g, b, a);
@@ -628,6 +629,8 @@ int D_FormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int * a
             *a = 255;
         };
     };
+
+    return 0;
 };
 
 /* This just convers a pixel from one format to another. It
