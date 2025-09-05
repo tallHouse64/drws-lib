@@ -22,19 +22,21 @@ int dontPrintf(char * format, ...){
  * V2 is for printing weather all tests were
  *  successful.
  */
-#define TEST_PRINTF_V0 printf
+#define TEST_PRINTF_V0 dontPrintf
 #define TEST_PRINTF_V1 printf
 #define TEST_PRINTF_V2 printf
 
 
 /*Include the .c files directly. */
 #include"chartomaptest.c"
+#include"formattorgbatest.c"
 
 int main(int argc, char ** argv){
 
     int failedTests = 0;
 
     failedTests += D_CharToMapTest();
+    failedTests += D_FormatTorgbaTest();
 
     TEST_PRINTF_V2("All tests overall ");
     if(failedTests == 0){

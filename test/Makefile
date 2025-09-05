@@ -1,7 +1,7 @@
 
 CC := gcc
 
-TEST_FILES := chartomaptest.c
+TEST_FILES := chartomaptest.c formattorgbatest.c
 
 FLAGS := -Wall
 
