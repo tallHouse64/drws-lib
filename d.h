@@ -443,7 +443,7 @@ D_PixFormat D_FindPixFormat(D_uint32 rMask, D_uint32 gMask, D_uint32 bMask, D_ui
 D_uint32 D_RawrgbaToFormat(D_PixFormat f, int r, int g, int b, int a){
     D_uint32 col = 0;
 
-    //If rgb masks are the same, (meaning black and white) average them.
+    /*If rgb masks are the same, (meaning black and white) average them. */
     if((f.rMask == f.gMask) && (f.gMask == f.bMask)){
         r = (g = (b = ((r + g + b) / 3)));
     };
@@ -493,7 +493,7 @@ D_uint32 D_RawrgbaToFormat(D_PixFormat f, int r, int g, int b, int a){
  *  if you use the same bitmask for rgba also.
  */
 D_uint32 D_rgbaToFormat(D_PixFormat f, int r, int g, int b, int a){
-    //make sure each rgba is betwee 255 and 0
+    /*make sure each rgba is betwee 255 and 0 */
     r = (r > 255) ? 255 : ((r < 0) ? 0 : r);
     g = (g > 255) ? 255 : ((g < 0) ? 0 : g);
     b = (b > 255) ? 255 : ((b < 0) ? 0 : b);
@@ -740,12 +740,13 @@ D_Surf * D_CreateSurfFrom(int w, int h, D_PixFormat format, void * pix){
  * s: The surface to free.
  */
 int D_FreeSurf(D_Surf * s){
-    //todo: deal with errors
+    /*todo: deal with errors */
 
-    //If the surface pixel data is not preallocated
+    /* If the surface pixel data is not
+     *  preallocated. */
     if(!(s->flags & D_SURF_PREALLOCATED)){
 
-        //Free the pixel data
+        /*Free the pixel data*/
         D_FREE(s->pix);
     };
 
@@ -792,15 +793,16 @@ int D_BlendNone(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, 
  * returns: Always 0.
  */
 int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
-    //This works by multiplying fractions.
-    //
-    // sr    sa    sr*sa    dr    255-sa   dr*(255-sa)
-    // --- * --- = -----    --- * ------ = -----------
-    // 255   255   255^2    255   255      255^2
-    //
-    // sr*sa   dr*(255-sa)   r
-    // ----- + ----------- = ---
-    // 255^2   255^2         255
+    /* This works by multiplying fractions.
+     *
+     *  sr    sa    sr*sa    dr    255-sa   dr*(255-sa)
+     *  --- * --- = -----    --- * ------ = -----------
+     *  255   255   255^2    255   255      255^2
+     *
+     *  sr*sa   dr*(255-sa)   r
+     *  ----- + ----------- = ---
+     *  255^2   255^2         255
+     */
 
     *r = ((sr * sa) / 255) + ((dr * (255 - sa)) / 255);
     *g = ((sg * sa) / 255) + ((dg * (255 - sa)) / 255);
@@ -825,11 +827,12 @@ int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da
  * returns: Always 0.
  */
 int D_BlendAdd(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
-    //The equation for dstRGB in 0-255 form.
-    //
-    // dstRGB     srcRGB   srcA     dstRGB
-    // ------ = ( ------ * ---- ) + ------
-    //  255        255     255       255
+    /* The equation for dstRGB in 0-255 form.
+     *
+     *  dstRGB     srcRGB   srcA     dstRGB
+     *  ------ = ( ------ * ---- ) + ------
+     *   255        255     255       255
+     */
 
     *r = ((sr * sa) / 255) + dr;
     if(*r > 255){*r = 255;};
@@ -859,10 +862,11 @@ int D_BlendAdd(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, i
  * returns: Always 0.
  */
 int D_BlendMultiply(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
-    //
-    // dstRGB     srcRGB   dstRGB       dstRGB           srcA
-    // ------ = ( ------ * ------ ) + ( ------ * ( 255 - ---- ))
-    //  255        255      255          255             255
+    /*
+     * dstRGB     srcRGB   dstRGB       dstRGB           srcA
+     * ------ = ( ------ * ------ ) + ( ------ * ( 255 - ---- ))
+     *  255        255      255          255             255
+     */
 
     *r = ((sr * dr) / 255) + (( dr * (255 - sa) ) / 255);
     if(*r > 255){*r = 255;};
@@ -891,11 +895,12 @@ int D_BlendMultiply(int sr, int sg, int sb, int sa, int dr, int dg, int db, int 
  * returns: Always 0.
  */
 int D_BlendSubtract(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
-    //This is the equation in 0 to 255 form.
-    //
-    // dstRGB   dstRGB   srcRGB   srcA
-    // ------ = ------ ( ------ * ---- )
-    //  255      255      255     255
+    /* This is the equation in 0 to 255 form.
+     *
+     *  dstRGB   dstRGB   srcRGB   srcA
+     *  ------ = ------ ( ------ * ---- )
+     *   255      255      255     255
+     */
 
     *r = (dr - ((sr * sa) / 255));
     if(*r < 0){*r = 0;};
@@ -914,33 +919,34 @@ int D_BlendSubtract(int sr, int sg, int sb, int sa, int dr, int dg, int db, int 
  *
  */
 int D_BlendDivide(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a){
-    //
-    //
-    //                           (srcRGB + 1)
-    // dstRGB = min( W, dstRGB / ------------ )
-    //                                256
-    //
-    //Rearrange so information is not lost in
-    // dividing by 256.
-    //
-    //                                256
-    // dstRGB = min( W, dstRGB * ( ---------- ) )
-    //                             srcRGB + 1
-    //
-    //                    dstRGB * 256
-    // dstRGB = min( W, ( ------------ ) )
-    //                     srcRGB + 1
-    //
-    // W here means white, r: 255 g: 255 b: 255.
-    //
-    //Factor in srcA.
-    //
-    //                      dstRGB * 256       srcA       dstRGB   255 - srcA
-    // dstRGB = ( min( W, ( ------------ ) ) * ---- ) + ( ------ * ---------- )
-    //                       srcRGB + 1        255         255        255
-    //
-    //This page was a great help for this:
-    // https://www.linuxtopia.org/online_books/graphics_tools/gimp_advanced_guide/gimp_guide_node55_002.html
+    /*
+     *
+     *                            (srcRGB + 1)
+     *  dstRGB = min( W, dstRGB / ------------ )
+     *                                 256
+     *
+     * Rearrange so information is not lost in
+     *  dividing by 256.
+     *
+     *                                256
+     *  dstRGB = min( W, dstRGB * ( ---------- ) )
+     *                             srcRGB + 1
+     *
+     *                     dstRGB * 256
+     *  dstRGB = min( W, ( ------------ ) )
+     *                      srcRGB + 1
+     *
+     * W here means white, r: 255 g: 255 b: 255.
+     *
+     * Factor in srcA.
+     *
+     *                       dstRGB * 256       srcA       dstRGB   255 - srcA
+     *  dstRGB = ( min( W, ( ------------ ) ) * ---- ) + ( ------ * ---------- )
+     *                        srcRGB + 1        255         255        255
+     *
+     * This page was a great help for this:
+     * https://www.linuxtopia.org/online_books/graphics_tools/gimp_advanced_guide/gimp_guide_node55_002.html
+     */
 
     *r = (dr * 256) / (sr + 1);
     if(*r > 255){*r = 255;};
@@ -1045,35 +1051,35 @@ void D_SetSurfAlphaMod(D_Surf * s, D_uint8 alphaMod){
  */
 int D_ClipRect(int x, int y, int w, int h, D_Rect * inner){
 
-    //Clip inner x
+    /*Clip inner x */
     if(inner->x < x){
         inner->w -= x - inner->x;
         inner->x = x;
     }else if(inner->x > x + w){
-        inner->x = (x + w);// - 1;
+        inner->x = (x + w);/* - 1;*/
     };
 
-    //Clip inner w
+    /*Clip inner w */
     if(inner->x + inner->w > x + w){
         inner->w = (x + w) - inner->x;
-        //inner->w = w;
+        /*inner->w = w; */
     };
     if(inner->w < 0){
         inner->w = 0;
     };
 
-    //Clip inner y
+    /*Clip inner y */
     if(inner->y < y){
         inner->h -= y - inner->y;
         inner->y = y;
     }else if(inner->y > y + h){
-        inner->y = (y + h);// - 1;
+        inner->y = (y + h);/* - 1;*/
     };
 
-    //Clip inner h
+    /*Clip inner h */
     if(inner->y + inner->h > y + h){
         inner->h = (y + h) - inner->y;
-        //inner->h = h;
+        /*inner->h = h;*/
     };
     if(inner->h < 0){
         inner->h = 0;
@@ -1120,30 +1126,35 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
     int x = rect->x;
     int y = rect->y;
 
-    //printf("x: %d y: %d\n", x, y);
+    /*printf("x: %d y: %d\n", x, y);*/
 
-    //If this needs optimising, have 3 loops so the switch
-    //can be outside them instead of inside
+    /* If this needs optimising, have 3 loops so
+     *  the switch can be outside them instead of
+     *  inside.
+     */
     while(y < rect->y + rect->h){
         x = rect->x;
-        //x = (rect->x < 0) ? 0 : rect->x;
+        /*x = (rect->x < 0) ? 0 : rect->x;*/
         while(x < rect->x + rect->w){
             switch(D_BITDEPTHTOBYTES(s->format.bitDepth)){
                 case 4:
                     ((D_uint32 *)(s->pix))[(y * s->w) + x] = col;
-                    //printf("32 bitdepth\n");
+                    /*printf("32 bitdepth\n");*/
                     break;
                 case 2:
                     ((D_uint16 *)(s->pix))[(y * s->w) + x] = col;
-                    //printf("16 bitdepth\n");
+                    /*printf("16 bitdepth\n");*/
                     break;
                 case 1:
                     ((D_uint8 *)(s->pix))[(y * s->w) + x] = col;
-                    //printf("8 bitdepth\n");
+                    /*printf("8 bitdepth\n");*/
                     break;
                 default:
-                    //Maybe add error message here, like "bitDepth not supported."
-                    //Like SDLs SDL_GetError()
+                    /* Maybe add error message
+                     *  here, like "bitDepth not
+                     *  supported." Like SDLs
+                     *  SDL_GetError().
+                     */
                     return -1;
                     break;
             };
@@ -1177,7 +1188,7 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
  */
 #define D_D_SCSPIXEL(from, to) {D_FormatTorgba((to)[(y * s2->w) + x], s2->format, &dr, &dg, &db, &da); D_FormatTorgba((from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)], s1->format, &sr, &sg, &sb, &sa); sa = (sa * s1->alphaMod) / 255; D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &r, &g, &b, &a); (to)[(y * s2->w) + x] = D_rgbaToFormat(s2->format, r, g, b, a);}
 
-//#define D_D_SCSPIXEL(from, to) (to)[(y * s2->w) + x] = D_ConvertPixel(s1->format, s2->format, (from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)])
+/*#define D_D_SCSPIXEL(from, to) (to)[(y * s2->w) + x] = D_ConvertPixel(s1->format, s2->format, (from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)])*/
 
 /*
  * D_SurfCopyScale copies part of surface 1 (the part
@@ -1196,10 +1207,12 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
         return -1;
     };
 
-    //If r1 is null, make an r1 for the whole surface
-    //If r1 is not null make a copy of r1 without
-    // changing r1 and clip the copy to inside of s1
-    // then point r1 to the copy
+    /* If r1 is null, make an r1 for the whole
+     *  surface. If r1 is not null make a copy of
+     *  r1 without changing r1 and clip the copy
+     *  to inside of s1 then point r1 to the
+     *  copy.
+     */
     D_Rect temp1 = {0};
     if(r1 == D_NULL){
         temp1.w = s1->w;
@@ -1207,7 +1220,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
         r1 = &temp1;
     };
 
-    //same as above except for r2 and s2
+    /*same as above except for r2 and s2. */
     D_Rect temp2 = {0};
     if(r2 == D_NULL){
         temp2.w = s2->w;
@@ -1216,13 +1229,17 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     };
 
 
-    //This cycles through s2 pixels left to right top
-    //to bottom within r2 asking what colour goes here
+    /* This cycles through s2 pixels left to
+     *  right top to bottom within r2 asking what
+     *  colour goes here.
+     */
 
     int x = r2->x;
     int y = r2->y;
 
-    //Temp storage for each pixels colour while blending (used in D_D_SCSPIXEL()).
+    /* Temp storage for each pixels colour while
+     *  blending (used in D_D_SCSPIXEL()).
+     */
     int sr = 0;
     int sg = 0;
     int sb = 0;
@@ -1247,7 +1264,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
             y = 0;
         };
 
-        //Safety! If y is off the bottom of s2, break
+        /*Safety! If y is off the bottom of s2, break*/
         if(y >= s2->h){
             break;
         };
@@ -1259,8 +1276,10 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
                 x = 0;
             };
 
-            //if the x is off the right of s2 then
-            //break and start drawing the next line
+            /* If the x is off the right of s2
+             *  then break and start drawing the
+             *  next line.
+             */
             if(x >= s2->w){
                 break;
             };
@@ -1269,9 +1288,18 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
                 case 4:
 
                     switch(s1ByteDepth){
-                        case 4: //The line below is copied meaning there are 9 of them below. The only differences are what the pointe are cast to.
+                        case 4:
+                            /* The line below is
+                             *  copied meaning
+                             *  there are 9 of
+                             *  them below. The
+                             *  only differences
+                             *  are what the
+                             *  pointers are cast
+                             *  to.
+                             */
                             D_D_SCSPIXEL((D_uint32 *)(s1->pix), (D_uint32 *)(s2->pix));
-                            //((D_uint32 *)(s2->pix))[(y * s2->w) + x] = D_ConvertPixel(s1->format, s2->format, ((D_uint32 *)(s1->pix))[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)]); //old, it was repeated for all 9
+                            /*((D_uint32 *)(s2->pix))[(y * s2->w) + x] = D_ConvertPixel(s1->format, s2->format, ((D_uint32 *)(s1->pix))[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)]);*/ /*old, it was repeated for all 9*/
                             break;
                         case 2:
                             D_D_SCSPIXEL((D_uint16 *)(s1->pix), (D_uint32 *)(s2->pix));
@@ -1279,7 +1307,9 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
                         case 1:
                             D_D_SCSPIXEL((D_uint8 *)(s1->pix), (D_uint32 *)(s2->pix));
                         default:
-                            //Error s2 bitDepth not supported
+                            /* Error s2 bitDepth
+                             *  not supported.
+                             */
                             break;
                     };
 
@@ -1296,7 +1326,9 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
                         case 1:
                             D_D_SCSPIXEL((D_uint8 *)(s1->pix), (D_uint16 *)(s2->pix));
                         default:
-                            //Error s2 bitDepth not supported
+                            /* Error s2 bitDepth
+                             *  not supported.
+                             */
                             break;
                     };
 
@@ -1313,18 +1345,24 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
                         case 1:
                             D_D_SCSPIXEL((D_uint8 *)(s1->pix), (D_uint8 *)(s2->pix));
                         default:
-                            //Error s2 bitDepth not supported
+                            /* Error s2 bitDepth
+                             *  not supported.
+                             */
                             break;
                     };
 
                 default:
-                    //Error s1 bitdepth not supported (its possible s2 bitdepth is also not supported)
+                    /* Error s1 bitdepth not
+                     *  supported (its possible
+                     *  s2 bitdepth is also not
+                     *  supported).
+                     */
                     break;
             };
 
-            //((D_SurfInt *)(s2->pix))[(y * s2->w) + x] = ((D_SurfInt *)(s1->pix))[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)]; //Old
+            /*((D_SurfInt *)(s2->pix))[(y * s2->w) + x] = ((D_SurfInt *)(s1->pix))[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)];*/ /*Old*/
 
-            //(((y - r2->y) / r2->h) * r1->h) + r1->y | (((x - r2->x) / r2->w) * r1->w) + r1->x
+            /*(((y - r2->y) / r2->h) * r1->h) + r1->y | (((x - r2->x) / r2->w) * r1->w) + r1->x*/
 
             x++;
         };
@@ -1533,9 +1571,10 @@ D_Surf * D_LoadImage(char * path){
 
 #else
 
-    //Run D_SetError() when implemented.
+    /*Run D_SetError() when implemented.*/
 
-#endif // D_ALLOW_STB_IMAGE
+#endif
+/* endif D_ALLOW_STB_IMAGE */
 
     return s;
 };
