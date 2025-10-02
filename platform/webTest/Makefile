@@ -5,7 +5,9 @@ FLAGS := -Oz
 
 TEST_FOLDERS := getoutsurftest
 
-getoutsurftest:
+DEPENDENCIES := ../../d.h ../../devents.h ../../dplatform.h ../webd.h
+
+getoutsurftest: getoutsurftest.c page.html $(DEPENDENCIES)
 	-mkdir getoutsurftest
 	-cp page.html getoutsurftest/page.html
 	$(CC) getoutsurftest.c -o getoutsurftest/page.js $(FLAGS)

@@ -53,7 +53,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
         D_Canvas.height = $1;
 
         window.D_Context = D_Canvas.getContext('2d');
-        window.D_ImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        window.D_ImageData = D_Context.getImageData(0, 0, D_Canvas.width, D_Canvas.height);
         //var data = imageData.data;
 
         return D_ImageData.data;
@@ -81,7 +81,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
 int D_FreeOutSurf(D_Surf * s){
 
     if(s == D_NULL){
-        retrun -1;
+        return -1;
     };
 
     s->outId = 0;
@@ -117,7 +117,7 @@ int D_FlipOutSurf(D_Surf * s){
         return -1;
     };
 
-    if(s->outID != 1){
+    if(s->outId != 1){
         return -2;
     };
 

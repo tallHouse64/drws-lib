@@ -76,3 +76,6 @@ platform/test/a.exe
 platform/ndstest/getoutsurftest
 platform/ndstest/delaytest
 platform/ndstest/pumpeventstest
+
+#ignore all platform web tests
+platform/webTest/getoutsurftest
