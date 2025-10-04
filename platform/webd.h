@@ -127,16 +127,20 @@ int D_FreeOutSurf(D_Surf * s){
     D_FreeSurf(s);
     s = D_NULL;
 
-    D_FREE(D_D_Buffer1);
-    D_D_Buffer1 = D_NULL;
+    if(D_D_Buffer1 != D_NULL){
+        D_FREE(D_D_Buffer1);
+        D_D_Buffer1 = D_NULL;
+    };
 
-    D_FREE(D_D_Buffer2);
-    D_D_Buffer2 = D_NULL;
+    if(D_D_Buffer2 != D_NULL){
+        D_FREE(D_D_Buffer2);
+        D_D_Buffer2 = D_NULL;
+    };
 
     EM_ASM({
-        D_Canvas = undefined;
-        D_Context = undefined;
         D_ImageData = undefined;
+        D_Context = undefined;
+        D_Canvas = undefined;
     });
 
     return 0;
