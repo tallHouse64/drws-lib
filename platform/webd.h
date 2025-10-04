@@ -149,6 +149,10 @@ int D_FreeOutSurf(D_Surf * s){
 /* This function takes in a surface created by
  *  D_GetOutSurf() and shows it onscreen.
  *
+ * To show the backbuffer onscreen, this function
+ *  copies it onto a JS ImageData connected to
+ *  the canvas. This may need optimising.
+ *
  * If s is null, the function does nothing and
  *  returns -1.
  *
@@ -170,7 +174,32 @@ int D_FlipOutSurf(D_Surf * s){
     };
 
     EM_ASM({
+
+        /* Apparently malloc in emscripen is
+         *  always aligned to 8 bytes
+         *  https://reviews.llvm.org/D104808 */
+
+        var pixel = 0;
+
+        for(var i = 0; i < (D_Canvas.width * D_Canvas.height); i++){
+            pixel = getValue($0, "i32");
+
+            D_ImageData.data[(i * 4)    ] = ((pixel >>> 24) & 0xFF); //Red
+            D_ImageData.data[(i * 4) + 1] = ((pixel >>> 16) & 0xFF); //Green
+            D_ImageData.data[(i * 4) + 2] = ((pixel >>>  8) & 0xFF); //Blue
+            D_ImageData.data[(i * 4) + 3] = ((pixel       ) & 0xFF); //Alpha
+
+        };
+
         D_Context.putImageData(D_ImageData, 0, 0);
-    });
+    }, (int)(s->pix));
+
+    /*Flip the front and back buffers.*/
+    if(s->pix == D_D_Buffer1){
+        s->pix = D_D_Buffer2;
+    }else{
+        s->pix = D_D_Buffer1;
+    };
+
     return 0;
 };
