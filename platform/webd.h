@@ -3,6 +3,20 @@
 #include"../devents.h"
 #include"../dplatform.h"
 
+/* Front and back buffers to draw to. Limit the
+ *  global state as much as possible, this global
+ *  state is necessary because a D_Surf doesn't
+ *  have a pointer to front buffer pixel data, it
+ *  only has a pointer to back buffer pixel data
+ *  (which is surf->pix).
+ *
+ * Note that there is some global state in JS
+ *  with D_Canvas, etc. Search "window." with ctrl
+ *  + f to find it.
+ */
+D_uint32 * D_D_Buffer1;
+D_uint32 * D_D_Buffer2;
+
 /* This finds the element with the id
  *  "drws-lib-canvas" and returns an outsurf that
  *  can be used to draw to it.
@@ -19,6 +33,11 @@
  *  return null, causing this function to return
  *  null.
  *
+ * This function draws to buffers inside wasm
+ *  memory, this means a buffer needs to be
+ *  copied when calling D_FlipSurf(). This may
+ *  need optimising in the future.
+ *
  * x: This number gets ignored.
  * y: This number gets ignored.
  * w: The width to set the html canvas element to.
@@ -29,10 +48,12 @@
  */
 D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags flags){
 
-    void * data = EM_ASM_PTR({
+    int foundUnusedCanvas = EM_ASM_INT({
 
         if(typeof D_Canvas !== 'undefined'){
             console.log("Drws-lib: Warning, D_GetOutSurf() called more than once without calling D_FreeOutSurf().");
+
+            return 0;
         };
 
         window.D_Canvas = document.getElementById("drws-lib-canvas");
@@ -56,14 +77,22 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
         window.D_ImageData = D_Context.getImageData(0, 0, D_Canvas.width, D_Canvas.height);
         //var data = imageData.data;
 
-        return D_ImageData.data;
+        return 1;
     }, w, h);
 
-    if(data == D_NULL){
+    if(!foundUnusedCanvas){
         return D_NULL;
     };
 
-    D_Surf * surf = D_CreateSurfFrom(w, h, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32), data);
+    if(buffer1 != D_NULL){
+        D_D_Buffer1 = D_CALLOC(w * h, sizeof(D_uint32));
+    };
+
+    if(buffer2 != D_NULL){
+        D_D_Buffer2 = D_CALLOC(w * h, sizeof(D_uint32));
+    };
+
+    D_Surf * surf = D_CreateSurfFrom(w, h, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32), D_D_Buffer1);
 
     surf->outId = 1;
 
@@ -73,7 +102,12 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
 /* This function frees a surf created by
  *  D_GetOutSurf().
  *
- * This function returns -1 if s is null.
+ * This function returns -1 if s is null and does
+ *  nothing.
+ *
+ * If the surface passed in was not created by
+ *  D_GetOutSurf(), the function returns -2 and
+ *  does nothing.
  *
  * returns: 0 on success or a negative number on
  *  failure.
@@ -84,10 +118,20 @@ int D_FreeOutSurf(D_Surf * s){
         return -1;
     };
 
+    if(s->outId != 1){
+        return -2;
+    };
+
     s->outId = 0;
 
     D_FreeSurf(s);
     s = D_NULL;
+
+    D_FREE(D_D_Buffer1);
+    D_D_Buffer1 = D_NULL;
+
+    D_FREE(D_D_Buffer2);
+    D_D_Buffer2 = D_NULL;
 
     EM_ASM({
         D_Canvas = undefined;
