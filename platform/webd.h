@@ -182,12 +182,12 @@ int D_FlipOutSurf(D_Surf * s){
         var pixel = 0;
 
         for(var i = 0; i < (D_Canvas.width * D_Canvas.height); i++){
-            pixel = getValue($0, "i32");
+            pixel = getValue(($0) + (i * 4), "i32");
 
-            D_ImageData.data[(i * 4)    ] = ((pixel >>> 24) & 0xFF); //Red
-            D_ImageData.data[(i * 4) + 1] = ((pixel >>> 16) & 0xFF); //Green
-            D_ImageData.data[(i * 4) + 2] = ((pixel >>>  8) & 0xFF); //Blue
-            D_ImageData.data[(i * 4) + 3] = ((pixel       ) & 0xFF); //Alpha
+            D_ImageData.data[(i * 4)    ] = ((pixel       ) & 0xFF); //Red
+            D_ImageData.data[(i * 4) + 1] = ((pixel >>>  8) & 0xFF); //Green
+            D_ImageData.data[(i * 4) + 2] = ((pixel >>> 16) & 0xFF); //Blue
+            D_ImageData.data[(i * 4) + 3] = ((pixel >>> 24) & 0xFF); //Alpha
 
         };
 
