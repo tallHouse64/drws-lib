@@ -14,8 +14,8 @@
  *  with D_Canvas, etc. Search "window." with ctrl
  *  + f to find it.
  */
-D_uint32 * D_D_Buffer1;
-D_uint32 * D_D_Buffer2;
+D_uint32 * D_D_Buffer1 = D_NULL;
+D_uint32 * D_D_Buffer2 = D_NULL;
 
 /* This finds the element with the id
  *  "drws-lib-canvas" and returns an outsurf that
@@ -84,11 +84,11 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
         return D_NULL;
     };
 
-    if(buffer1 != D_NULL){
+    if(D_D_Buffer1 == D_NULL){
         D_D_Buffer1 = D_CALLOC(w * h, sizeof(D_uint32));
     };
 
-    if(buffer2 != D_NULL){
+    if(D_D_Buffer2 == D_NULL){
         D_D_Buffer2 = D_CALLOC(w * h, sizeof(D_uint32));
     };
 
