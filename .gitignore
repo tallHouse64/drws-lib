@@ -79,3 +79,4 @@ platform/ndstest/pumpeventstest
 
 #ignore all platform web tests
 platform/webTest/getoutsurftest
+platform/webTest/pumpeventstest

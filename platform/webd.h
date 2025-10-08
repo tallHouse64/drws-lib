@@ -163,7 +163,7 @@ int D_FreeOutSurf(D_Surf * s){
         D_D_Buffer2 = D_NULL;
     };
 
-    if(D_D_Inputstate != D_NULL){
+    if(D_D_InputState != D_NULL){
         D_FREE(D_D_InputState);
         D_D_InputState = D_NULL;
     };
@@ -273,7 +273,7 @@ int D_PumpEvents(){
     };
 
     /*Update D_D_InputState*/
-    EM_JS({
+    EM_ASM({
 
         /* Some useful links:
          * https://developer.mozilla.org/en-US/docs/Web/API/Event
@@ -290,11 +290,16 @@ int D_PumpEvents(){
          *  writeArrayToMemory() was the simplest
          *  way I could find).*/
         if(D_InputState === 'undefined'){
-            window.D_InputState = [
-                0, /*Mouse x*/
-                0, /*Mouse y*/
-                0  /*Mouse state (JS state with 2 being right click, not drws-lib state with 2 being middle click)*/
-            ];
+            window.D_InputState = [];
+
+            D_InputState.push(0, /*Mouse x*/
+                              0, /*Mouse y*/
+                              0);/*Mouse state*/
+
+            /* Note that mouse state is in JS
+             *  form with 2 being right click,
+             *  not drws-lib form with 2 being
+             *  middle click.*/
         };
 
         /*Setup callback function in  JS*/
@@ -340,24 +345,24 @@ int D_PumpEvents(){
 
     /* Swap the middle click bit and right click
      *  bit. */
-    if(D_InputState[2] & 4){/*Middle button down?*/
+    if(D_D_InputState[2] & 4){/*Middle button down?*/
 
-        if(D_InputState[2] & 2){/*Left button down?*/
-            D_InputState[2] = D_InputState[2] | D_RIGHTBUTTON;
+        if(D_D_InputState[2] & 2){/*Left button down?*/
+            D_D_InputState[2] = D_D_InputState[2] | D_RIGHTBUTTON;
         }else{
-            D_InputState[2] = D_InputState[2] & (~D_RIGHTBUTTON);
+            D_D_InputState[2] = D_D_InputState[2] & (~D_RIGHTBUTTON);
         };
 
-        D_InputState[2] = D_InputState[2] | D_MIDDLEBUTTON;
+        D_D_InputState[2] = D_D_InputState[2] | D_MIDDLEBUTTON;
     }else{
 
-        if(D_InputState[2] & 2){/*Left button down?*/
-            D_InputState[2] = D_InputState[2] | D_RIGHTBUTTON;
+        if(D_D_InputState[2] & 2){/*Left button down?*/
+            D_D_InputState[2] = D_D_InputState[2] | D_RIGHTBUTTON;
         }else{
-            D_InputState[2] = D_InputState[2] & (~D_RIGHTBUTTON);
+            D_D_InputState[2] = D_D_InputState[2] & (~D_RIGHTBUTTON);
         };
 
-        D_InputState[2] = D_InputState[2] & (~D_MIDDLEBUTTON);
+        D_D_InputState[2] = D_D_InputState[2] & (~D_MIDDLEBUTTON);
     };
 
     /* Now the mouse state in D_D_InputState
@@ -373,8 +378,8 @@ int D_PumpEvents(){
        D_D_InputState[2] != 0){
 
         e.type = D_MOUSEDOWN;
-        e.mouse.x = D_D_Inputstate[0];
-        e.mouse.y = D_D_Inputstate[1];
+        e.mouse.x = D_D_InputState[0];
+        e.mouse.y = D_D_InputState[1];
         e.mouse.button = D_D_InputState[2];
         D_CauseEvent(&e);
 
@@ -384,8 +389,8 @@ int D_PumpEvents(){
              D_D_InputState[2] == 0){
 
         e.type = D_MOUSEUP;
-        e.mouse.x = D_D_Inputstate[0];
-        e.mouse.y = D_D_Inputstate[1];
+        e.mouse.x = D_D_InputState[0];
+        e.mouse.y = D_D_InputState[1];
         e.mouse.button = D_D_InputState[2];
         D_CauseEvent(&e);
 
@@ -395,8 +400,8 @@ int D_PumpEvents(){
              D_D_InputState[1] != D_D_OldInputState[1]){
 
         e.type = D_MOUSEMOVE;
-        e.mouse.x = D_D_Inputstate[0];
-        e.mouse.y = D_D_Inputstate[1];
+        e.mouse.x = D_D_InputState[0];
+        e.mouse.y = D_D_InputState[1];
         e.mouse.button = D_D_InputState[2];
         D_CauseEvent(&e);
     };
