@@ -20,6 +20,15 @@
  *  emscripten) should automatically run main().
  */
 
+
+
+typedef struct D_D_InputState {
+    int mouseX;
+    int mouseY;
+    int buttonState;
+} D_D_InputState;
+
+
 /* Front and back buffers to draw to. Limit the
  *  global state as much as possible, this global
  *  state is necessary because a D_Surf doesn't
@@ -35,10 +44,10 @@ D_uint32 * D_D_Buffer1 = D_NULL;
 D_uint32 * D_D_Buffer2 = D_NULL;
 
 /*Current input state*/
-int * D_D_InputState = D_NULL;
+D_D_InputState * D_D_CurrentInputState = D_NULL;
 
 /*Old state from last call to D_PumpEvents()*/
-int * D_D_OldInputState = D_NULL;
+D_D_InputState * D_D_OldInputState = D_NULL;
 
 /* This finds the element with the id
  *  "drws-lib-canvas" and returns an outsurf that
@@ -163,9 +172,9 @@ int D_FreeOutSurf(D_Surf * s){
         D_D_Buffer2 = D_NULL;
     };
 
-    if(D_D_InputState != D_NULL){
-        D_FREE(D_D_InputState);
-        D_D_InputState = D_NULL;
+    if(D_D_CurrentInputState != D_NULL){
+        D_FREE(D_D_CurrentInputState);
+        D_D_CurrentInputState = D_NULL;
     };
 
     if(D_D_OldInputState != D_NULL){
@@ -240,8 +249,6 @@ int D_FlipOutSurf(D_Surf * s){
     return 0;
 };
 
-#define D_D_INPUTSTATELEN 3
-
 int D_PumpEvents(){
 
     /* Note that in this function D_D_InputState
@@ -251,28 +258,27 @@ int D_PumpEvents(){
      *  state, then copied to D_D_InputState for
      *  processing in C.*/
 
-    if(D_D_InputState == D_NULL){
-        D_D_InputState = D_CALLOC(D_D_INPUTSTATELEN, sizeof(int));
+    if(D_D_CurrentInputState == D_NULL){
+        D_D_CurrentInputState = D_CALLOC(1, sizeof(D_D_InputState));
     };
 
     if(D_D_OldInputState == D_NULL){
-        D_D_OldInputState = D_CALLOC(D_D_INPUTSTATELEN, sizeof(int));
+        D_D_OldInputState = D_CALLOC(1, sizeof(D_D_InputState));
     };
 
     /* In case D_CALLOC didn't work. */
-    if(D_D_InputState == D_NULL || D_D_OldInputState == D_NULL){
+    if(D_D_CurrentInputState == D_NULL || D_D_OldInputState == D_NULL){
         return -1;
     };
 
     /* Keep the input state from the last call to
      *  D_PumpEvents() in D_D_OldInputState. */
-    {   int i = 0;
-        for(; i < D_D_INPUTSTATELEN; i++){
-            D_D_OldInputState[i] = D_D_InputState[i];
-        }
-    };
+    D_D_OldInputState->mouseX = D_D_CurrentInputState->mouseX;
+    D_D_OldInputState->mouseY = D_D_CurrentInputState->mouseY;
+    D_D_OldInputState->buttonState = D_D_CurrentInputState->buttonState;
 
-    /*Update D_D_InputState*/
+
+    /*Update D_D_CurrentInputState*/
     EM_ASM({
 
         /* Some useful links:
@@ -281,26 +287,14 @@ int D_PumpEvents(){
          * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
          */
 
-        /* This may seem like an awkward way to
-         *  store the state of input devices (in
-         *  an array like this), but this is
-         *  necessary because passing data
-         *  between C and JS is complicated (and
-         *  using emscripten's
-         *  writeArrayToMemory() was the simplest
-         *  way I could find).*/
-        if(D_InputState === 'undefined'){
-            window.D_InputState = [];
 
-            D_InputState.push(0, /*Mouse x*/
-                              0, /*Mouse y*/
-                              0);/*Mouse state*/
-
-            /* Note that mouse state is in JS
-             *  form with 2 being right click,
-             *  not drws-lib form with 2 being
-             *  middle click.*/
-        };
+        var mouseX = 0;
+        var mouseY = 0;
+        var buttonState = 0;
+        /* Note that mouse state is in JS
+         *  form with 2 being right click,
+         *  not drws-lib form with 2 being
+         *  middle click.*/
 
         /*Setup callback function in  JS*/
         if(typeof D_EventCallback === 'undefined'){
@@ -308,64 +302,77 @@ int D_PumpEvents(){
             window.D_EventCallback = function(event) {
                 switch(event.type){
                     case "mousemove":
+                        console.log("JS move " + event.button);
 
-                        D_InputState[0] = event.clientX;
-                        D_InputState[1] = event.clientY;
-                        D_InputState[2] = event.button;
+                        mouseX = event.clientX;
+                        mouseY = event.clientY;
+                        buttonState = event.button;
 
                         break;
                     case "mousedown":
-                        /*console.log("click x: " + event.clientX + " y: " + event.clientY);*/
+                        console.log("JS down " + event.button);
 
-                        D_InputState[0] = event.clientX;
-                        D_InputState[1] = event.clientY;
-                        D_InputState[2] = event.button;
+                        mouseX = event.clientX;
+                        mouseY = event.clientY;
+                        buttonState = event.button;
 
                         break;
                     case "mouseup":
+                        console.log("JS up " + event.button);
 
-                        D_InputState[0] = event.clientX;
-                        D_InputState[1] = event.clientY;
-                        D_InputState[2] = event.button;
+                        mouseX = event.clientX;
+                        mouseY = event.clientY;
+                        buttonState = event.button;
 
                         break;
                 };
             };
 
-            D_Canvas.addEventListener("click", eventCallback);
+            D_Canvas.addEventListener("mousemove", D_EventCallback);
+            D_Canvas.addEventListener("mousedown", D_EventCallback);
+            D_Canvas.addEventListener("mouseup", D_EventCallback);
         };
 
+        console.log("x " + mouseX + " y " + mouseY + " button " + buttonState);
 
-        writeArrayToMemory(D_InputState, $0);
 
-    }, ((int)D_D_InputState));
+
+        /*The lines below copy values into the D_D_CurrentInputState array.*/
+        setValue($0 + 0, mouseX);
+        setValue($0 + 4, mouseY);
+        setValue($0 + 8, buttonState);
+
+    }, ((int)D_D_CurrentInputState));
+
 
     /* Remember at this point the mouse state is
-     *  still in JS form in D_D_InputState. */
+     *  still in JS form in D_D_CurrentInputState. */
+
 
     /* Swap the middle click bit and right click
      *  bit. */
-    if(D_D_InputState[2] & 4){/*Middle button down?*/
+    if(D_D_CurrentInputState->buttonState & 4){/*Middle button down?*/
 
-        if(D_D_InputState[2] & 2){/*Left button down?*/
-            D_D_InputState[2] = D_D_InputState[2] | D_RIGHTBUTTON;
+        if(D_D_CurrentInputState->buttonState & 2){/*Left button down?*/
+            D_D_CurrentInputState->buttonState = D_D_CurrentInputState->buttonState | D_RIGHTBUTTON;
         }else{
-            D_D_InputState[2] = D_D_InputState[2] & (~D_RIGHTBUTTON);
+            D_D_CurrentInputState->buttonState = D_D_CurrentInputState->buttonState & (~D_RIGHTBUTTON);
         };
 
-        D_D_InputState[2] = D_D_InputState[2] | D_MIDDLEBUTTON;
+        D_D_CurrentInputState->buttonState = D_D_CurrentInputState->buttonState | D_MIDDLEBUTTON;
     }else{
 
-        if(D_D_InputState[2] & 2){/*Left button down?*/
-            D_D_InputState[2] = D_D_InputState[2] | D_RIGHTBUTTON;
+        if(D_D_CurrentInputState->buttonState & 2){/*Left button down?*/
+            D_D_CurrentInputState->buttonState = D_D_CurrentInputState->buttonState | D_RIGHTBUTTON;
         }else{
-            D_D_InputState[2] = D_D_InputState[2] & (~D_RIGHTBUTTON);
+            D_D_CurrentInputState->buttonState = D_D_CurrentInputState->buttonState & (~D_RIGHTBUTTON);
         };
 
-        D_D_InputState[2] = D_D_InputState[2] & (~D_MIDDLEBUTTON);
+        D_D_CurrentInputState->buttonState = D_D_CurrentInputState->buttonState & (~D_MIDDLEBUTTON);
     };
 
-    /* Now the mouse state in D_D_InputState
+
+    /* Now the mouse state in D_D_CurrentInputState
      *  should be in drws-lib form (D_MouseButton
      *  can be used, eg D_LEFTBUTTON,
      *  D_RIGHTBUTTON, etc)*/
@@ -374,35 +381,35 @@ int D_PumpEvents(){
     D_Event e = {0};
 
     /* Has the the mouse gone down? */
-    if(D_D_OldInputState[2] == 0 &&
-       D_D_InputState[2] != 0){
+    if(D_D_OldInputState->buttonState == 0 &&
+       D_D_CurrentInputState->buttonState != 0){
 
         e.type = D_MOUSEDOWN;
-        e.mouse.x = D_D_InputState[0];
-        e.mouse.y = D_D_InputState[1];
-        e.mouse.button = D_D_InputState[2];
+        e.mouse.x = D_D_CurrentInputState->mouseX;
+        e.mouse.y = D_D_CurrentInputState->mouseY;
+        e.mouse.button = D_D_CurrentInputState->buttonState;
         D_CauseEvent(&e);
 
 
     /* Has the mouse gone up? */
-    }else if(D_D_OldInputState[2] != 0 &&
-             D_D_InputState[2] == 0){
+    }else if(D_D_OldInputState->buttonState != 0 &&
+             D_D_CurrentInputState->buttonState == 0){
 
         e.type = D_MOUSEUP;
-        e.mouse.x = D_D_InputState[0];
-        e.mouse.y = D_D_InputState[1];
-        e.mouse.button = D_D_InputState[2];
+        e.mouse.x = D_D_CurrentInputState->mouseX;
+        e.mouse.y = D_D_CurrentInputState->mouseY;
+        e.mouse.button = D_D_CurrentInputState->buttonState;
         D_CauseEvent(&e);
 
 
     /* Has the mouse moved? */
-    }else if(D_D_InputState[0] != D_D_OldInputState[0] ||
-             D_D_InputState[1] != D_D_OldInputState[1]){
+    }else if(D_D_CurrentInputState->mouseX != D_D_OldInputState->mouseX ||
+             D_D_CurrentInputState->mouseY != D_D_OldInputState->mouseY){
 
         e.type = D_MOUSEMOVE;
-        e.mouse.x = D_D_InputState[0];
-        e.mouse.y = D_D_InputState[1];
-        e.mouse.button = D_D_InputState[2];
+        e.mouse.x = D_D_CurrentInputState->mouseX;
+        e.mouse.y = D_D_CurrentInputState->mouseY;
+        e.mouse.button = D_D_CurrentInputState->buttonState;
         D_CauseEvent(&e);
     };
 
