@@ -1,7 +1,7 @@
 
 CC := emcc
 
-FLAGS := -sASYNCIFY -Oz
+FLAGS := -sASYNCIFY -O0 -sEXPORTED_RUNTIME_METHODS=ccall -sEXPORTED_FUNCTIONS="_main,_D_D_SetMouseState"
 
 TEST_FOLDERS := getoutsurftest pumpeventstest
 
