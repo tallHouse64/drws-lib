@@ -18,6 +18,8 @@ int main(int argc, char ** argv){
     int state = 0; /*1: draw white, 0: draw black*/
     D_Event e = {0};
 
+    D_StartEvents();
+
     EM_ASM({console.log("Running");});
 
     while(running){
@@ -50,6 +52,8 @@ int main(int argc, char ** argv){
         state = !state;
         emscripten_sleep(200);
     };
+
+    D_StopEvents();
 
     D_FreeOutSurf(out);
     out = D_NULL;
