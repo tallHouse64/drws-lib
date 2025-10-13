@@ -206,7 +206,11 @@ typedef enum D_Key {
     D_KPageUp,
     D_KDelete,
     D_KEnd,
-    D_KPageDown
+    D_KPageDown,
+
+    /* The line below should always be the last
+     *  line in the enum. */
+    D_NumKeys
 } D_Key;
 
 typedef struct D_KeyboardEvent {
