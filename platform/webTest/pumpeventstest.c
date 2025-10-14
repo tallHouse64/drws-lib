@@ -7,6 +7,9 @@
 #include"../../dplatform.h"
 #include"../webd.h"
 
+#define DELAY 1000/60
+
+
 /* WARNING: This test has flashing lights.
  *
  * This file tests the D_PumpEvents() function.
@@ -27,6 +30,7 @@ int main(int argc, char ** argv){
 
         while(D_GetEvent(&e) >= 0){
             switch(e.type){
+
                 case D_MOUSEMOVE:
                     EM_ASM({console.log("Mouse move!");});
                     break;
@@ -36,6 +40,14 @@ int main(int argc, char ** argv){
                 case D_MOUSEUP:
                     EM_ASM({console.log("Mouse up!");});
                     break;
+
+                case D_KEYDOWN:
+                    EM_ASM({console.log("Key down! " + String.fromCharCode($0));}, D_DKeyToChar(e.keyboard.key));
+                    break;
+                case D_KEYUP:
+                    EM_ASM({console.log("Key up! " + String.fromCharCode($0));}, D_DKeyToChar(e.keyboard.key));
+                    break;
+
                 default:
                     break;
             };
@@ -50,7 +62,7 @@ int main(int argc, char ** argv){
         D_FlipOutSurf(out);
 
         state = !state;
-        emscripten_sleep(200);
+        emscripten_sleep(DELAY);
     };
 
     D_StopEvents();

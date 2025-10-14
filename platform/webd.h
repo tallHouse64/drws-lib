@@ -26,6 +26,7 @@ typedef struct D_D_InputState {
     int mouseX;
     int mouseY;
     int buttonState;
+    int keyboardState[D_NumKeys];
 } D_D_InputState;
 
 
@@ -322,6 +323,14 @@ int D_PumpEvents(){
      oldInputState->mouseY = inputState->mouseY;
      oldInputState->buttonState = inputState->buttonState;
 
+    {
+        int i = 0;
+        while(i < D_NumKeys){
+            oldInputState->keyboardState[i] = inputState->keyboardState[i];
+            i++;
+        };
+    }
+
 
     /* Cause inputState to be updated when events
      *  fire in JS.*/
@@ -331,18 +340,51 @@ int D_PumpEvents(){
          * https://developer.mozilla.org/en-US/docs/Web/API/Event
          * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
          * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
+         *
+         * https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event
          */
 
+        /* Create some globals */
         if(typeof D_MouseX === 'undefined'){window.D_MouseX = 0};
         if(typeof D_MouseY === 'undefined'){window.D_MouseY = 0};
         if(typeof D_ButtonState === 'undefined'){window.D_ButtonState = 0};
+        if(typeof D_LastElementClicked === 'undefined'){window.D_LastElementClicked = document.querySelector("body")};
+
+        if(typeof D_KeyboardState === 'undefined'){
+
+            /* This is for storing keyboard
+             *  key state as a dictionary with JS
+             *  entries not drws-lib entries (eg
+             *  a: true instead of D_Ka: true).
+             *
+             * If a keydown event fires in JS, an
+             *  entry is created with a value of
+             *  true. When there is a keyup
+             *  event, the entry is set to false
+             *  and gets deleted later on in the
+             *  function, before the function
+             *  returns.
+             */
+            window.D_KeyboardState = [];
+
+        };
+
+        /*if(typeof D_JsKeyToDrwsLibKey === 'undefined'){
+            window.D_JsKeyToDrwsLibKey = function(jsKey){
+
+                switch(jsKey){
+                    case "a": return
+                };
+
+            };
+        };*/
 
         /* Note that mouse state is in JS
          *  form with 2 being right click,
          *  not drws-lib form with 2 being
          *  middle click.*/
 
-        /*Setup callback function in  JS*/
+        /*Setup callback function in JS*/
         if(typeof D_EventCallback === 'undefined'){
 
             window.D_EventCallback = function(event) {
@@ -366,12 +408,119 @@ int D_PumpEvents(){
             D_Canvas.addEventListener("mouseup", D_EventCallback);
         };
 
+        /* Setup keyboard callback function */
+        if(typeof D_BodyEventCallback === 'undefined'){
+            window.D_BodyEventCallback = function(event) {
+                switch(event.type){
+                    case "keydown":
+
+                        if(D_Canvas === D_LastElementClicked){
+                            /*console.log("keydown on canvas!");*/
+                            D_KeyboardState[event.key] = true;
+
+                        }else{
+                            /*console.log("kedown off canvas!");*/
+                        };
+
+                        break;
+
+                    case "keyup":
+
+                        //delete D_KeyboardState[event.key];
+
+                        if(D_Canvas === D_LastElementClicked){
+                            /*console.log("keyup on canvas!");*/
+                            D_KeyboardState[event.key] = false;
+
+                        }else{
+                            /*console.log("keyup off canvas!");*/
+                        };
+
+                        break;
+
+                    case "mouseup":
+                        D_LastElementClicked = event.target;
+                        break;
+                };
+            };
+
+            document.querySelector("body").addEventListener("keydown", D_BodyEventCallback);
+            document.querySelector("body").addEventListener("keyup", D_BodyEventCallback);
+            document.querySelector("body").addEventListener("mouseup", D_BodyEventCallback);
+        };
+
+
         /* Update inputState from JS */
         setValue($0 + 0, D_MouseX, "i32");
         setValue($0 + 4, D_MouseY, "i32");
         setValue($0 + 8, D_ButtonState, "i32");
 
-    }, ((int)(inputState)) );
+
+        /* Update inputSate with keyboard data */
+        for(const [key, value] of Object.entries(D_KeyboardState)){
+
+            /* For every key, if it's down,
+             *  (meaning value is true) write 1
+             *  to a key in
+             *  inputState->keyboardState[].
+             * If it's up, (meaning value is
+             *  false) write 0 to the key in
+             *  inputState->keyboardState[].
+             */
+            switch(key){
+                case "a": if(value){setValue(($0 + 12) +   4, 1, "i32"); }else{setValue(($0 + 12) +   4, 0, "i32");}; break;
+                case "b": if(value){setValue(($0 + 12) +   8, 1, "i32"); }else{setValue(($0 + 12) +   8, 0, "i32");}; break;
+                case "c": if(value){setValue(($0 + 12) +  12, 1, "i32"); }else{setValue(($0 + 12) +  12, 0, "i32");}; break;
+                case "d": if(value){setValue(($0 + 12) +  16, 1, "i32"); }else{setValue(($0 + 12) +  16, 0, "i32");}; break;
+                case "e": if(value){setValue(($0 + 12) +  20, 1, "i32"); }else{setValue(($0 + 12) +  20, 0, "i32");}; break;
+                case "f": if(value){setValue(($0 + 12) +  24, 1, "i32"); }else{setValue(($0 + 12) +  24, 0, "i32");}; break;
+                case "g": if(value){setValue(($0 + 12) +  28, 1, "i32"); }else{setValue(($0 + 12) +  28, 0, "i32");}; break;
+                case "h": if(value){setValue(($0 + 12) +  32, 1, "i32"); }else{setValue(($0 + 12) +  32, 0, "i32");}; break;
+                case "i": if(value){setValue(($0 + 12) +  36, 1, "i32"); }else{setValue(($0 + 12) +  36, 0, "i32");}; break;
+                case "j": if(value){setValue(($0 + 12) +  40, 1, "i32"); }else{setValue(($0 + 12) +  40, 0, "i32");}; break;
+                case "k": if(value){setValue(($0 + 12) +  44, 1, "i32"); }else{setValue(($0 + 12) +  44, 0, "i32");}; break;
+                case "l": if(value){setValue(($0 + 12) +  48, 1, "i32"); }else{setValue(($0 + 12) +  48, 0, "i32");}; break;
+                case "m": if(value){setValue(($0 + 12) +  52, 1, "i32"); }else{setValue(($0 + 12) +  52, 0, "i32");}; break;
+                case "n": if(value){setValue(($0 + 12) +  56, 1, "i32"); }else{setValue(($0 + 12) +  56, 0, "i32");}; break;
+                case "o": if(value){setValue(($0 + 12) +  60, 1, "i32"); }else{setValue(($0 + 12) +  60, 0, "i32");}; break;
+                case "p": if(value){setValue(($0 + 12) +  64, 1, "i32"); }else{setValue(($0 + 12) +  64, 0, "i32");}; break;
+                case "q": if(value){setValue(($0 + 12) +  68, 1, "i32"); }else{setValue(($0 + 12) +  68, 0, "i32");}; break;
+                case "r": if(value){setValue(($0 + 12) +  72, 1, "i32"); }else{setValue(($0 + 12) +  72, 0, "i32");}; break;
+                case "s": if(value){setValue(($0 + 12) +  76, 1, "i32"); }else{setValue(($0 + 12) +  76, 0, "i32");}; break;
+                case "t": if(value){setValue(($0 + 12) +  80, 1, "i32"); }else{setValue(($0 + 12) +  80, 0, "i32");}; break;
+                case "u": if(value){setValue(($0 + 12) +  84, 1, "i32"); }else{setValue(($0 + 12) +  84, 0, "i32");}; break;
+                case "v": if(value){setValue(($0 + 12) +  88, 1, "i32"); }else{setValue(($0 + 12) +  88, 0, "i32");}; break;
+                case "w": if(value){setValue(($0 + 12) +  92, 1, "i32"); }else{setValue(($0 + 12) +  92, 0, "i32");}; break;
+                case "x": if(value){setValue(($0 + 12) +  96, 1, "i32"); }else{setValue(($0 + 12) +  96, 0, "i32");}; break;
+                case "y": if(value){setValue(($0 + 12) + 100, 1, "i32"); }else{setValue(($0 + 12) + 100, 0, "i32");}; break;
+                case "z": if(value){setValue(($0 + 12) + 104, 1, "i32"); }else{setValue(($0 + 12) + 104, 0, "i32");}; break;
+            };
+
+            /* If D_Key in devents.h ever
+             *  changes, the above switch
+             *  statement would also have to
+             *  change, otherwise keyboard events
+             *  might fire with the wrong
+             *  character value.
+             *
+             * All the switch statement above
+             *  does is write a 1 in
+             *  inputState->keyboardState[] when
+             *  it's down and 0 when it's
+             *  released. Read about setValue()
+             *  in the emscripten documentation.
+             */
+
+            /* For every key (remember this is in
+             *  a for loop) remove all the
+             *  entries with a value of false
+             *  (meaning the key is up). */
+            if(value === false){
+                delete D_KeyboardState[key];
+            };
+        };
+
+    }, ((int)(inputState)), D_NumKeys);
 
 
     /* Remember at this point that button is
@@ -448,6 +597,46 @@ int D_PumpEvents(){
         e.mouse.button = inputState->buttonState;
         D_CauseEvent(&e);
     };
+
+    {
+
+        /* For every key... */
+        int i = 0;
+        while(i < D_NumKeys){
+
+            /* ...If the key is down but wasn't
+             *  before... */
+            if(inputState->keyboardState[i] && (!oldInputState->keyboardState[i])){
+
+                /* Then cause a keydown event. */
+                e.type = D_KEYDOWN;
+                e.keyboard.key = i;
+                D_CauseEvent(&e);
+
+                /* Otherwise if the key is up but
+                 *  wasn't before...*/
+            }else if((!inputState->keyboardState[i]) && oldInputState->keyboardState[i]){
+
+                /* Then cause a keyup event. */
+                e.type = D_KEYUP;
+                e.keyboard.key = i;
+                D_CauseEvent(&e);
+            };
+
+            i++;
+        };
+    }
+
+#if 0
+    /* Detect and fire keydown events */
+    e.type = D_KEYDOWN;
+    if(inputState->keyboardState[D_Ka] && (!oldInputState->keyboardState[D_Ka])){ e.keyboard.key = D_Ka; D_CauseEvent(&e); };
+
+
+    /* Detect and fire keyup events */
+    e.type = D_KEYUP;
+    if((!inputState->keyboardState[D_Ka]) && oldInputState->keyboardState[D_Ka]){ e.keyboard.key = D_Ka; D_CauseEvent(&e); };
+#endif
 
 
     return 0;
