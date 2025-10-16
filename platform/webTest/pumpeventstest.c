@@ -15,6 +15,23 @@
  * This file tests the D_PumpEvents() function.
  */
 
+/* This function prints keys */
+int printSpecialKey(D_Key k){
+    switch(k){
+
+        case D_KLeft:  EM_ASM({console.log("Left");});  break;
+        case D_KRight: EM_ASM({console.log("Right");}); break;
+        case D_KUp:    EM_ASM({console.log("Up");});    break;
+        case D_KDown:  EM_ASM({console.log("Down");});  break;
+
+        default:
+            EM_ASM({console.log("Unknown");});
+            break;
+    };
+
+    return 0;
+};
+
 int main(int argc, char ** argv){
     D_Surf * out = D_GetOutSurf(0, 0, 640, 480, "D_PumpEvents() test", 0);
     int running = 1;
@@ -42,10 +59,22 @@ int main(int argc, char ** argv){
                     break;
 
                 case D_KEYDOWN:
-                    EM_ASM({console.log("Key down! " + String.fromCharCode($0));}, D_DKeyToChar(e.keyboard.key));
+                    if(D_DKeyToChar(e.keyboard.key) != '\0'){
+                        EM_ASM({console.log("Key down! " + String.fromCharCode($0));}, D_DKeyToChar(e.keyboard.key));
+                    }else{
+                        EM_ASM({console.log("Key down:");});
+                        printSpecialKey(e.keyboard.key);
+                    };
                     break;
+
+
                 case D_KEYUP:
-                    EM_ASM({console.log("Key up! " + String.fromCharCode($0));}, D_DKeyToChar(e.keyboard.key));
+                    if(D_DKeyToChar(e.keyboard.key) != '\0'){
+                        EM_ASM({console.log("Key up! " + String.fromCharCode($0));}, D_DKeyToChar(e.keyboard.key));
+                    }else{
+                        EM_ASM({console.log("Key up:");});
+                        printSpecialKey(e.keyboard.key);
+                    };
                     break;
 
                 default:
