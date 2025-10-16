@@ -207,6 +207,7 @@ typedef enum D_Key {
     D_KDelete,
     D_KEnd,
     D_KPageDown,
+    D_KUnknown,
 
     /* The line below should always be the last
      *  line in the enum. */
