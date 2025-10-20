@@ -457,9 +457,14 @@ int D_PumpEvents(){
 
                 if(event.type === "keydown" || event.type === "keyup"){
 
+
+                    /* The Address of
+                     *  inputState->keyboardEvent[D_KeyEventsThisFrame].key*/
+                    var keyAddr = ($0 + 16) + (D_KeyEventsThisFrame * 8) + 4;
+
                     /* Write D_KUnknown to
                      *  inputState->keyboardEvent[D_KeyEventsThisFrame].key*/
-                    setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 110, "i32");
+                    setValue(keyAddr, 110, "i32");
 
                     /*console.log("key " + event.key);*/
 
@@ -473,127 +478,128 @@ int D_PumpEvents(){
                      *  change.
                      */
 
+
                     switch(event.key){
-                        case "A": case "a": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  1, "i32"); break;
-                        case "B": case "b": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  2, "i32"); break;
-                        case "C": case "c": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  3, "i32"); break;
-                        case "D": case "d": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  4, "i32"); break;
-                        case "E": case "e": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  5, "i32"); break;
-                        case "F": case "f": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  6, "i32"); break;
-                        case "G": case "g": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  7, "i32"); break;
-                        case "H": case "h": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  8, "i32"); break;
-                        case "I": case "i": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  9, "i32"); break;
-                        case "J": case "j": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 10, "i32"); break;
-                        case "K": case "k": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 11, "i32"); break;
-                        case "L": case "l": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 12, "i32"); break;
-                        case "M": case "m": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 13, "i32"); break;
-                        case "N": case "n": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 14, "i32"); break;
-                        case "O": case "o": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 15, "i32"); break;
-                        case "P": case "p": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 16, "i32"); break;
-                        case "Q": case "q": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 17, "i32"); break;
-                        case "R": case "r": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 18, "i32"); break;
-                        case "S": case "s": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 19, "i32"); break;
-                        case "T": case "t": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 20, "i32"); break;
-                        case "U": case "u": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 21, "i32"); break;
-                        case "V": case "v": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 22, "i32"); break;
-                        case "W": case "w": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 23, "i32"); break;
-                        case "X": case "x": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 24, "i32"); break;
-                        case "Y": case "y": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 25, "i32"); break;
-                        case "Z": case "z": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 26, "i32"); break;
+                        case "A": case "a": setValue(keyAddr,  1, "i32"); break;
+                        case "B": case "b": setValue(keyAddr,  2, "i32"); break;
+                        case "C": case "c": setValue(keyAddr,  3, "i32"); break;
+                        case "D": case "d": setValue(keyAddr,  4, "i32"); break;
+                        case "E": case "e": setValue(keyAddr,  5, "i32"); break;
+                        case "F": case "f": setValue(keyAddr,  6, "i32"); break;
+                        case "G": case "g": setValue(keyAddr,  7, "i32"); break;
+                        case "H": case "h": setValue(keyAddr,  8, "i32"); break;
+                        case "I": case "i": setValue(keyAddr,  9, "i32"); break;
+                        case "J": case "j": setValue(keyAddr, 10, "i32"); break;
+                        case "K": case "k": setValue(keyAddr, 11, "i32"); break;
+                        case "L": case "l": setValue(keyAddr, 12, "i32"); break;
+                        case "M": case "m": setValue(keyAddr, 13, "i32"); break;
+                        case "N": case "n": setValue(keyAddr, 14, "i32"); break;
+                        case "O": case "o": setValue(keyAddr, 15, "i32"); break;
+                        case "P": case "p": setValue(keyAddr, 16, "i32"); break;
+                        case "Q": case "q": setValue(keyAddr, 17, "i32"); break;
+                        case "R": case "r": setValue(keyAddr, 18, "i32"); break;
+                        case "S": case "s": setValue(keyAddr, 19, "i32"); break;
+                        case "T": case "t": setValue(keyAddr, 20, "i32"); break;
+                        case "U": case "u": setValue(keyAddr, 21, "i32"); break;
+                        case "V": case "v": setValue(keyAddr, 22, "i32"); break;
+                        case "W": case "w": setValue(keyAddr, 23, "i32"); break;
+                        case "X": case "x": setValue(keyAddr, 24, "i32"); break;
+                        case "Y": case "y": setValue(keyAddr, 25, "i32"); break;
+                        case "Z": case "z": setValue(keyAddr, 26, "i32"); break;
 
-                        case "0": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  27, "i32"); break;
-                        case "1": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  28, "i32"); break;
-                        case "2": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  29, "i32"); break;
-                        case "3": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  30, "i32"); break;
-                        case "4": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  31, "i32"); break;
-                        case "5": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  32, "i32"); break;
-                        case "6": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  33, "i32"); break;
-                        case "7": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  34, "i32"); break;
-                        case "8": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  35, "i32"); break;
-                        case "9": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  36, "i32"); break;
+                        case "0": setValue(keyAddr,  27, "i32"); break;
+                        case "1": setValue(keyAddr,  28, "i32"); break;
+                        case "2": setValue(keyAddr,  29, "i32"); break;
+                        case "3": setValue(keyAddr,  30, "i32"); break;
+                        case "4": setValue(keyAddr,  31, "i32"); break;
+                        case "5": setValue(keyAddr,  32, "i32"); break;
+                        case "6": setValue(keyAddr,  33, "i32"); break;
+                        case "7": setValue(keyAddr,  34, "i32"); break;
+                        case "8": setValue(keyAddr,  35, "i32"); break;
+                        case "9": setValue(keyAddr,  36, "i32"); break;
 
-                        case "!": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  37, "i32"); break;
-                        case '"': setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  38, "i32"); break;
-                        case "£": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  39, "i32"); break;
-                        case "$": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  40, "i32"); break;
-                        case "%": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  41, "i32"); break;
-                        case "^": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  42, "i32"); break;
-                        case "&": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  43, "i32"); break;
-                        case "*": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  44, "i32"); break;
-                        case "(": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  45, "i32"); break;
-                        case ")": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  46, "i32"); break;
+                        case "!": setValue(keyAddr,  37, "i32"); break;
+                        case '"': setValue(keyAddr,  38, "i32"); break;
+                        case "£": setValue(keyAddr,  39, "i32"); break;
+                        case "$": setValue(keyAddr,  40, "i32"); break;
+                        case "%": setValue(keyAddr,  41, "i32"); break;
+                        case "^": setValue(keyAddr,  42, "i32"); break;
+                        case "&": setValue(keyAddr,  43, "i32"); break;
+                        case "*": setValue(keyAddr,  44, "i32"); break;
+                        case "(": setValue(keyAddr,  45, "i32"); break;
+                        case ")": setValue(keyAddr,  46, "i32"); break;
 
-                        case "Left":  case "ArrowLeft":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 47, "i32"); break;
-                        case "Right": case "ArrowRight": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 48, "i32"); break;
-                        case "Up":    case "ArrowUp":    setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 49, "i32"); break;
-                        case "Down":  case "ArrowDown":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 50, "i32"); break;
+                        case "Left":  case "ArrowLeft":  setValue(keyAddr, 47, "i32"); break;
+                        case "Right": case "ArrowRight": setValue(keyAddr, 48, "i32"); break;
+                        case "Up":    case "ArrowUp":    setValue(keyAddr, 49, "i32"); break;
+                        case "Down":  case "ArrowDown":  setValue(keyAddr, 50, "i32"); break;
 
                         case "Esc":
-                        case "Escape":    setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 51, "i32"); break;
-                        case "`":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 52, "i32"); break;
-                        case "Tab":       setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 53, "i32"); break;
-                        case "CapsLock":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 54, "i32"); break;
-                        case "Shift":     setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 55, "i32"); break;
-                        case String.fromCharCode(92): setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 56, "i32"); break;
-                        case "Control":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 57, "i32"); break;
-                        case "Meta":      setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 58, "i32"); break;
-                        case "Alt":       setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 59, "i32"); break;
-                        //case " ":       setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 60, "i32"); break;
-                        case "AltGraph":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 61, "i32"); break;
+                        case "Escape":    setValue(keyAddr, 51, "i32"); break;
+                        case "`":         setValue(keyAddr, 52, "i32"); break;
+                        case "Tab":       setValue(keyAddr, 53, "i32"); break;
+                        case "CapsLock":  setValue(keyAddr, 54, "i32"); break;
+                        case "Shift":     setValue(keyAddr, 55, "i32"); break;
+                        case String.fromCharCode(92): setValue(keyAddr, 56, "i32"); break;
+                        case "Control":   setValue(keyAddr, 57, "i32"); break;
+                        case "Meta":      setValue(keyAddr, 58, "i32"); break;
+                        case "Alt":       setValue(keyAddr, 59, "i32"); break;
+                        //case " ":       setValue(keyAddr, 60, "i32"); break;
+                        case "AltGraph":  setValue(keyAddr, 61, "i32"); break;
                         /* D_KRightSuper*/
-                        case "ContextMenu":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 63, "i32"); break;
+                        case "ContextMenu":setValue(keyAddr, 63, "i32"); break;
                         /* D_KRightCtrl */
                         /* D_KRightShift*/
-                        case "Enter":     setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 66, "i32"); break;
-                        case "Backspace": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 67, "i32"); break;
+                        case "Enter":     setValue(keyAddr, 66, "i32"); break;
+                        case "Backspace": setValue(keyAddr, 67, "i32"); break;
 
-                        case "|":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 68, "i32"); break;
+                        case "|":         setValue(keyAddr, 68, "i32"); break;
 
-                        case "-":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 69, "i32"); break;
-                        case "=":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 70, "i32"); break;
-                        case "[":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 71, "i32"); break;
-                        case "]":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 72, "i32"); break;
-                        case ";":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 73, "i32"); break;
-                        case "'":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 74, "i32"); break;
-                        case "#":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 75, "i32"); break;
-                        case ",":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 76, "i32"); break;
-                        case ".":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 77, "i32"); break;
-                        case "/":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 78, "i32"); break;
+                        case "-":         setValue(keyAddr, 69, "i32"); break;
+                        case "=":         setValue(keyAddr, 70, "i32"); break;
+                        case "[":         setValue(keyAddr, 71, "i32"); break;
+                        case "]":         setValue(keyAddr, 72, "i32"); break;
+                        case ";":         setValue(keyAddr, 73, "i32"); break;
+                        case "'":         setValue(keyAddr, 74, "i32"); break;
+                        case "#":         setValue(keyAddr, 75, "i32"); break;
+                        case ",":         setValue(keyAddr, 76, "i32"); break;
+                        case ".":         setValue(keyAddr, 77, "i32"); break;
+                        case "/":         setValue(keyAddr, 78, "i32"); break;
 
-                        case "_":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 79, "i32"); break;
-                        case "+":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 80, "i32"); break;
-                        case "{":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 81, "i32"); break;
-                        case "}":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 82, "i32"); break;
-                        case ":":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 83, "i32"); break;
-                        case "@":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 84, "i32"); break;
-                        case "~":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 85, "i32"); break;
-                        case "<":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 86, "i32"); break;
-                        case ">":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 87, "i32"); break;
-                        case "?":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 88, "i32"); break;
+                        case "_":         setValue(keyAddr, 79, "i32"); break;
+                        case "+":         setValue(keyAddr, 80, "i32"); break;
+                        case "{":         setValue(keyAddr, 81, "i32"); break;
+                        case "}":         setValue(keyAddr, 82, "i32"); break;
+                        case ":":         setValue(keyAddr, 83, "i32"); break;
+                        case "@":         setValue(keyAddr, 84, "i32"); break;
+                        case "~":         setValue(keyAddr, 85, "i32"); break;
+                        case "<":         setValue(keyAddr, 86, "i32"); break;
+                        case ">":         setValue(keyAddr, 87, "i32"); break;
+                        case "?":         setValue(keyAddr, 88, "i32"); break;
 
-                        case "F1":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  89, "i32"); break;
-                        case "F2":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  90, "i32"); break;
-                        case "F3":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  91, "i32"); break;
-                        case "F4":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  92, "i32"); break;
-                        case "F5":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  93, "i32"); break;
-                        case "F6":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  94, "i32"); break;
-                        case "F7":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  95, "i32"); break;
-                        case "F8":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  96, "i32"); break;
-                        case "F9":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  97, "i32"); break;
-                        case "F10": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  98, "i32"); break;
-                        case "F11": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  99, "i32"); break;
-                        case "F12": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 100, "i32"); break;
+                        case "F1":  setValue(keyAddr,  89, "i32"); break;
+                        case "F2":  setValue(keyAddr,  90, "i32"); break;
+                        case "F3":  setValue(keyAddr,  91, "i32"); break;
+                        case "F4":  setValue(keyAddr,  92, "i32"); break;
+                        case "F5":  setValue(keyAddr,  93, "i32"); break;
+                        case "F6":  setValue(keyAddr,  94, "i32"); break;
+                        case "F7":  setValue(keyAddr,  95, "i32"); break;
+                        case "F8":  setValue(keyAddr,  96, "i32"); break;
+                        case "F9":  setValue(keyAddr,  97, "i32"); break;
+                        case "F10": setValue(keyAddr,  98, "i32"); break;
+                        case "F11": setValue(keyAddr,  99, "i32"); break;
+                        case "F12": setValue(keyAddr, 100, "i32"); break;
 
-                        case "PrintScreen":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 101, "i32"); break;
-                        case "ScrollLock": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 102, "i32"); break;
-                        case "Pause":      setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 103, "i32"); break;
+                        case "PrintScreen":setValue(keyAddr, 101, "i32"); break;
+                        case "ScrollLock": setValue(keyAddr, 102, "i32"); break;
+                        case "Pause":      setValue(keyAddr, 103, "i32"); break;
 
-                        case "Insert":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 104, "i32"); break;
-                        case "Home":     setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 105, "i32"); break;
-                        case "PageUp":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 106, "i32"); break;
-                        case "Delete":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 107, "i32"); break;
-                        case "End":      setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 108, "i32"); break;
-                        case "PageDown": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 109, "i32"); break;
+                        case "Insert":   setValue(keyAddr, 104, "i32"); break;
+                        case "Home":     setValue(keyAddr, 105, "i32"); break;
+                        case "PageUp":   setValue(keyAddr, 106, "i32"); break;
+                        case "Delete":   setValue(keyAddr, 107, "i32"); break;
+                        case "End":      setValue(keyAddr, 108, "i32"); break;
+                        case "PageDown": setValue(keyAddr, 109, "i32"); break;
                     };
 
                     /* For some reason checking
@@ -602,7 +608,7 @@ int D_PumpEvents(){
                      *  all keyboard events were
                      *  keyup events. */
                     if(event.key == " "){
-                        setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 60, "i32");
+                        setValue(keyAddr, 60, "i32");
                     };
 
                     D_KeyEventsThisFrame++;
