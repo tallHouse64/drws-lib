@@ -88,6 +88,7 @@ typedef struct D_D_InputState {
  */
 D_uint32 * D_D_Buffer1 = D_NULL;
 D_uint32 * D_D_Buffer2 = D_NULL;
+D_Surf * D_D_OutSurf = D_NULL;
 
 
 /* This finds the element with the id
@@ -169,6 +170,8 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
 
     surf->outId = 1;
 
+    D_D_OutSurf = surf;
+
     return surf;
 };
 
@@ -190,6 +193,10 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
  */
 D_Surf * D_GetResizedOutSurf(D_Surf * s){
     return s;
+};
+
+D_Surf * D_OutIdToOutSurf(int outId){
+    return D_D_OutSurf;
 };
 
 /* This function frees a surf created by
