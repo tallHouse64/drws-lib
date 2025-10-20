@@ -15,7 +15,9 @@
  * This file tests the D_PumpEvents() function.
  */
 
-/* This function prints keys */
+/* This function prints special keys that
+ *  D_DKeyToChar() returns null for, like
+ *  CapsLock or Ctrl.*/
 int printSpecialKey(D_Key k){
     switch(k){
 
@@ -23,6 +25,25 @@ int printSpecialKey(D_Key k){
         case D_KRight: EM_ASM({console.log("Right");}); break;
         case D_KUp:    EM_ASM({console.log("Up");});    break;
         case D_KDown:  EM_ASM({console.log("Down");});  break;
+
+        case D_KEscape:   EM_ASM({console.log("Escape");});   break;
+        case D_KTab:      EM_ASM({console.log("Tab");});      break;
+        case D_KCapLock:  EM_ASM({console.log("CapLock");});  break;
+        case D_KLeftShift:EM_ASM({console.log("LeftShift");});break;
+        case D_KLeftCtrl: EM_ASM({console.log("LeftCtrl");}); break;
+        case D_KLeftSuper:EM_ASM({console.log("LeftSuper");});break;
+        case D_KAlt:      EM_ASM({console.log("Alt");});      break;
+        case D_KAltGr:    EM_ASM({console.log("AltGr");});    break;
+        case D_KRightSuper:EM_ASM({console.log("RightSuper");});break;
+        case D_KContextMenu:EM_ASM({console.log("ContextMenu");});break;
+        case D_KRightCtrl:EM_ASM({console.log("RightCtrl");});break;
+        case D_KRightShift:EM_ASM({console.log("RightShift");});break;
+        case D_KEnter:    EM_ASM({console.log("Enter");});    break;
+        case D_KBackspace:EM_ASM({console.log("Backspace");});break;
+
+        case D_KPrintScreen:EM_ASM({console.log("PrintScreen")});break;
+        case D_KScrollLock: EM_ASM({console.log("ScrollLock")}); break;
+        case D_KPause:      EM_ASM({console.log("Pause")});      break;
 
         default:
             EM_ASM({console.log("Unknown");});

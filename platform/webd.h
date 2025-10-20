@@ -457,9 +457,9 @@ int D_PumpEvents(){
 
                 if(event.type === "keydown" || event.type === "keyup"){
 
-                    /* Write 0 to
+                    /* Write D_KUnknown to
                      *  inputState->keyboardEvent[D_KeyEventsThisFrame].key*/
-                    setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 0, "i32");
+                    setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 110, "i32");
 
                     /*console.log("key " + event.key);*/
 
@@ -527,6 +527,64 @@ int D_PumpEvents(){
                         case "Right": case "ArrowRight": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 48, "i32"); break;
                         case "Up":    case "ArrowUp":    setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 49, "i32"); break;
                         case "Down":  case "ArrowDown":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 50, "i32"); break;
+
+                        case "Esc":
+                        case "Escape":    setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 51, "i32"); break;
+                        case "`":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 52, "i32"); break;
+                        case "Tab":       setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 53, "i32"); break;
+                        case "CapsLock":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 54, "i32"); break;
+                        case "Shift":     setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 55, "i32"); break;
+                        case String.fromCharCode(92): setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 56, "i32"); break;
+                        case "Control":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 57, "i32"); break;
+                        case "Meta":      setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 58, "i32"); break;
+                        case "Alt":       setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 59, "i32"); break;
+                        //case " ":       setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 60, "i32"); break;
+                        case "AltGraph":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 61, "i32"); break;
+                        /* D_KRightSuper*/
+                        case "ContextMenu":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 63, "i32"); break;
+                        /* D_KRightCtrl */
+                        /* D_KRightShift*/
+                        case "Enter":     setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 66, "i32"); break;
+                        case "Backspace": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 67, "i32"); break;
+
+                        case "|":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 68, "i32"); break;
+
+                        case "-":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 69, "i32"); break;
+                        case "=":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 70, "i32"); break;
+                        case "[":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 71, "i32"); break;
+                        case "]":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 72, "i32"); break;
+                        case ";":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 73, "i32"); break;
+                        case "'":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 74, "i32"); break;
+                        case "#":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 75, "i32"); break;
+                        case ",":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 76, "i32"); break;
+                        case ".":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 77, "i32"); break;
+                        case "/":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 78, "i32"); break;
+
+                        case "_":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 79, "i32"); break;
+                        case "+":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 80, "i32"); break;
+                        case "{":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 81, "i32"); break;
+                        case "}":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 82, "i32"); break;
+                        case ":":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 83, "i32"); break;
+                        case "@":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 84, "i32"); break;
+                        case "~":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 85, "i32"); break;
+                        case "<":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 86, "i32"); break;
+                        case ">":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 87, "i32"); break;
+                        case "?":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 88, "i32"); break;
+
+                        /* F1 to F12*/
+
+                        case "PrintScreen":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 101, "i32"); break;
+                        case "ScrollLock":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 102, "i32"); break;
+                        case "Pause":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 103, "i32"); break;
+                    };
+
+                    /* For some reason checking
+                     *  for space in the switch
+                     *  above caused a bug where
+                     *  all keyboard events were
+                     *  keyup events. */
+                    if(event.key == " "){
+                        setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 60, "i32");
                     };
 
                     D_KeyEventsThisFrame++;
