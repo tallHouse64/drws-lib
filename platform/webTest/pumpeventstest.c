@@ -91,7 +91,7 @@ int main(int argc, char ** argv){
             switch(e.type){
 
                 case D_MOUSEMOVE:
-                    EM_ASM({console.log("Mouse move!");});
+                    EM_ASM({console.log("Mouse move! x: " + $0 + " y: " + $1);}, e.mouse.x, e.mouse.y);
                     break;
                 case D_MOUSEDOWN:
                     EM_ASM({console.log("Mouse down!");});

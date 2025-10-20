@@ -428,8 +428,8 @@ int D_PumpEvents(){
                     case "mousedown":
                     case "mouseup":
 
-                        D_MouseX = event.clientX;
-                        D_MouseY = event.clientY;
+                        D_MouseX = event.offsetX;
+                        D_MouseY = event.offsetY;
                         D_ButtonState = event.buttons;
 
                         //ccall('D_D_SetMouseState', 'number', ['number', 'number', 'number', 'number'], [$0, event.clientX, event.clientY, event.buttons]);
