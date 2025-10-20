@@ -172,6 +172,26 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
     return surf;
 };
 
+/* Normally when a window gets resized it's
+ *  surface becomes invalid and gets passed to
+ *  this function. Right now webd.h doesn't
+ *  support canvas resizing so this function does
+ *  nothing except return the surface passed into
+ *  it.
+ *
+ * This function is only needed when an
+ *  D_OUTSURFRESIZE event fires, but because
+ *  webd.h doesn't support resizing, this should
+ *  never fire.
+ *
+ * s: The surface that would be resized.
+ * returns: The surface s, that was passed into
+ *  this function.
+ */
+D_Surf * D_GetResizedOutSurf(D_Surf * s){
+    return s;
+};
+
 /* This function frees a surf created by
  *  D_GetOutSurf().
  *
@@ -759,5 +779,10 @@ int D_PumpEvents(){
     }
 
 
+    return 0;
+};
+
+int D_Delay(int ms){
+    emscripten_sleep(ms);
     return 0;
 };
