@@ -539,12 +539,12 @@ int D_PumpEvents(){
                         case "`":         setValue(keyAddr, 52, "i32"); break;
                         case "Tab":       setValue(keyAddr, 53, "i32"); break;
                         case "CapsLock":  setValue(keyAddr, 54, "i32"); break;
-                        case "Shift":     setValue(keyAddr, 55, "i32"); break;
+                        //case "Shift":     setValue(keyAddr, 55, "i32"); break;
                         case String.fromCharCode(92): setValue(keyAddr, 56, "i32"); break;
-                        case "Control":   setValue(keyAddr, 57, "i32"); break;
+                        //case "Control":   setValue(keyAddr, 57, "i32"); break;
                         case "Meta":      setValue(keyAddr, 58, "i32"); break;
                         case "Alt":       setValue(keyAddr, 59, "i32"); break;
-                        //case " ":       setValue(keyAddr, 60, "i32"); break;
+                        //case " ":         setValue(keyAddr, 60, "i32"); break;
                         case "AltGraph":  setValue(keyAddr, 61, "i32"); break;
                         /* D_KRightSuper*/
                         case "ContextMenu":setValue(keyAddr, 63, "i32"); break;
@@ -609,6 +609,27 @@ int D_PumpEvents(){
                      *  keyup events. */
                     if(event.key == " "){
                         setValue(keyAddr, 60, "i32");
+
+                        /* Handle left/right
+                         *  control, shift, alt,
+                         *  separately from the
+                         *  above switch. */
+                    }else if(event.key == "Control"){
+
+                        if(event.code == "ControlRight"){
+                            setValue(keyAddr, 64, "i32");
+                        }else{
+                            setValue(keyAddr, 57, "i32");
+                        };
+
+                    }else if(event.key == "Shift"){
+
+                        if(event.code == "ShiftRight"){
+                            setValue(keyAddr, 65, "i32");
+                        }else{
+                            setValue(keyAddr, 55, "i32");
+                        };
+
                     };
 
                     D_KeyEventsThisFrame++;
