@@ -571,11 +571,29 @@ int D_PumpEvents(){
                         case ">":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 87, "i32"); break;
                         case "?":         setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 88, "i32"); break;
 
-                        /* F1 to F12*/
+                        case "F1":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  89, "i32"); break;
+                        case "F2":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  90, "i32"); break;
+                        case "F3":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  91, "i32"); break;
+                        case "F4":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  92, "i32"); break;
+                        case "F5":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  93, "i32"); break;
+                        case "F6":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  94, "i32"); break;
+                        case "F7":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  95, "i32"); break;
+                        case "F8":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  96, "i32"); break;
+                        case "F9":  setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  97, "i32"); break;
+                        case "F10": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  98, "i32"); break;
+                        case "F11": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4,  99, "i32"); break;
+                        case "F12": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 100, "i32"); break;
 
                         case "PrintScreen":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 101, "i32"); break;
-                        case "ScrollLock":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 102, "i32"); break;
-                        case "Pause":setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 103, "i32"); break;
+                        case "ScrollLock": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 102, "i32"); break;
+                        case "Pause":      setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 103, "i32"); break;
+
+                        case "Insert":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 104, "i32"); break;
+                        case "Home":     setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 105, "i32"); break;
+                        case "PageUp":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 106, "i32"); break;
+                        case "Delete":   setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 107, "i32"); break;
+                        case "End":      setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 108, "i32"); break;
+                        case "PageDown": setValue(($0 + 16) + (D_KeyEventsThisFrame * 8) + 4, 109, "i32"); break;
                     };
 
                     /* For some reason checking

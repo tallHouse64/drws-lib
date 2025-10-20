@@ -41,9 +41,30 @@ int printSpecialKey(D_Key k){
         case D_KEnter:    EM_ASM({console.log("Enter");});    break;
         case D_KBackspace:EM_ASM({console.log("Backspace");});break;
 
+        case D_KF1:  EM_ASM({console.log("F1")});  break;
+        case D_KF2:  EM_ASM({console.log("F2")});  break;
+        case D_KF3:  EM_ASM({console.log("F3")});  break;
+        case D_KF4:  EM_ASM({console.log("F4")});  break;
+        case D_KF5:  EM_ASM({console.log("F5")});  break;
+        case D_KF6:  EM_ASM({console.log("F6")});  break;
+        case D_KF7:  EM_ASM({console.log("F7")});  break;
+        case D_KF8:  EM_ASM({console.log("F8")});  break;
+        case D_KF9:  EM_ASM({console.log("F9")});  break;
+        case D_KF10: EM_ASM({console.log("F10")}); break;
+        case D_KF11: EM_ASM({console.log("F11")}); break;
+        case D_KF12: EM_ASM({console.log("F12")}); break;
+
         case D_KPrintScreen:EM_ASM({console.log("PrintScreen")});break;
         case D_KScrollLock: EM_ASM({console.log("ScrollLock")}); break;
         case D_KPause:      EM_ASM({console.log("Pause")});      break;
+
+        case D_KInsert:    EM_ASM({console.log("Insert")}); break;
+        case D_KHome:      EM_ASM({console.log("Home")});   break;
+        case D_KPageUp:    EM_ASM({console.log("PageUp")}); break;
+        case D_KDelete:    EM_ASM({console.log("Delete")}); break;
+        case D_KEnd:       EM_ASM({console.log("End")});    break;
+        case D_KPageDown:  EM_ASM({console.log("PageDown")});break;
+
 
         default:
             EM_ASM({console.log("Unknown");});
