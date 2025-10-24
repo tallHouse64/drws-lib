@@ -149,7 +149,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
 
         window.D_Context = D_Canvas.getContext('2d');
         window.D_ImageData = D_Context.getImageData(0, 0, D_Canvas.width, D_Canvas.height);
-        //var data = imageData.data;
+        window.D_DirectData = D_ImageData.data;
 
         return 1;
     }, w, h);
@@ -241,6 +241,7 @@ int D_FreeOutSurf(D_Surf * s){
         D_ImageData = undefined;
         D_Context = undefined;
         D_Canvas = undefined;
+        D_DirectData = undefined;
     });
 
     return 0;
@@ -281,13 +282,11 @@ int D_FlipOutSurf(D_Surf * s){
 
         var pixel = 0;
 
-        for(var i = 0; i < (D_Canvas.width * D_Canvas.height); i++){
-            pixel = getValue(($0) + (i * 4), "i32");
+        let view = HEAPU8.subarray($0, $0 + (D_Canvas.width * D_Canvas.height * 4));
 
-            D_ImageData.data[(i * 4)    ] = ((pixel       ) & 0xFF); //Red
-            D_ImageData.data[(i * 4) + 1] = ((pixel >>>  8) & 0xFF); //Green
-            D_ImageData.data[(i * 4) + 2] = ((pixel >>> 16) & 0xFF); //Blue
-            D_ImageData.data[(i * 4) + 3] = ((pixel >>> 24) & 0xFF); //Alpha
+        for(var i = 0; i < (D_Canvas.width * D_Canvas.height * 4); i++){
+
+            D_DirectData[i] = view[i];
 
         };
 

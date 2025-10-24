@@ -3,7 +3,7 @@
 #include"../../dplatform.h"
 #include"../webd.h"
 
-#define DELAY 1000/5
+#define DELAY 1000/60
 
 D_Surf * out = D_NULL;
 
@@ -36,7 +36,14 @@ int main(){
     while(1){
         EM_ASM({console.log("While loop!")});
 
-        D_SurfCopyScale(testImage, D_NULL, out, D_NULL);
+        /*D_SurfCopyScale(testImage, D_NULL, out, D_NULL);*/
+
+        colorBox.x = 0;
+        D_FillRect(out, &colorBox, D_rgbaToFormat(out->format, 255, 0, 0, 255));
+        colorBox.x += colorBox.w;
+        D_FillRect(out, &colorBox, D_rgbaToFormat(out->format, 0, 255, 0, 255));
+        colorBox.x += colorBox.w;
+        D_FillRect(out, &colorBox, D_rgbaToFormat(out->format, 0, 0, 255, 255));
 
         if(state){
             D_FillRect(out, &flashingRect, D_rgbaToFormat(out->format, 0, 0, 255, 255));
@@ -44,7 +51,16 @@ int main(){
             D_FillRect(out, &flashingRect, D_rgbaToFormat(out->format, 255, 0, 0, 255));
         };
 
+        EM_ASM({
+            window.timeBeforeFlipOutSurf = Date.now();
+        });
+
         D_FlipOutSurf(out);
+
+        EM_ASM({
+            console.log("D_FlipSurf() took " + (Date.now() - timeBeforeFlipOutSurf) + "ms");
+        });
+
         state = !state;
 
         emscripten_sleep(DELAY);
