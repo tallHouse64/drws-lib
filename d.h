@@ -209,6 +209,10 @@ typedef struct D_Point {
 typedef struct D_Surf {
     void * pix;
     int w, h;
+
+    /*Num of bytes between each row of pixels*/
+    int pitch;
+
     int outId;
     D_uint8 alphaMod;
     D_BLENDMODE blendMode;
