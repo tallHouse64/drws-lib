@@ -1144,23 +1144,24 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
         while(x < rect->x + rect->w){
             switch(D_BITDEPTHTOBYTES(s->format.bitDepth)){
                 case 4:
-                    ((D_uint32 *)(s->pix))[(y * s->w) + x] = col;
+                    /*((D_uint32 *)(s->pix))[(y * s->w) + x] = col;*/
+                    &((D_Uint32 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 4) + (s->pitch * y)))) = col;
                     /*printf("32 bitdepth\n");*/
                     break;
                 case 2:
-                    ((D_uint16 *)(s->pix))[(y * s->w) + x] = col;
+                    /*((D_uint16 *)(s->pix))[(y * s->w) + x] = col;*/
+                    &((D_Uint16 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 2) + (s->pitch * y)))) = col;
                     /*printf("16 bitdepth\n");*/
                     break;
                 case 1:
-                    ((D_uint8 *)(s->pix))[(y * s->w) + x] = col;
+                    /*((D_uint8 *)(s->pix))[(y * s->w) + x] = col;*/
+                    &((D_Uint8  *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x)    ) + (s->pitch * y)))) = col;
                     /*printf("8 bitdepth\n");*/
                     break;
                 default:
-                    /* Maybe add error message
-                     *  here, like "bitDepth not
-                     *  supported." Like SDLs
-                     *  SDL_GetError().
-                     */
+
+                    D_SetError("Drws-lib D_FillRect(): Bit depth not supported.");
+
                     return -1;
                     break;
             };
