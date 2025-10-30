@@ -717,7 +717,7 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
  * format: The format of the pixel data.
  * pix: A pointer to the pixel data to put in the surface.
  */
-D_Surf * D_CreateSurfFrom(int w, int h, D_PixFormat format, void * pix){
+D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_PixFormat format, void * pix){
     D_Surf * s = D_CALLOC(1, sizeof(D_Surf));
     if(s == D_NULL){
         return D_NULL;
@@ -726,6 +726,7 @@ D_Surf * D_CreateSurfFrom(int w, int h, D_PixFormat format, void * pix){
     s->pix = pix;
     s->w = w;
     s->h = h;
+    s->pitch = pitch;
     s->outId = -1;
     s->alphaMod = 255;
     s->blendMode = D_BLENDMODE_NORMAL;
