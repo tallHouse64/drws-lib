@@ -213,6 +213,10 @@ typedef struct D_Surf {
     /*Num of bytes between each row of pixels*/
     int pitch;
 
+    /* The part of the surface that is safe to
+     *  draw to, usually the whole surface. */
+    D_Rect safeArea;
+
     int outId;
     D_uint8 alphaMod;
     D_BLENDMODE blendMode;
