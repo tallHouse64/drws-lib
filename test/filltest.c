@@ -1,5 +1,16 @@
 #include<SDL2/SDL.h>
+#define D_IMPLEMENTATION
 #include"../d.h"
+
+/* This file tests the D_FillRect() function.
+ *
+ * If the function works, 3 windows should
+ *  appear, one at a time. A green rectangle
+ *  should appear covering the entire window
+ *  except for a 1 pixel thick black line in each
+ *  window. The third window has a grey rectangle
+ *  instead of green.
+ */
 
 int showSurf(D_Surf * s){
 
@@ -16,7 +27,7 @@ int showSurf(D_Surf * s){
 
     SDL_UpdateWindowSurface(w);
 
-    SDL_Delay(1000);
+    SDL_Delay(3000);
 
     SDL_DestroyWindow(w);
     ws = NULL;
@@ -65,7 +76,7 @@ int main(){
     //ABGR8888 fill test
     D_Surf * s = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32));
 
-    D_Rect r = {5, 5, 630, 470};
+    D_Rect r = {1, 1, 638, 478};
     D_FillRect(s, &r, D_rgbaToFormat(s->format, 200, 255, 200, 255));
 
     //printf("Colour: %#x\n", D_rgbaToFormat(s->format, 200, 255, 200, 255));

@@ -237,7 +237,7 @@ int D_RawFormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int 
 int D_FormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int * a);
 D_uint32 D_ConvertPixel(D_PixFormat from, D_PixFormat to, D_uint32 p);
 D_Surf * D_CreateSurf(int w, int h, D_PixFormat format);
-D_Surf * D_CreateSurfFrom(int w, int h, D_PixFormat format, void * pix);
+D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_PixFormat format, void * pix);
 int D_FreeSurf(D_Surf * s);
 int D_BlendNone(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
 int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
@@ -1145,17 +1145,17 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
             switch(D_BITDEPTHTOBYTES(s->format.bitDepth)){
                 case 4:
                     /*((D_uint32 *)(s->pix))[(y * s->w) + x] = col;*/
-                    &((D_Uint32 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 4) + (s->pitch * y)))) = col;
+                    *((D_uint32 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 4) + (s->pitch * y)))) = col;
                     /*printf("32 bitdepth\n");*/
                     break;
                 case 2:
                     /*((D_uint16 *)(s->pix))[(y * s->w) + x] = col;*/
-                    &((D_Uint16 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 2) + (s->pitch * y)))) = col;
+                    *((D_uint16 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 2) + (s->pitch * y)))) = col;
                     /*printf("16 bitdepth\n");*/
                     break;
                 case 1:
                     /*((D_uint8 *)(s->pix))[(y * s->w) + x] = col;*/
-                    &((D_Uint8  *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x)    ) + (s->pitch * y)))) = col;
+                    *((D_uint8  *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x)    ) + (s->pitch * y)))) = col;
                     /*printf("8 bitdepth\n");*/
                     break;
                 default:
