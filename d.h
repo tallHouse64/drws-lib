@@ -1151,13 +1151,15 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
     if(rect == D_NULL){
         temp.w = s->w;
         temp.h = s->h;
-        rect = &temp;
     }else{
-        D_ClipRect(0, 0, s->w, s->h, rect);
+        temp = *rect;
     };
 
-    int x = rect->x;
-    int y = rect->y;
+    D_ClipRect(s->safeArea.x, s->safeArea.y, s->safeArea.w, s->safeArea.h, &temp);
+
+
+    int x = temp.x;
+    int y = temp.y;
 
     /*printf("x: %d y: %d\n", x, y);*/
 
@@ -1165,10 +1167,10 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
      *  the switch can be outside them instead of
      *  inside.
      */
-    while(y < rect->y + rect->h){
-        x = rect->x;
-        /*x = (rect->x < 0) ? 0 : rect->x;*/
-        while(x < rect->x + rect->w){
+    while(y < temp.y + temp.h){
+        x = temp.x;
+        /*x = (temp.x < 0) ? 0 : temp.x;*/
+        while(x < temp.x + temp.w){
             switch(D_BITDEPTHTOBYTES(s->format.bitDepth)){
                 case 4:
                     /*((D_uint32 *)(s->pix))[(y * s->w) + x] = col;*/
