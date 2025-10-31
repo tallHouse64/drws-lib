@@ -714,6 +714,8 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
  *
  * w: The width of the surface.
  * h: The height of the surface.
+ * pitch: The number of bytes between each row
+ *  (BYTES not pixels).
  * format: The format of the pixel data.
  * pix: A pointer to the pixel data to put in the surface.
  */
