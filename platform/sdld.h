@@ -198,6 +198,7 @@ D_Surf * D_GetResizedOutSurf(D_Surf * s){
     outSurfs[temp.outId] = D_CreateSurfFrom(
         sdls[temp.outId]->w,
         sdls[temp.outId]->h,
+        0,
         D_FindPixFormat(sdls[temp.outId]->format->Rmask, sdls[temp.outId]->format->Gmask, sdls[temp.outId]->format->Bmask, sdls[temp.outId]->format->Amask, sdls[temp.outId]->format->BitsPerPixel),
         sdls[temp.outId]->pixels);
 
