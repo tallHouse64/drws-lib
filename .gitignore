@@ -61,6 +61,8 @@ test/bigcustomeventtest
 test/setgeterrortest
 test/setsurfalphamodtest
 test/surfcopyscalealphamodtest
+test/subsurfacetest
+test/subsurfacetest.exe
 test/a.out
 test/a.exe
 
