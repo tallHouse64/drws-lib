@@ -726,10 +726,15 @@ D_Surf * D_CreateSurf(int w, int h, D_PixFormat format){
  * h: The height of the surface.
  * pitch: The number of bytes between each row
  *  (BYTES not pixels).
+ * safeRect: What part of the surface is safe to
+ *  draw to, use D_NULL unless you know part of
+ *  the surface is not safe to read/write to.
+ *  Passing D_NULL means the whole surface is
+ *  safe to draw to.
  * format: The format of the pixel data.
  * pix: A pointer to the pixel data to put in the surface.
  */
-D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_PixFormat format, void * pix){
+D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixFormat format, void * pix){
     D_Surf * s = D_CALLOC(1, sizeof(D_Surf));
     if(s == D_NULL){
         return D_NULL;
@@ -739,6 +744,16 @@ D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_PixFormat format, void * pi
     s->w = w;
     s->h = h;
     s->pitch = pitch;
+
+    if(safeRect == D_NULL){
+        s->safeRect.x = 0;
+        s->safeRect.y = 0;
+        s->safeRect.w = w;
+        s->safeRect.h = h;
+    }else{
+        s->safeRect = *safeRect;
+    };
+
     s->outId = -1;
     s->alphaMod = 255;
     s->blendMode = D_BLENDMODE_NORMAL;
