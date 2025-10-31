@@ -241,7 +241,7 @@ int D_RawFormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int 
 int D_FormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int * a);
 D_uint32 D_ConvertPixel(D_PixFormat from, D_PixFormat to, D_uint32 p);
 D_Surf * D_CreateSurf(int w, int h, D_PixFormat format);
-D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_PixFormat format, void * pix);
+D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixFormat format, void * pix);
 int D_FreeSurf(D_Surf * s);
 int D_BlendNone(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
 int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
@@ -746,12 +746,12 @@ D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixForma
     s->pitch = pitch;
 
     if(safeRect == D_NULL){
-        s->safeRect.x = 0;
-        s->safeRect.y = 0;
-        s->safeRect.w = w;
-        s->safeRect.h = h;
+        s->safeArea.x = 0;
+        s->safeArea.y = 0;
+        s->safeArea.w = w;
+        s->safeArea.h = h;
     }else{
-        s->safeRect = *safeRect;
+        s->safeArea = *safeRect;
     };
 
     s->outId = -1;
