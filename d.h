@@ -763,6 +763,57 @@ D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixForma
     return s;
 };
 
+/* This function creates a surface using part of
+ *  (a smaller rectangle of) the pixel data from
+ *  another surface.
+ *
+ * It is safe to pass null into "outer", the
+ *  function would do nothing and return null.
+ *
+ * It is also safe to pass null into "where", the
+ *  created subsurf would cover the entire outer
+ *  surface.
+ *
+ * outer: The outer surface to use pixel data
+ *  from.
+ * where: The rectangle that the subsurf should
+ *  cover on the outer surface.
+ */
+D_Surf * D_CreateSubsurf(D_Surf * outer, D_Rect * where){
+
+    if(outer == D_NULL){
+        return D_NULL;
+    };
+
+    /* "where2" is the same as "where" except
+     *  sanitised and not null.*/
+    D_Rect where2 = {0};
+    if(where == D_NULL){
+        where2.x = 0;
+        where2.y = 0;
+        where2.w = outer->w;
+        where2.h = outer->h;
+    }else{
+        where2 = *where;
+    };
+
+
+    D_Rect innerSafeArea = where2;
+
+    D_ClipRect(outer->safeArea.x, outer->safeArea.y, outer->safeArea.w, outer->safeArea.h, &innerSafeArea);
+
+
+    D_Surf * inner =
+    D_CreateSurfFrom(where2.w,
+                     where2.h,
+                     ((outer->w - where2.w) * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + outer->pitch,
+                     &innerSafeRect,
+                     outer->format,
+                     (((D_uint8 *)out->pix) + (((where2.y * outer->w) + where2.x) * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + outer->pitch));
+
+    return inner;
+};
+
 /* This frees a surface created with
  *  D_CreateSurf() or D_CreateSurfFrom(). If the
  *  surface is preallocated (made using
