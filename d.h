@@ -767,6 +767,20 @@ D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixForma
  *  (a smaller rectangle of) the pixel data from
  *  another surface.
  *
+ * This function is useful for situations where
+ *  you would create a surface, draw to it, then
+ *  copy it to the screen (another surface).
+ *  Using this function would mean drawing to the
+ *  surface would just draw to the screen
+ *  directly (even though you are drawing to what
+ *  seems like a separate surface). This should
+ *  save memory and time spent copying.
+ *
+ * Bear in mind that, if you use this function as
+ *  an alternative to D_SurfCopyScale(), you
+ *  won't be able to scale the surface. A subsurf
+ *  can only "mount" pixels 1 to 1.
+ *
  * It is safe to pass null into "outer", the
  *  function would do nothing and return null.
  *
@@ -778,6 +792,8 @@ D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixForma
  *  from.
  * where: The rectangle that the subsurf should
  *  cover on the outer surface.
+ * returns: The created subsurface on success or
+ *  null on failure.
  */
 D_Surf * D_CreateSubsurf(D_Surf * outer, D_Rect * where){
 
@@ -785,8 +801,9 @@ D_Surf * D_CreateSubsurf(D_Surf * outer, D_Rect * where){
         return D_NULL;
     };
 
+
     /* "where2" is the same as "where" except
-     *  sanitised and not null.*/
+     *  safe (not null).*/
     D_Rect where2 = {0};
     if(where == D_NULL){
         where2.x = 0;
