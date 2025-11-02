@@ -242,6 +242,7 @@ int D_FormatTorgba(D_uint32 p, D_PixFormat f, int * r, int * g, int * b, int * a
 D_uint32 D_ConvertPixel(D_PixFormat from, D_PixFormat to, D_uint32 p);
 D_Surf * D_CreateSurf(int w, int h, D_PixFormat format);
 D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixFormat format, void * pix);
+D_Surf * D_CreateSubsurf(D_Surf * outer, D_Rect * where);
 int D_FreeSurf(D_Surf * s);
 int D_BlendNone(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
 int D_BlendNormal(int sr, int sg, int sb, int sa, int dr, int dg, int db, int da, int * r, int * g, int * b, int * a);
@@ -781,12 +782,18 @@ D_Surf * D_CreateSurfFrom(int w, int h, int pitch, D_Rect * safeRect, D_PixForma
  *  won't be able to scale the surface. A subsurf
  *  can only "mount" pixels 1 to 1.
  *
+ * Internally this function uses
+ *  D_CreateSurfFrom() on the outer pixel data.
+ *
  * It is safe to pass null into "outer", the
  *  function would do nothing and return null.
  *
  * It is also safe to pass null into "where", the
  *  created subsurf would cover the entire outer
  *  surface.
+ *
+ * A subsurf created by this function can be
+ *  freed using D_FreeSurf().
  *
  * outer: The outer surface to use pixel data
  *  from.
