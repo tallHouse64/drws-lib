@@ -77,10 +77,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
 
     sdls[i] = SDL_GetWindowSurface(sdlw[i]);
 
-    D_Surf * s = D_CALLOC(1, sizeof(D_Surf));
-    s->pix = sdls[i]->pixels;
-    s->w = sdls[i]->w;
-    s->h = sdls[i]->h;
+    D_Surf * s = D_CreateSurfFrom(sdls[i]->w, sdls[i]->h, 0, D_NULL, D_FindPixFormat(sdls[i]->format->Rmask, sdls[i]->format->Gmask, sdls[i]->format->Bmask, sdls[i]->format->Amask, sdls[i]->format->BitsPerPixel), sdls[i]->pixels);
     s->outId = i;
     s->blendMode = D_BLENDMODE_NORMAL;
     s->outSurfFlags = flags;
@@ -92,7 +89,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
     //surfaces store pixels like d.h does,only storing
     //pixles in byte sizes.
     //todo: make sure that's true, fix if not.
-    s->format = D_FindPixFormat(sdls[i]->format->Rmask, sdls[i]->format->Gmask, sdls[i]->format->Bmask, sdls[i]->format->Amask, sdls[i]->format->BitsPerPixel);
+    /*s->format = D_FindPixFormat(sdls[i]->format->Rmask, sdls[i]->format->Gmask, sdls[i]->format->Bmask, sdls[i]->format->Amask, sdls[i]->format->BitsPerPixel);*/
     return s;
 };
 
@@ -199,6 +196,7 @@ D_Surf * D_GetResizedOutSurf(D_Surf * s){
         sdls[temp.outId]->w,
         sdls[temp.outId]->h,
         0,
+        D_NULL,
         D_FindPixFormat(sdls[temp.outId]->format->Rmask, sdls[temp.outId]->format->Gmask, sdls[temp.outId]->format->Bmask, sdls[temp.outId]->format->Amask, sdls[temp.outId]->format->BitsPerPixel),
         sdls[temp.outId]->pixels);
 
