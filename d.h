@@ -1489,6 +1489,76 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     return 0;
 };
 
+/* This function copies one surface onto another,
+ *  it can copy part of the source to part of the
+ *  destination.
+ *
+ * It is safe to pass null for s1 and s2, the
+ *  function would do nothing and return -1.
+ *
+ * s1: The surface to copy from.
+ * r1: What part of s1 to copy, pass D_NULL for
+ *  the whole of s1.
+ * s2: The surface to copy to.
+ * r2: Where to copy onto s2. Pass D_NULL to copy
+ *  onto the whole of s2.
+ */
+#if 0
+int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
+
+    if(s1 == D_NULL || s2 == D_NULL){
+        return -1;
+    };
+
+
+    /* sr1 means safe rect 1, it's the same as r1
+     *  except it can't be null. */
+    D_Rect sr1 = {0};
+    if(r1 == D_NULL){
+        sr1.x = 0;
+        sr1.y = 0;
+        sr1.w = s1->w;
+        sr1.h = s1->h;
+    }else{
+        sr1 = *r1;
+    };
+
+
+    /* sr2 means safe rect 2, it's the same as r2
+     *  except it can't be null. */
+    D_Rect sr2 = {0};
+    if(r2 == D_NULL){
+        sr2.x = 0;
+        sr2.y = 0;
+        sr2.w = s2->w;
+        sr2.h = s2->h;
+    }else{
+        sr2 = *r2;
+    };
+
+    /* lr1 means "limit rect 1". It is the same
+     *  as sr1 except clipped to s1->safeArea.
+     *  This function should not read pixels
+     *  outside lr1. The reason lr2 exists is
+     *  because clipping sr1 would cause
+     *  stretching in ways the user of this
+     *  function may not want. */
+    D_Rect lr1 = sr1;
+    D_ClipRect(s1->safeArea.x, s1->safeArea.y, s1->safeArea.w, s1->safeArea.h, &lr1);
+
+
+
+    /* Loop through the pixels of the destination
+     *  surface. Left to right, top to bottom. */
+    int x = ( sr2.x > s2->safeArea.x ? sr2.x : s2->safeArea.x );
+    int y = ( sr2.y > s2->safeArea.y ? sr2.y : s2->safeArea.y );
+
+    while(y < ){};
+
+    return 0;
+};
+#endif
+
 /* This finds the number position of where a
  *  character is on a character map.
  *
