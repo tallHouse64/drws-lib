@@ -827,13 +827,18 @@ D_Surf * D_CreateSubsurf(D_Surf * outer, D_Rect * where){
     D_ClipRect(outer->safeArea.x, outer->safeArea.y, outer->safeArea.w, outer->safeArea.h, &innerSafeArea);
 
 
+    /* Make innerSafeArea relative to inner. */
+    innerSafeArea.x = innerSafeArea.x - where2.x;
+    innerSafeArea.y = innerSafeArea.y - where2.y;
+
+
     D_Surf * inner =
     D_CreateSurfFrom(where2.w,
                      where2.h,
                      ((outer->w - where2.w) * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + outer->pitch,
-                     &innerSafeRect,
+                     &innerSafeArea,
                      outer->format,
-                     (((D_uint8 *)out->pix) + (((where2.y * outer->w) + where2.x) * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + outer->pitch));
+                     (((D_uint8 *)outer->pix) + (((where2.y * outer->w) + where2.x) * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + (outer->pitch * where2.y)));
 
     return inner;
 };
