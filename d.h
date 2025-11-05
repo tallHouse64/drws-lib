@@ -1350,6 +1350,24 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     D_ClipRect(s2->safeArea.x, s2->safeArea.y, s2->safeArea.w, s2->safeArea.h, &lr2);
 
 
+    /* Source pixel colour */
+    int sr = 0;
+    int sg = 0;
+    int sb = 0;
+    int sa = 0;
+
+    /* Destination pixel colour */
+    int dr = 0;
+    int dg = 0;
+    int db = 0;
+    int da = 0;
+
+    /* Result pixel colour */
+    int rr = 0;
+    int rg = 0;
+    int rb = 0;
+    int ra = 0;
+
     /* Loop through the pixels of the destination
      *  surface. Left to right, top to bottom. */
     int dstX = lr2.x;
@@ -1388,9 +1406,36 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
                 break;
             };
 
-            /* Copy the pixel */
+            /* Get source colour from pixel */
+            D_FormatTorgba(
+                *((D_uint32 *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),
+                s1->format,
+                &sr,
+                &sg,
+                &sb,
+                &sa
+            );
+
+            /* Get destination colour from pixel
+             */
+            D_FormatTorgba(
+                *((D_uint32 *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),
+                s2->format,
+                &dr,
+                &dg,
+                &db,
+                &da
+            );
+
+            D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
+
+            /* Write the result colour to s2 */
             *((D_uint32 *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
-            *((D_uint32 *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))));
+            D_rgbaToFormat(s2->format, rr, rg, rb, ra);
+
+            /* Copy the pixel without blending *//*
+            *((D_uint32 *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
+            *((D_uint32 *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))));*/
 
             dstX++;
         };
