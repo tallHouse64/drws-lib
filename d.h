@@ -1282,6 +1282,119 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
     return 0;
 };
 
+/* This macro is for the D_SurfCopyScale()
+ *  function. It's the loop that copies pixels.
+ *  The reason it's a macro is to stop code
+ *  duplication (9 times).
+ *
+ * Don't try to edit the macro directly (your
+ *  changes might get removed accidentally).
+ *  Instead edit the code below (which is much
+ *  more readable) and copy paste it into this
+ *  macro, removing all the newlines, tabs and
+ *  comments.
+ *
+ * This macro is only intended for use in
+ *  D_SurfCopyScale() and uses local variables in
+ *  it.
+ *
+ * Make sure that srcType and dstType are the
+ *  correct data type:
+ *  D_uint32 if the bit depth is 32.
+ *  D_uint16 if the bit depth is 16.
+ *  D_uint8 if the bit depth is 8.
+ *
+ * Purposely giving an incorrect data type for
+ *  srcType or dstType may not do what you expect
+ *  because the macro also uses bit depth
+ *  information directly from s1 and s2 in
+ *  D_SurfCopyScale().
+ *
+ * srcPix: The pixel data of the source.
+ * srcType: The data type to cast source pixel
+ *  data to (read above).
+ * dstPix: The pixel data of the destination.
+ * dstType: The data type to cast destination
+ *  pixel data to (read above).
+ * returns: Void.
+ */
+#define D_D_SCSLOOP(srcType, dstType) {while(dstY < lr2.y + lr2.h){srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);if(srcY < lr1.y){dstY++;continue;}else if(srcY >= lr1.y + lr1.h){break;};dstX = lr2.x;while(dstX < lr2.x + lr2.w){srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);if(srcX < lr1.x){dstX++;continue;}else if(srcX >= lr1.x + lr1.w){break;};D_FormatTorgba(*((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),s1->format,&sr,&sg,&sb,&sa);D_FormatTorgba(*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),s2->format,&dr,&dg,&db,&da);D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) = D_rgbaToFormat(s2->format, rr, rg, rb, ra);dstX++;};dstY++;};}
+
+#if 0
+
+    /* Edit this code below instead of the macro
+     *  above, then copy it onto the macro
+     *  (remove the old macro code first) and
+     *  remove all newlines, tabs and comments.
+     */
+
+    {while(dstY < lr2.y + lr2.h){
+        /*srcY = (((dstY - sr2.y) * (sr1.h / sr2.h)) + sr1.y);*/
+        srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);
+
+        /*If above the limit area (on s1), skip*/
+        if(srcY < lr1.y){
+            dstY++;
+            continue;
+
+        /*If below the limit area (on s1), stop*/
+        }else if(srcY >= lr1.y + lr1.h){
+            break;
+        };
+
+        dstX = lr2.x;
+        while(dstX < lr2.x + lr2.w){
+            /*srcX = (((dstX - sr2.x) * (sr1.w / sr2.w)) + sr1.x);*/
+            srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);
+
+            /* If to the left of limit area (on
+             *  s1), skip. */
+            if(srcX < lr1.x){
+                dstX++;
+                continue;
+
+            /* If to the right of limit area (on
+             *  s1), stop this line. */
+            }else if(srcX >= lr1.x + lr1.w){
+                break;
+            };
+
+            /* Get source colour from pixel */
+            D_FormatTorgba(
+                *((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),
+                s1->format,
+                &sr,
+                &sg,
+                &sb,
+                &sa
+            );
+
+            /* Get destination colour from pixel
+             */
+            D_FormatTorgba(
+                *((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),
+                s2->format,
+                &dr,
+                &dg,
+                &db,
+                &da
+            );
+
+            D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
+
+            /* Write the result colour to s2 */
+            *((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
+            D_rgbaToFormat(s2->format, rr, rg, rb, ra);
+
+            dstX++;
+        };
+
+        dstY++;
+    };}
+
+#endif
+
+
 /* This function copies one surface onto another,
  *  it can copy part of the source to part of the
  *  destination.
@@ -1375,72 +1488,49 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     int srcX = 0;
     int srcY = 0;
 
-    while(dstY < lr2.y + lr2.h){
-        /*srcY = (((dstY - sr2.y) * (sr1.h / sr2.h)) + sr1.y);*/
-        srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);
+    switch(D_BITDEPTHTOBYTES(s1->format.bitDepth)){
 
-        /*If above the limit area (on s1), skip*/
-        if(srcY < lr1.y){
-            dstY++;
-            continue;
-
-        /*If below the limit area (on s1), stop*/
-        }else if(srcY >= lr1.y + lr1.h){
-            break;
-        };
-
-        dstX = lr2.x;
-        while(dstX < lr2.x + lr2.w){
-            /*srcX = (((dstX - sr2.x) * (sr1.w / sr2.w)) + sr1.x);*/
-            srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);
-
-            /* If to the left of limit area (on
-             *  s1), skip. */
-            if(srcX < lr1.x){
-                dstX++;
-                continue;
-
-            /* If to the right of limit area (on
-             *  s1), stop this line. */
-            }else if(srcX >= lr1.x + lr1.w){
-                break;
+        case 4:
+            switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
+                case 4:
+                    D_D_SCSLOOP(D_uint32, D_uint32);
+                    break;
+                case 2:
+                    D_D_SCSLOOP(D_uint32, D_uint16);
+                    break;
+                case 1:
+                    D_D_SCSLOOP(D_uint32, D_uint8);
+                    break;
             };
+            break;
 
-            /* Get source colour from pixel */
-            D_FormatTorgba(
-                *((D_uint32 *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),
-                s1->format,
-                &sr,
-                &sg,
-                &sb,
-                &sa
-            );
+        case 2:
+            switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
+                case 4:
+                    D_D_SCSLOOP(D_uint16, D_uint32);
+                    break;
+                case 2:
+                    D_D_SCSLOOP(D_uint16, D_uint16);
+                    break;
+                case 1:
+                    D_D_SCSLOOP(D_uint16, D_uint8);
+                    break;
+            };
+            break;
 
-            /* Get destination colour from pixel
-             */
-            D_FormatTorgba(
-                *((D_uint32 *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),
-                s2->format,
-                &dr,
-                &dg,
-                &db,
-                &da
-            );
-
-            D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
-
-            /* Write the result colour to s2 */
-            *((D_uint32 *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
-            D_rgbaToFormat(s2->format, rr, rg, rb, ra);
-
-            /* Copy the pixel without blending *//*
-            *((D_uint32 *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
-            *((D_uint32 *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))));*/
-
-            dstX++;
-        };
-
-        dstY++;
+        case 1:
+            switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
+                case 4:
+                    D_D_SCSLOOP(D_uint8, D_uint32);
+                    break;
+                case 2:
+                    D_D_SCSLOOP(D_uint8, D_uint16);
+                    break;
+                case 1:
+                    D_D_SCSLOOP(D_uint8, D_uint8);
+                    break;
+            };
+            break;
     };
 
     return 0;
