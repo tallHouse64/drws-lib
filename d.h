@@ -1358,7 +1358,8 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     int srcY = 0;
 
     while(dstY < lr2.y + lr2.h){
-        srcY = (((dstY - sr2.y) * (sr1.h / sr2.h)) + sr1.y);
+        /*srcY = (((dstY - sr2.y) * (sr1.h / sr2.h)) + sr1.y);*/
+        srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);
 
         /*If above the limit area (on s1), skip*/
         if(srcY < lr1.y){
@@ -1372,7 +1373,8 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
 
         dstX = lr2.x;
         while(dstX < lr2.x + lr2.w){
-            srcX = (((dstX - sr2.x) * (sr1.w / sr2.w)) + sr1.x);
+            /*srcX = (((dstX - sr2.x) * (sr1.w / sr2.w)) + sr1.x);*/
+            srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);
 
             /* If to the left of limit area (on
              *  s1), skip. */
@@ -1382,12 +1384,13 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
 
             /* If to the right of limit area (on
              *  s1), stop this line. */
-            }else if(srcX > lr1.x + lr1.w){
+            }else if(srcX >= lr1.x + lr1.w){
                 break;
             };
 
-            ((D_uint32 *)(s2->pix))[(((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)] =
-            ((D_uint32 *)(s1->pix))[(((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)];
+            /* Copy the pixel */
+            *((D_uint32 *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
+            *((D_uint32 *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))));
 
             dstX++;
         };
