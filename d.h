@@ -1282,216 +1282,13 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
     return 0;
 };
 
-/* This macro is used for D_SurfCopyScale(), it
- *  may change or be removed at any time.
- *
- * First the destination pixel's rgba and put
- *  them in dr, dg, db, da.
- *
- * Then take the source pixel's rgba and put them
- *  in sr, sg, sb, sa.
- *
- * Then multiply the source surface's alphaMod
- *  with sa and store that in sa.
- *
- * Then blend the source and destination pixels
- *  rgba values using the source surface's blend
- *  mode, putting those new values in the rgba
- *  variables.
- *
- * Finally write the blended values to the
- *  destination pixel.
- */
-#define D_D_SCSPIXEL(from, to) {D_FormatTorgba((to)[(y * s2->w) + x], s2->format, &dr, &dg, &db, &da); D_FormatTorgba((from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)], s1->format, &sr, &sg, &sb, &sa); sa = (sa * s1->alphaMod) / 255; D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &r, &g, &b, &a); (to)[(y * s2->w) + x] = D_rgbaToFormat(s2->format, r, g, b, a);}
-
-/*#define D_D_SCSPIXEL(from, to) (to)[(y * s2->w) + x] = D_ConvertPixel(s1->format, s2->format, (from)[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)])*/
-
-/*
- * D_SurfCopyScale copies part of surface 1 (the part
- *  inside r1) to surface 2 within r2. It also streches
- *  what it reads from s1 (in r1) to fill r2, it scales.
- *(to)[(y * s2->w) + x]
- * It is safe for r2 to be anywhere, off of any side of
- *  s2.
- *
- * todo: make it all safe (dont read/write outside of
- *  s1 or s2 and make use all the pointe are not null)
- */
-int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
-
-    if(s1 == D_NULL || s2 == D_NULL){
-        return -1;
-    };
-
-    /* If r1 is null, make an r1 for the whole
-     *  surface. If r1 is not null make a copy of
-     *  r1 without changing r1 and clip the copy
-     *  to inside of s1 then point r1 to the
-     *  copy.
-     */
-    D_Rect temp1 = {0};
-    if(r1 == D_NULL){
-        temp1.w = s1->w;
-        temp1.h = s1->h;
-        r1 = &temp1;
-    };
-
-    /*same as above except for r2 and s2. */
-    D_Rect temp2 = {0};
-    if(r2 == D_NULL){
-        temp2.w = s2->w;
-        temp2.h = s2->h;
-        r2 = &temp2;
-    };
-
-
-    /* This cycles through s2 pixels left to
-     *  right top to bottom within r2 asking what
-     *  colour goes here.
-     */
-
-    int x = r2->x;
-    int y = r2->y;
-
-    /* Temp storage for each pixels colour while
-     *  blending (used in D_D_SCSPIXEL()).
-     */
-    int sr = 0;
-    int sg = 0;
-    int sb = 0;
-    int sa = 0;
-
-    int dr = 0;
-    int dg = 0;
-    int db = 0;
-    int da = 0;
-
-    int r = 0;
-    int g = 0;
-    int b = 0;
-    int a = 0;
-
-    int s2ByteDepth = D_BITDEPTHTOBYTES(s2->format.bitDepth);
-    int s1ByteDepth = D_BITDEPTHTOBYTES(s1->format.bitDepth);
-
-    while(y < r2->y + r2->h && y < s2->h){
-
-        if(y < 0){
-            y = 0;
-        };
-
-        /*Safety! If y is off the bottom of s2, break*/
-        if(y >= s2->h){
-            break;
-        };
-
-        x = r2->x;
-        while(x < r2->x + r2->w && x < s2->w){
-
-            if(x < 0){
-                x = 0;
-            };
-
-            /* If the x is off the right of s2
-             *  then break and start drawing the
-             *  next line.
-             */
-            if(x >= s2->w){
-                break;
-            };
-
-            switch(s2ByteDepth){
-                case 4:
-
-                    switch(s1ByteDepth){
-                        case 4:
-                            /* The line below is
-                             *  copied meaning
-                             *  there are 9 of
-                             *  them below. The
-                             *  only differences
-                             *  are what the
-                             *  pointers are cast
-                             *  to.
-                             */
-                            D_D_SCSPIXEL((D_uint32 *)(s1->pix), (D_uint32 *)(s2->pix));
-                            /*((D_uint32 *)(s2->pix))[(y * s2->w) + x] = D_ConvertPixel(s1->format, s2->format, ((D_uint32 *)(s1->pix))[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)]);*/ /*old, it was repeated for all 9*/
-                            break;
-                        case 2:
-                            D_D_SCSPIXEL((D_uint16 *)(s1->pix), (D_uint32 *)(s2->pix));
-                            break;
-                        case 1:
-                            D_D_SCSPIXEL((D_uint8 *)(s1->pix), (D_uint32 *)(s2->pix));
-                        default:
-                            /* Error s2 bitDepth
-                             *  not supported.
-                             */
-                            break;
-                    };
-
-                    break;
-                case 2:
-
-                    switch(s1ByteDepth){
-                        case 4:
-                            D_D_SCSPIXEL((D_uint32 *)(s1->pix), (D_uint16 *)(s2->pix));
-                            break;
-                        case 2:
-                            D_D_SCSPIXEL((D_uint16 *)(s1->pix), (D_uint16 *)(s2->pix));
-                            break;
-                        case 1:
-                            D_D_SCSPIXEL((D_uint8 *)(s1->pix), (D_uint16 *)(s2->pix));
-                        default:
-                            /* Error s2 bitDepth
-                             *  not supported.
-                             */
-                            break;
-                    };
-
-                    break;
-                case 1:
-
-                    switch(s1ByteDepth){
-                        case 4:
-                            D_D_SCSPIXEL((D_uint32 *)(s1->pix), (D_uint8 *)(s2->pix));
-                            break;
-                        case 2:
-                            D_D_SCSPIXEL((D_uint16 *)(s1->pix), (D_uint8 *)(s2->pix));
-                            break;
-                        case 1:
-                            D_D_SCSPIXEL((D_uint8 *)(s1->pix), (D_uint8 *)(s2->pix));
-                        default:
-                            /* Error s2 bitDepth
-                             *  not supported.
-                             */
-                            break;
-                    };
-
-                default:
-                    /* Error s1 bitdepth not
-                     *  supported (its possible
-                     *  s2 bitdepth is also not
-                     *  supported).
-                     */
-                    break;
-            };
-
-            /*((D_SurfInt *)(s2->pix))[(y * s2->w) + x] = ((D_SurfInt *)(s1->pix))[(((((y - r2->y) * r1->h) / r2->h) + r1->y) * s1->w) + ((((x - r2->x) * r1->w) / r2->w) + r1->x)];*/ /*Old*/
-
-            /*(((y - r2->y) / r2->h) * r1->h) + r1->y | (((x - r2->x) / r2->w) * r1->w) + r1->x*/
-
-            x++;
-        };
-
-        y++;
-    };
-
-    return 0;
-};
-
 /* This function copies one surface onto another,
  *  it can copy part of the source to part of the
  *  destination.
+ *
+ * For now, this function can only copy between
+ *  surfaces with the same format and must have a
+ *  bit depth of 32.
  *
  * It is safe to pass null for s1 and s2, the
  *  function would do nothing and return -1.
@@ -1502,8 +1299,9 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
  * s2: The surface to copy to.
  * r2: Where to copy onto s2. Pass D_NULL to copy
  *  onto the whole of s2.
+ * returns: 0 on success or a negative number on
+ *  failure.
  */
-#if 0
 int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
 
     if(s1 == D_NULL || s2 == D_NULL){
@@ -1511,7 +1309,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     };
 
 
-    /* sr1 means safe rect 1, it's the same as r1
+    /* sr1 means size rect 1, it's the same as r1
      *  except it can't be null. */
     D_Rect sr1 = {0};
     if(r1 == D_NULL){
@@ -1524,7 +1322,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     };
 
 
-    /* sr2 means safe rect 2, it's the same as r2
+    /* sr2 means size rect 2, it's the same as r2
      *  except it can't be null. */
     D_Rect sr2 = {0};
     if(r2 == D_NULL){
@@ -1542,22 +1340,63 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
      *  outside lr1. The reason lr2 exists is
      *  because clipping sr1 would cause
      *  stretching in ways the user of this
-     *  function may not want. */
+     *  function may not want. This also applies
+     *  to lr2 being a copy of sr2 clipped to
+     *  s2->safeArea. */
     D_Rect lr1 = sr1;
     D_ClipRect(s1->safeArea.x, s1->safeArea.y, s1->safeArea.w, s1->safeArea.h, &lr1);
 
+    D_Rect lr2 = sr2;
+    D_ClipRect(s2->safeArea.x, s2->safeArea.y, s2->safeArea.w, s2->safeArea.h, &lr2);
 
 
     /* Loop through the pixels of the destination
      *  surface. Left to right, top to bottom. */
-    int x = ( sr2.x > s2->safeArea.x ? sr2.x : s2->safeArea.x );
-    int y = ( sr2.y > s2->safeArea.y ? sr2.y : s2->safeArea.y );
+    int dstX = lr2.x;
+    int dstY = lr2.y;
+    int srcX = 0;
+    int srcY = 0;
 
-    while(y < ){};
+    while(dstY < lr2.y + lr2.h){
+        srcY = (((dstY - sr2.y) * (sr1.h / sr2.h)) + sr1.y);
+
+        /*If above the limit area (on s1), skip*/
+        if(srcY < lr1.y){
+            dstY++;
+            continue;
+
+        /*If below the limit area (on s1), stop*/
+        }else if(srcY >= lr1.y + lr1.h){
+            break;
+        };
+
+        dstX = lr2.x;
+        while(dstX < lr2.x + lr2.w){
+            srcX = (((dstX - sr2.x) * (sr1.w / sr2.w)) + sr1.x);
+
+            /* If to the left of limit area (on
+             *  s1), skip. */
+            if(srcX < lr1.x){
+                dstX++;
+                continue;
+
+            /* If to the right of limit area (on
+             *  s1), stop this line. */
+            }else if(srcX > lr1.x + lr1.w){
+                break;
+            };
+
+            ((D_uint32 *)(s2->pix))[(((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)] =
+            ((D_uint32 *)(s1->pix))[(((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)];
+
+            dstX++;
+        };
+
+        dstY++;
+    };
 
     return 0;
 };
-#endif
 
 /* This finds the number position of where a
  *  character is on a character map.
