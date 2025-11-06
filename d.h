@@ -1318,7 +1318,7 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
  *  pixel data to (read above).
  * returns: Void.
  */
-#define D_D_SCSLOOP(srcType, dstType) {while(dstY < lr2.y + lr2.h){srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);if(srcY < lr1.y){dstY++;continue;}else if(srcY >= lr1.y + lr1.h){break;};dstX = lr2.x;while(dstX < lr2.x + lr2.w){srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);if(srcX < lr1.x){dstX++;continue;}else if(srcX >= lr1.x + lr1.w){break;};D_FormatTorgba(*((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),s1->format,&sr,&sg,&sb,&sa);D_FormatTorgba(*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),s2->format,&dr,&dg,&db,&da);D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) = D_rgbaToFormat(s2->format, rr, rg, rb, ra);dstX++;};dstY++;};}
+#define D_D_SCSLOOP(srcType, dstType) {while(dstY < lr2.y + lr2.h){srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);if(srcY < lr1.y){dstY++;continue;}else if(srcY >= lr1.y + lr1.h){break;};dstX = lr2.x;while(dstX < lr2.x + lr2.w){srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);if(srcX < lr1.x){dstX++;continue;}else if(srcX >= lr1.x + lr1.w){break;};D_FormatTorgba(*((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),s1->format,&sr, &sg, &sb, &sa);D_FormatTorgba(*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),s2->format,&dr, &dg, &db, &da);sa = (sa * s1->alphaMod) / 255;D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) = D_rgbaToFormat(s2->format, rr, rg, rb, ra);dstX++;};dstY++;};}
 
 #if 0
 
@@ -1329,7 +1329,6 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
      */
 
     {while(dstY < lr2.y + lr2.h){
-        /*srcY = (((dstY - sr2.y) * (sr1.h / sr2.h)) + sr1.y);*/
         srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);
 
         /*If above the limit area (on s1), skip*/
@@ -1344,7 +1343,6 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
 
         dstX = lr2.x;
         while(dstX < lr2.x + lr2.w){
-            /*srcX = (((dstX - sr2.x) * (sr1.w / sr2.w)) + sr1.x);*/
             srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);
 
             /* If to the left of limit area (on
@@ -1363,10 +1361,7 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
             D_FormatTorgba(
                 *((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),
                 s1->format,
-                &sr,
-                &sg,
-                &sb,
-                &sa
+                &sr, &sg, &sb, &sa
             );
 
             /* Get destination colour from pixel
@@ -1374,11 +1369,11 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
             D_FormatTorgba(
                 *((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),
                 s2->format,
-                &dr,
-                &dg,
-                &db,
-                &da
+                &dr, &dg, &db, &da
             );
+
+            /* Multiply in alpha mod */
+            sa = (sa * s1->alphaMod) / 255;
 
             D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
 
