@@ -132,12 +132,20 @@
 #define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
 /*                                                                            32bits                  16bits                 8bits*/
 
-/* D_SurfFlags are for storing qualities of a
- *  surface. They can be combined bitwise "|"
- *  together.
+/* D_SurfFlags are for storing information about
+ *  a surface. They can be combined with bitwise
+ *  OR "|".
  */
 typedef enum D_SurfFlags {
-    D_SURF_PREALLOCATED = 0x1
+
+    /* On if the surface was created by
+     *  D_CreateSurfFrom(). */
+    D_SURF_PREALLOCATED = 0x1,
+
+    /* On if the surface was created by
+     *  D_CreateSubsurf(). */
+    D_SURF_SUBSURF      = 0x2
+
 } D_SurfFlags;
 
 /* D_OutSurfFlags are used to store qualities of
