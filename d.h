@@ -848,6 +848,15 @@ D_Surf * D_CreateSubsurf(D_Surf * outer, D_Rect * where){
                      outer->format,
                      (((D_uint8 *)outer->pix) + (((where2.y * outer->w) + where2.x) * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + (outer->pitch * where2.y)));
 
+
+    if(inner != D_NULL){
+
+        /* Turn on the subsurf flag */
+        inner->flags = inner->flags | D_SURF_SUBSURF;
+
+    };
+
+
     return inner;
 };
 
