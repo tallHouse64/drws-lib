@@ -860,6 +860,96 @@ D_Surf * D_CreateSubsurf(D_Surf * outer, D_Rect * where){
     return inner;
 };
 
+/* This function can move a subsurface to
+ *  somewhere else on the same outer surface. You
+ *  can use it like D_CreateSubsurf() except you
+ *  pass the inner surface also.
+ *
+ * This function does not change the width or
+ *  height of the inner surface, it only changes
+ *  it's position on the outer surface (where.w
+ *  and where.h are ignored). If you need to
+ *  change the width or height you need to free
+ *  the subsurf and recreate it with
+ *  D_CreateSubsurf().
+ *
+ * It is safe to pass null into "where", the
+ *  function would use 0, 0 for the x and y
+ *  position and work normally.
+ *
+ * It is safe to pass null for outer and inner,
+ *  the function would set an error, do nothing
+ *  and return -1. Use D_GetError() for more
+ *  details.
+ *
+ * If the inner subsurface was not created with
+ *  D_CreateSubSurf(), the function would set and
+ *  error, return -2 and do nothing. If you know
+ *  what you are doing and want to ignore this
+ *  error, you can turn on the D_SURF_SUBSURF
+ *  flag (inner->flags = inner->flags |
+ *  D_SURF_SUBSURF).
+ *
+ * If this function detects that the inner
+ *  surface is not a subsurface of the outer
+ *  surface, it would set error (use D_GetError()
+ *  for details), return -3 and do nothing.
+ *
+ * outer: The outer surface that inner was
+ *  created on.
+ * inner: The inner surface to move.
+ * where: A rectangle of where the inner surface
+ *  should move to on outer (width and height are
+ *  ignored, read above).
+ */
+int D_ReconfigureSubsurf(D_Surf * outer, D_Surf * inner, D_Rect * where){
+
+    if(inner == D_NULL || outer == D_NULL){
+        D_SetError("Drws-lib D_ReconfigureSubsurf(): The inner or outer surface (or both) are null.");
+        return -1;
+    };
+
+    /* Is the subsurf flag set? */
+    if(!(inner->flags & D_SURF_SUBSURF)){
+        D_SetError("Drws-lib D_ReconfigureSubsurf(): The inner surface is not a subsurface (was it created by D_CreateSubsurf()?), set D_SURF_SUBSURF on the inner surface to ignore.");
+        return -2;
+    };
+
+    /* Is the inner pix pointer within the outer
+     *  pixel data? */
+    if( !( ((D_uint8 *)(inner->pix)) >= ((D_uint8 *)(outer->pix)) &&
+           ((D_uint8 *)(inner->pix)) <
+           (((D_uint8 *)(outer->pix)) + (outer->w * outer->h * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + (outer->pitch * outer->h))
+           )
+       ){
+        D_SetError("Drws-lib D_ReconfigureSubSurf(): The inner surface is not a subsurface of the outer surface.");
+        return -3;
+    };
+
+    /* where2 is the same as where except it
+     *  can't be null. */
+    D_Rect where2 = {0, 0, 0, 0};
+    if(where != D_NULL){
+        where2 = *where;
+    };
+
+
+    D_Rect innerSafeArea = where2;
+
+    D_ClipRect(outer->safeArea.x, outer->safeArea.y, outer->safeArea.w, outer->safeArea.h, &innerSafeArea);
+
+    /* Make innerSafeArea relative to inner. */
+    innerSafeArea.x = innerSafeArea.x - where2.x;
+    innerSafeArea.y = innerSafeArea.y - where2.y;
+
+    inner->safeArea = innerSafeArea;
+
+
+    inner->pix = (((D_uint8 *)outer->pix) + (((where2.y * outer->w) + where2.x) * (D_BITDEPTHTOBYTES(outer->format.bitDepth))) + (outer->pitch * where2.y));
+
+    return 0;
+};
+
 /* This frees a surface created with
  *  D_CreateSurf() or D_CreateSurfFrom(). If the
  *  surface is preallocated (made using
