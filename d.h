@@ -1417,10 +1417,8 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
  *  information directly from s1 and s2 in
  *  D_SurfCopyScale().
  *
- * srcPix: The pixel data of the source.
  * srcType: The data type to cast source pixel
  *  data to (read above).
- * dstPix: The pixel data of the destination.
  * dstType: The data type to cast destination
  *  pixel data to (read above).
  * returns: Void.
