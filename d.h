@@ -37,8 +37,8 @@
  * This library can use stb image, to include it
  *  define D_ALLOW_STB_IMAGE. Then you can use
  *  D_LoadImage(), just pass it a file path. Big
- *  thanks to Sean and the people who made that
- *  library, it just works.
+ *  thanks to Sean Barrett and everyone else who
+ *  made that library, it just works.
  *
  * Things to add.
  * I hoping to add sound out. This way the
