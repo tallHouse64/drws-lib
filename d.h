@@ -5,22 +5,23 @@
  * project started Tue 12/11/2024
  *
  * The purpose of this library is to make
- *  gmaes/programs that are very cross platform.
+ *  games/programs that are very cross platform.
  *  As many platforms as possible, this is the
  *  main goal of the library. Think Windows, Mac,
- *  Linux, NDS, TI calcs, IPOD, PSP. Only Windows
- *  and Linux are tested and work so far. This
- *  way anyone can play games I make no matter
- *  what device they have. This is why the
- *  library is a group of single header files and
- *  has as few dependancies as possible, all
- *  dependencies (with few exeptions) and
- *  platform specific code are separated away
- *  into the platform single header file
- *  libraries (sdld.h for sdl2 and ndsd.h for DS)
- *  one file per platform, I also have chosen to
- *  make it possible to remove all drws-lib core
- *  dependancies using C defines, (you can give
+ *  Linux, NDS, TI calcs, IPOD, PSP. So far,
+ *  Windows, Linux, Web and Nintendo DS are
+ *  supported. This way anyone can play games I
+ *  make no matter what device they have. This is
+ *  why the library is a group of single header
+ *  files and has as few dependencies as
+ *  possible, all dependencies (with few
+ *  exceptions) and platform specific code are
+ *  separated away into the platform single
+ *  header file libraries (sdld.h for sdl2 and
+ *  ndsd.h for DS, the letter d means driver) one
+ *  file per platform, I also have chosen to make
+ *  it possible to remove all drws-lib core
+ *  dependencies using C defines, (you can give
  *  your own calloc and free for this library to
  *  use). Also it would be great to make a game
  *  engine with this library, even better if the
