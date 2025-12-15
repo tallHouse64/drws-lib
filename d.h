@@ -89,6 +89,8 @@
 #define D_uint8 unsigned char
 #endif
 
+typedef D_double double
+
 #ifndef D_CALLOC
 #define D_CALLOC calloc
 #endif
