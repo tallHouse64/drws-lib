@@ -521,6 +521,32 @@ const char * D_GetAudioOutputName(int which){
     return SDL_GetAudioDeviceName(which, 0);
 };
 
+D_AudioOutputId D_OpenAudioOutput(int which, D_SoundFormat * desired, D_SoundFormat * obtained){
+
+    SDL_AudioSpec desired2;
+    if(desired != D_NULL){
+        desired2->freq = desired->freq;
+        /* Format */
+        desired2->channels = desired->channels;
+        desired2->silence = desired->silence;
+        desired2->samples = desired->samples;
+        desired2->padding = 0;
+        desired2->size = desired->
+        //desired2->size = desired->samples * desired->channels * ((desired->bitsPerSample) / 8);
+        desired2->callback = D_NULL;
+        desired2->userdata = D_NULL;
+
+    };
+
+    return SDL_OpenAudioDevice(SDL_GetAudioDeviceName(which, 0),
+                               0,
+                               );
+};
+
+int D_SendAudio(D_Sound * sound){
+
+};
+
 /* This stops the thread from running
  *  for ms millisecon.
  *
