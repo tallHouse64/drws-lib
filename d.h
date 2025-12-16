@@ -1723,6 +1723,11 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
      *
      * Another trick is to negate the imaginary
      *  part of p to go clockwise.
+     *
+     * Now the parameter "deg" can be converted
+     *  to a complex number using P so a rotation
+     *  can be made by multiplying by one number.
+     *  This new number is degR and degC.
      */
 
     if(s1 == D_NULL || s2 == D_NULL){
@@ -1754,9 +1759,33 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     const D_double pR = 0.999847695156;
     const D_double pC = 0.0174524064373;
 
+    D_double degR = 1;
+    D_double degC = 0;
 
-    /* Top left x */
-    int tlx = 0;
+    /* Convert deg from degrees to a point on the
+     *  complex plane */
+    int i = 0;
+    while(i < deg){
+
+        /* Add one degree to degR and degC */
+        degR = D_COMPLEXMULTR(degR, degC, pR, pC);
+        degC = D_COMPLEXMULTC(degR, degC, pR, pC);
+
+        i++;
+    };
+
+
+    /* Top left x and top left y relative to
+     *  centre. */
+    D_double toplx = sr2.x - scen.x;
+    D_double toply = sr2.y - scen.y;
+
+    /* Rotate it "deg" number of degrees */
+    toplx = D_COMPLEXMULTR(toplx, toply, degR, degC);
+    toply = D_COMPLEXMULTC(toplx, toply, degR, degC);
+
+    toplx = toplx + scen.x;
+    toply = toply + scen.y;
 
     return 0;
 };
