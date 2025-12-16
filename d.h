@@ -1639,6 +1639,118 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     return 0;
 };
 
+/* This function does the same thing as
+ *  D_SurfCopyScale() except it can also rotate
+ *  the image data.
+ */
+int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * center, D_double deg){
+
+    /* This function does not use trigonometry
+     *  functions, instead it can rotate points
+     *  by multiplying complex numbers. To be
+     *  able to understand and update this
+     *  function, you will need some
+     *  understanding of complex numbers and the
+     *  complex plane (watching one youtube video
+     *  may be enough depending on your maths
+     *  skill level).
+     *
+     * Please bear in mind that to simplify
+     *  implementation, degrees are used to
+     *  measure angles.
+     *
+     * Also bear in mind that the "first"and
+     *  "second" numbers are just two complex
+     *  numbers on the complex plane, the purpose
+     *  of the first number is to rotate the
+     *  second one by one degree when multiplied,
+     *  the second number could be anything.
+     *
+     * Multiplying a complex number by any other
+     *  complex number has two effects:
+     *
+     * - The second number's distance to the
+     *  origin gets scaled by the first number's
+     *  distance to the origin.
+     *
+     * - The second number's angle between it and
+     *  the real axis gets added to by the first
+     *  number's angle between it and the origin.
+     *
+     * The first effect isn't needed and can be
+     *  made of no effect by ensuring the
+     *  distance between the origin and the first
+     *  number is 1.
+     *
+     * The second effect of rotation is what we
+     *  need, to make it useful, the angle
+     *  between the first number and the real
+     *  axis should be 1.
+     *
+     *                      point P
+     *   |              _.-X
+     *   |dist = 1 _.-''   |
+     *   |    _.-''        |
+     *   |.-''\  1 deg     |
+     * --o-----|-----------|-----Real axis
+     *   |
+     *   |
+     *  Imaginary axis
+     *
+     * After doing some trigonometry by hand, I
+     *  found the value of the point P (it's
+     *  position).
+     *
+     * P = 0.999847695156 + i 0.0174524064373
+     *
+     * The real and imaginary parts of this
+     *  number are stored separately in pR and
+     *  pC.
+     *
+     * Any x, y coordinate can be interpreted as
+     *  a complex number and multiplied by p to
+     *  rotate it 1 degree anticlockwise.
+     *
+     * Another trick is to negate the imaginary
+     *  part of p to go clockwise.
+     */
+
+    if(s1 == D_NULL || s2 == D_NULL){
+        return -1;
+    };
+
+    /* sr1 is the safe version of r1 that can't
+     *  be null. */
+    D_Rect sr1 = {0, 0, s1->w, s1->h};
+    if(r1 != D_NULL){
+        sr1 = *r1;
+    };
+
+    /* sr2 is the safe version of r2 that can't
+     *  be null. */
+    D_Rect sr2 = {0, 0, s2->w, s2->h};
+    if(r2 != D_NULL){
+        sr2 = *r2;
+    };
+
+    /* scen is the safe version of center that
+     *  can't be null. */
+    D_Point scen = {sr2.x + (sr2.w / 2), sr2.y + (sr2.h / 2)};
+    if(center != D_NULL){
+        scen = center;
+    };
+
+
+    const D_double pR = 0.999847695156;
+    const D_double pC = 0.0174524064373;
+
+
+    /* Top left x */
+    int tlx = 0;
+
+    return 0;
+};
+
 /* This finds the number position of where a
  *  character is on a character map.
  *
