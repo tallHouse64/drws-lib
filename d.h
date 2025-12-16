@@ -1653,7 +1653,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
  *  D_SurfCopyScale() except it can also rotate
  *  the image data.
  */
-int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * center, D_double deg){
+int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * centre, D_double deg){
 
     /* This function does not use trigonometry
      *  functions, instead it can rotate points
