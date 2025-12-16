@@ -89,7 +89,7 @@
 #define D_uint8 unsigned char
 #endif
 
-typedef D_double double
+typedef double D_double;
 
 #ifndef D_CALLOC
 #define D_CALLOC calloc
