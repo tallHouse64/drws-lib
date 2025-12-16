@@ -135,6 +135,16 @@ typedef D_double double
 #define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
 /*                                                                            32bits                  16bits                 8bits*/
 
+
+/* This macro multiplies two complex numbers and
+ *  returns the real part of the result. */
+#define D_COMPLEXMULTR(r1, c1, r2, c2) (((r1) * (r2)) - ((c1) * (c2)))
+
+/* This macro multiplies two complex numbers and
+ *  returns the imaginary part of the result. */
+#define D_COMPLEXMULTC(r1, c1, r2, c2) (((r1) * (c2)) + ((c1) * (r2)))
+
+
 /* D_SurfFlags are for storing information about
  *  a surface. They can be combined with bitwise
  *  OR "|".
