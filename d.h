@@ -1751,8 +1751,8 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     /* scen is the safe version of center that
      *  can't be null. */
     D_Point scen = {sr2.x + (sr2.w / 2), sr2.y + (sr2.h / 2)};
-    if(center != D_NULL){
-        scen = center;
+    if(centre != D_NULL){
+        scen = *centre;
     };
 
 
