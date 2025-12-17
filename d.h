@@ -1652,6 +1652,8 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
 /* This function does the same thing as
  *  D_SurfCopyScale() except it can also rotate
  *  the image data.
+ *
+ * Note that centre is relative to r2.
  */
 int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * centre, D_double deg){
 
@@ -1759,6 +1761,8 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     const D_double pR = 0.999847695156;
     const D_double pC = 0.0174524064373;
 
+    D_double temp = 0;
+
     D_double degR = 1;
     D_double degC = 0;
 
@@ -1768,24 +1772,31 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     while(i < deg){
 
         /* Add one degree to degR and degC */
-        degR = D_COMPLEXMULTR(degR, degC, pR, pC);
+        temp = D_COMPLEXMULTR(degR, degC, pR, pC);
         degC = D_COMPLEXMULTC(degR, degC, pR, pC);
+        degR = temp;
 
         i++;
     };
 
 
+
     /* Top left x and top left y relative to
      *  centre. */
-    D_double toplx = sr2.x - scen.x;
-    D_double toply = sr2.y - scen.y;
+    D_double toplx = sr2.x - (sr2.x + scen.x);
+    D_double toply = sr2.y - (sr2.y + scen.y);
 
     /* Rotate it "deg" number of degrees */
-    toplx = D_COMPLEXMULTR(toplx, toply, degR, degC);
+    temp = D_COMPLEXMULTR(toplx, toply, degR, degC);
     toply = D_COMPLEXMULTC(toplx, toply, degR, degC);
+    toplx = temp;
 
-    toplx = toplx + scen.x;
-    toply = toply + scen.y;
+    toplx = toplx + (sr2.x + scen.x);
+    toply = toply + (sr2.y + scen.y);
+
+    /* Uncomment to see where toplx, toply are */
+    /*D_Rect test = {(int)(toplx - 4), (int)(toply - 4), 8, 8};
+    D_FillRect(s2, &test, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
     return 0;
 };
