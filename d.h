@@ -1881,6 +1881,7 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
     int dstX = 0;
     int dstY = toply;
+    int lastDstY = toply;
 
     /* This is x progress, every time a pixel
      *  gets drawn, it increments. Think of it as
@@ -1888,26 +1889,51 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
      *  to sr2.x (it ranges between 0 and toprx -
      *  toplx).*/
     int xProg = 0;
+    int yProg = 0;
+
+    /* slope is the slope of the line between
+     *  toplx, toply and toprx, topry. Note that
+     *  this slope is negative compared to what
+     *  you would traditionally think. */
     D_double slope = (topry - toply) / (toprx - toplx);
+
+    /* Climb is -1 if slope is negative and 1 if
+     *  slope is positive or 0 if slope is 0. */
+    int climb = 0;
+
+    if(slope < 0){
+        climb = -1;
+    }else if(slope > 0){
+        climb = 1;
+    };
 
     D_uint32 col = D_rgbaToFormat(s2->format, 255, 255, 255, 255);
 
-    /*while(){*/
+    while(yProg < (botly - toply)){
 
-        dstX = toplx;
+        dstX = toplx + (-slope * yProg);
         xProg = 0;
         while(xProg < (toprx - toplx)){
 
-            dstY = toply + (slope * xProg);
+            dstY = toply + (slope * xProg) + yProg;
+
 
             if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
                 *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+
+                if(dstY != lastDstY && (dstY - 1) < s2->h && (dstY - 1) >= 0){
+                    *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - climb) * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+                };
             };
+
+            lastDstY = dstY;
 
             dstX++;
             xProg++;
         };
-    /*};*/
+
+        yProg++;
+    };
 
 
     return 0;
