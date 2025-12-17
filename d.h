@@ -1781,22 +1781,55 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
 
 
-    /* Top left x and top left y relative to
-     *  centre. */
-    D_double toplx = sr2.x - (sr2.x + scen.x);
-    D_double toply = sr2.y - (sr2.y + scen.y);
+    /* Top left x and top left y*/
+    D_double toplx = sr2.x;
+    D_double toply = sr2.y;
 
-    /* Rotate it "deg" number of degrees */
+    /* Make toplx, toply relative to centre
+     *  (necessary for rotation). */
+    toplx = toplx - (sr2.x + scen.x);
+    toply = toply - (sr2.y + scen.y);
+
+    /* Rotate toplx, toply "deg" number of
+     *  degrees */
     temp = D_COMPLEXMULTR(toplx, toply, degR, degC);
     toply = D_COMPLEXMULTC(toplx, toply, degR, degC);
     toplx = temp;
 
+    /* Make toplx, toply absolute again (relative
+     *  to s2)*/
     toplx = toplx + (sr2.x + scen.x);
     toply = toply + (sr2.y + scen.y);
 
     /* Uncomment to see where toplx, toply are */
-    /*D_Rect test = {(int)(toplx - 4), (int)(toply - 4), 8, 8};
-    D_FillRect(s2, &test, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
+    /*D_Rect testtopl = {(int)(toplx - 4), (int)(toply - 4), 8, 8};
+    D_FillRect(s2, &testtopl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
+
+
+
+    /* Top right x, y */
+    D_double toprx = sr2.x + sr2.w;
+    D_double topry = sr2.y;
+
+    /* Make toprx, topry relative to centre
+     *  (necessary for rotation). */
+    toprx = toprx - (sr2.x + scen.x);
+    topry = topry - (sr2.y + scen.y);
+
+    /* Rotate toprx, topry "deg" number of
+     *  degrees */
+    temp = D_COMPLEXMULTR(toprx, topry, degR, degC);
+    topry = D_COMPLEXMULTC(toprx, topry, degR, degC);
+    toprx = temp;
+
+    /* Make toplx, toply absolute again (relative
+     *  to s2)*/
+    toprx = toprx + (sr2.x + scen.x);
+    topry = topry + (sr2.y + scen.y);
+
+    /* Uncomment to see where toprx, topry are */
+    /*D_Rect testtopr = {(int)(toprx - 4), (int)(topry - 4), 8, 8};
+    D_FillRect(s2, &testtopr, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
     return 0;
 };
