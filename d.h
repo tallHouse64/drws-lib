@@ -1649,6 +1649,11 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     return 0;
 };
 
+#define D_D_SCSRLOOP
+
+#if 0
+#endif
+
 /* This function does the same thing as
  *  D_SurfCopyScale() except it can also rotate
  *  the image data.
@@ -1757,6 +1762,21 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         scen = *centre;
     };
 
+    /* lr1 means "limit rect 1". It is the same
+     *  as sr1 except clipped to s1->safeArea.
+     *  This function should not read pixels
+     *  outside lr1. The reason lr2 exists is
+     *  because clipping sr1 would cause
+     *  stretching in ways the user of this
+     *  function may not want. This also applies
+     *  to lr2 being a copy of sr2 clipped to
+     *  s2->safeArea. */
+    D_Rect lr1 = sr1;
+    D_ClipRect(s1->safeArea.x, s1->safeArea.y, s1->safeArea.w, s1->safeArea.h, &lr1);
+
+    D_Rect lr2 = sr2;
+    D_ClipRect(s2->safeArea.x, s2->safeArea.y, s2->safeArea.w, s2->safeArea.h, &lr2);
+
 
     const D_double pR = 0.999847695156;
     const D_double pC = 0.0174524064373;
@@ -1802,8 +1822,8 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     toply = toply + (sr2.y + scen.y);
 
     /* Uncomment to see where toplx, toply are */
-    /*D_Rect testtopl = {(int)(toplx - 4), (int)(toply - 4), 8, 8};
-    D_FillRect(s2, &testtopl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
+    D_Rect testtopl = {(int)(toplx - 4), (int)(toply - 4), 8, 8};
+    D_FillRect(s2, &testtopl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));
 
 
 
@@ -1828,8 +1848,8 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     topry = topry + (sr2.y + scen.y);
 
     /* Uncomment to see where toprx, topry are */
-    /*D_Rect testtopr = {(int)(toprx - 4), (int)(topry - 4), 8, 8};
-    D_FillRect(s2, &testtopr, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
+    D_Rect testtopr = {(int)(toprx - 4), (int)(topry - 4), 8, 8};
+    D_FillRect(s2, &testtopr, D_rgbaToFormat(s2->format, 255, 240, 200, 255));
 
 
 
@@ -1856,6 +1876,39 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     /* Uncomment to see where botlx, botly are */
     /*D_Rect testbotl = {(int)(botlx - 4), (int)(botly - 4), 8, 8};
     D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
+
+
+
+    int dstX = 0;
+    int dstY = toply;
+
+    /* This is x progress, every time a pixel
+     *  gets drawn, it increments. Think of it as
+     *  srcX except before rotation and relative
+     *  to sr2.x (it ranges between 0 and toprx -
+     *  toplx).*/
+    int xProg = 0;
+    D_double slope = (topry - toply) / (toprx - toplx);
+
+    D_uint32 col = D_rgbaToFormat(s2->format, 255, 255, 255, 255);
+
+    /*while(){*/
+
+        dstX = toplx;
+        xProg = 0;
+        while(xProg < (toprx - toplx)){
+
+            dstY = toply + (slope * xProg);
+
+            if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
+                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+            };
+
+            dstX++;
+            xProg++;
+        };
+    /*};*/
+
 
     return 0;
 };
