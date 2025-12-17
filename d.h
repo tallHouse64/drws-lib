@@ -1831,6 +1831,32 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     /*D_Rect testtopr = {(int)(toprx - 4), (int)(topry - 4), 8, 8};
     D_FillRect(s2, &testtopr, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
+
+
+    /* bottom left x, y */
+    D_double botlx = sr2.x;
+    D_double botly = sr2.y + sr2.h;
+
+    /* Make botlx, botly relative to centre
+     *  (necessary for rotation). */
+    botlx = botlx - (sr2.x + scen.x);
+    botly = botly - (sr2.y + scen.y);
+
+    /* Rotate botlx, botly "deg" number of
+     *  degrees */
+    temp = D_COMPLEXMULTR(botlx, botly, degR, degC);
+    botly = D_COMPLEXMULTC(botlx, botly, degR, degC);
+    botlx = temp;
+
+    /* Make botlx, botly absolute again (relative
+     *  to s2)*/
+    botlx = botlx + (sr2.x + scen.x);
+    botly = botly + (sr2.y + scen.y);
+
+    /* Uncomment to see where botlx, botly are */
+    /*D_Rect testbotl = {(int)(botlx - 4), (int)(botly - 4), 8, 8};
+    D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
+
     return 0;
 };
 
