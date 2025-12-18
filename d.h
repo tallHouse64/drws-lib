@@ -1782,6 +1782,12 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         deg = deg - 360;
     };
 
+    /* Cancel extra unnecessary negative
+     *  rotations. */
+    while(deg < 0){
+        deg = deg + 360;
+    };
+
     const D_double pR = 0.999847695156;
     const D_double pC = 0.0174524064373;
 
