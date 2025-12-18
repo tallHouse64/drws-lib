@@ -1777,6 +1777,10 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     D_Rect lr2 = sr2;
     D_ClipRect(s2->safeArea.x, s2->safeArea.y, s2->safeArea.w, s2->safeArea.h, &lr2);
 
+    /* Cancel extra unnecessary rotations. */
+    while(deg > 360){
+        deg = deg - 360;
+    };
 
     const D_double pR = 0.999847695156;
     const D_double pC = 0.0174524064373;
@@ -1805,6 +1809,16 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     D_double toplx = sr2.x;
     D_double toply = sr2.y;
 
+    /* In case the rectangle is upside-down, flip
+     *  the rectangle. */
+    if(deg >= 135 && deg < 315){
+
+        /* Notice this point is on the opposite
+         *  side of the rectangle. */
+        toplx = sr2.x + sr2.w;
+        toply = sr2.y + sr2.h;
+    };
+
     /* Make toplx, toply relative to centre
      *  (necessary for rotation). */
     toplx = toplx - (sr2.x + scen.x);
@@ -1830,6 +1844,16 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     /* Top right x, y */
     D_double toprx = sr2.x + sr2.w;
     D_double topry = sr2.y;
+
+    /* In case the rectangle is upside-down, flip
+     *  the rectangle. */
+    if(deg >= 135 && deg < 315){
+
+        /* Notice this point is on the opposite
+         *  side of the rectangle. */
+        toprx = sr2.x;
+        topry = sr2.y + sr2.h;
+    };
 
     /* Make toprx, topry relative to centre
      *  (necessary for rotation). */
@@ -1857,6 +1881,16 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     D_double botlx = sr2.x;
     D_double botly = sr2.y + sr2.h;
 
+    /* In case the rectangle is upside-down, flip
+     *  the rectangle. */
+    if(deg >= 135 && deg < 315){
+
+        /* Notice this point is on the opposite
+         *  side of the rectangle. */
+        botlx = sr2.x + sr2.w;
+        botly = sr2.y;
+    };
+
     /* Make botlx, botly relative to centre
      *  (necessary for rotation). */
     botlx = botlx - (sr2.x + scen.x);
@@ -1874,9 +1908,19 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     botly = botly + (sr2.y + scen.y);
 
     /* Uncomment to see where botlx, botly are */
-    /*D_Rect testbotl = {(int)(botlx - 4), (int)(botly - 4), 8, 8};
-    D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
+    D_Rect testbotl = {(int)(botlx - 4), (int)(botly - 4), 8, 8};
+    D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));
 
+
+    int flipH = 0;
+    int flipV = 0;
+
+    /* In case the rectangle is upside-down, flip
+     *  the rectangle. */
+    if(deg >= 135 && deg < 315){
+        flipH = !flipH;
+        flipV = !flipV;
+    };
 
     /* Source pixel colour */
     int sr = 0;
@@ -1935,12 +1979,21 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         dstX = toplx + (-slope * yProg);
         xProg = 0;
         srcY = (yProg * sr1.h) / (botly - toply);
+
+        if(flipV){
+            srcY = (sr1.h - srcY) - 1;
+        };
+
         while(xProg < (toprx - toplx)){
 
             dstY = toply + (slope * xProg) + yProg;
 
 
             srcX = (xProg * sr1.w) / (toprx - toplx);
+
+            if(flipH){
+                srcX = (sr1.w - srcX) - 1;
+            };
 
             D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
                            s1->format, &sr, &sg, &sb, &sa);
