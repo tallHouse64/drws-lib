@@ -65,6 +65,10 @@ test/subsurfacetest
 test/subsurfacetest.exe
 test/subsurfacecopyscaletest
 test/subsurfacecopyscaletest.exe
+test/surfcopyscalerottest
+test/surfcopyscalerottest.exe
+test/surfcopyscalerottest2
+test/surfcopyscalerottest2.exe
 test/a.out
 test/a.exe
 
