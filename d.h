@@ -1944,6 +1944,7 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     int dstX = 0;
     int dstY = toply;
     int lastDstY = toply;
+    int lastDstX = 0;
 
     int srcX = sr1.x;
     int srcY = sr1.y;
@@ -1976,7 +1977,7 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
     D_uint32 col = 0;
 
-    if((deg < 45) || (deg > 135 && deg < 225) || (deg > 315)){
+    if((deg < 45) || (deg >= 135 && deg < 225) || (deg >= 315)){
         while(yProg < (botly - toply)){
 
             dstX = toplx + (-slope * yProg);
@@ -2024,6 +2025,14 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         /* Get the inverted slope */
         slope = (toprx - toplx) / (topry - toply);
 
+        /* Recalculate climb base on the new
+         *  slope. */
+        if(slope < 0){
+            climb = -1;
+        }else if(slope > 0){
+            climb = 1;
+        };
+
         while(xProg < (toplx - botlx)){
 
 
@@ -2036,7 +2045,13 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
                 if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
                     *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = white;
+
+                    if(dstX != lastDstX && (dstX - climb) < s2->w && (dstX - climb) >= 0){
+                        *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - climb)) * 4) + (s2->pitch * dstY))) = white;
+                    };
                 };
+
+                lastDstX = dstX;
 
                 dstY++;
                 yProg++;
