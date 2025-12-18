@@ -2035,19 +2035,35 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
         while(xProg < (toplx - botlx)){
 
+            srcY = (xProg * sr1.h) / (toplx - botlx);
+
+            if(flipV){
+                srcY = (sr1.h - srcY) - 1;
+            };
 
             dstY = toply + (slope * xProg);
             yProg = 0;
             while(yProg < (topry - toply)){
 
+                srcX = (yProg * sr1.w) / (topry - toply);
+
+                if(flipH){
+                    srcX = (sr1.w - srcX) - 1;
+                };
+
                 dstX = toplx + (slope * yProg) - xProg;
 
 
+                D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
+                               s1->format, &sr, &sg, &sb, &sa);
+
+                col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
+
                 if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
-                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = white;
+                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
 
                     if(dstX != lastDstX && (dstX - climb) < s2->w && (dstX - climb) >= 0){
-                        *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - climb)) * 4) + (s2->pitch * dstY))) = white;
+                        *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - climb)) * 4) + (s2->pitch * dstY))) = col;
                     };
                 };
 
