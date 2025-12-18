@@ -1984,8 +1984,6 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         climb = 1;
     };
 
-    D_uint32 white = D_rgbaToFormat(s2->format, 255, 255, 255, 255);
-
     D_uint32 col = 0;
 
     if((deg < 45) || (deg >= 135 && deg < 225) || (deg >= 315)){
@@ -1994,6 +1992,18 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
             dstX = toplx + (-slope * yProg);
             xProg = 0;
             srcY = (yProg * sr1.h) / (botly - toply);
+
+
+            /* Two if statements to stop data
+             *  getting read unsafely. */
+            if(srcY < s1->safeArea.y){
+                yProg++;
+                continue;
+            };
+            if(srcY >= s1->safeArea.y + s1->safeArea.h){
+                break;
+            };
+
 
             if(flipV){
                 srcY = (sr1.h - srcY) - 1;
@@ -2006,20 +2016,32 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
                 srcX = (xProg * sr1.w) / (toprx - toplx);
 
+
+                /* Two more if statements to stop
+                 *  data getting read unsafely.*/
+                if(srcX < s1->safeArea.x){
+                    dstX++;
+                    xProg++;
+                    continue;
+                };
+                if(srcX >= s1->safeArea.x + s1->safeArea.w){
+                    break;
+                };
+
                 if(flipH){
                     srcX = (sr1.w - srcX) - 1;
                 };
 
-                D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
-                            s1->format, &sr, &sg, &sb, &sa);
-
-                col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
-
                 if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
+                                s1->format, &sr, &sg, &sb, &sa);
+
+                    col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
+
                     *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
 
-                    if(dstY != lastDstY && (dstY - 1) < s2->h && (dstY - 1) >= 0){
-                        *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - climb) * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+                    if(dstY != lastDstY && (dstY - climb) < s2->h && (dstY - climb) >= 0){
+                        *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - climb) * s2->w) + dstX) * 4) + (s2->pitch * (dstY - climb)))) = col;
                     };
                 };
 
@@ -2048,6 +2070,16 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
             srcY = (xProg * sr1.h) / (toplx - botlx);
 
+            /* Two if statements to stop data
+             *  getting read unsafely. */
+            if(srcY < s1->safeArea.y){
+                yProg++;
+                continue;
+            };
+            if(srcY >= s1->safeArea.y + s1->safeArea.h){
+                break;
+            };
+
             if(flipV){
                 srcY = (sr1.h - srcY) - 1;
             };
@@ -2058,6 +2090,17 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
                 srcX = (yProg * sr1.w) / (topry - toply);
 
+                /* Two more if statements to stop
+                 *  data getting read unsafely.*/
+                if(srcX < s1->safeArea.x){
+                    dstX++;
+                    xProg++;
+                    continue;
+                };
+                if(srcX >= s1->safeArea.x + s1->safeArea.w){
+                    break;
+                };
+
                 if(flipH){
                     srcX = (sr1.w - srcX) - 1;
                 };
@@ -2065,12 +2108,12 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
                 dstX = toplx + (slope * yProg) - xProg;
 
 
-                D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
-                               s1->format, &sr, &sg, &sb, &sa);
-
-                col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
-
                 if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
+                                s1->format, &sr, &sg, &sb, &sa);
+
+                    col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
+
                     *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
 
                     if(dstX != lastDstX && (dstX - climb) < s2->w && (dstX - climb) >= 0){
