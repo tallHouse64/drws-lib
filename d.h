@@ -1972,49 +1972,78 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         climb = 1;
     };
 
-    D_uint32 col = D_rgbaToFormat(s2->format, 255, 255, 255, 255);
+    D_uint32 white = D_rgbaToFormat(s2->format, 255, 255, 255, 255);
 
-    while(yProg < (botly - toply)){
+    D_uint32 col = 0;
 
-        dstX = toplx + (-slope * yProg);
-        xProg = 0;
-        srcY = (yProg * sr1.h) / (botly - toply);
+    if((deg < 45) || (deg > 135 && deg < 225) || (deg > 315)){
+        while(yProg < (botly - toply)){
 
-        if(flipV){
-            srcY = (sr1.h - srcY) - 1;
-        };
+            dstX = toplx + (-slope * yProg);
+            xProg = 0;
+            srcY = (yProg * sr1.h) / (botly - toply);
 
-        while(xProg < (toprx - toplx)){
-
-            dstY = toply + (slope * xProg) + yProg;
-
-
-            srcX = (xProg * sr1.w) / (toprx - toplx);
-
-            if(flipH){
-                srcX = (sr1.w - srcX) - 1;
+            if(flipV){
+                srcY = (sr1.h - srcY) - 1;
             };
 
-            D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
-                           s1->format, &sr, &sg, &sb, &sa);
+            while(xProg < (toprx - toplx)){
 
-            col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
+                dstY = toply + (slope * xProg) + yProg;
 
-            if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
-                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
 
-                if(dstY != lastDstY && (dstY - 1) < s2->h && (dstY - 1) >= 0){
-                    *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - climb) * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+                srcX = (xProg * sr1.w) / (toprx - toplx);
+
+                if(flipH){
+                    srcX = (sr1.w - srcX) - 1;
                 };
+
+                D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
+                            s1->format, &sr, &sg, &sb, &sa);
+
+                col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
+
+                if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
+                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+
+                    if(dstY != lastDstY && (dstY - 1) < s2->h && (dstY - 1) >= 0){
+                        *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - climb) * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+                    };
+                };
+
+                lastDstY = dstY;
+
+                dstX++;
+                xProg++;
             };
 
-            lastDstY = dstY;
+            yProg++;
+        };
+    }else{
 
-            dstX++;
+        /* Get the inverted slope */
+        slope = (toprx - toplx) / (topry - toply);
+
+        while(xProg < (toplx - botlx)){
+
+
+            dstY = toply + (slope * xProg);
+            yProg = 0;
+            while(yProg < (topry - toply)){
+
+                dstX = toplx + (slope * yProg) - xProg;
+
+
+                if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
+                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = white;
+                };
+
+                dstY++;
+                yProg++;
+            };
+
             xProg++;
         };
-
-        yProg++;
     };
 
 
