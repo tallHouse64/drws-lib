@@ -1658,6 +1658,9 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
  *  D_SurfCopyScale() except it can also rotate
  *  the image data.
  *
+ * This function ignores any precision in "deg"
+ *  that is smaller that a hundredth 1/100.
+ *
  * Note that centre is relative to r2.
  */
 int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * centre, D_double deg){
@@ -1788,8 +1791,10 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         deg = deg + 360;
     };
 
-    const D_double pR = 0.999847695156;
-    const D_double pC = 0.0174524064373;
+    /* Note that this pR and pC rotate a point by
+     *  0.01 degrees, not 1 degree. */
+    const D_double pR = 0.999999984769;
+    const D_double pC = 0.000174532924313;
 
     D_double temp = 0;
 
@@ -1798,7 +1803,7 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
     /* Convert deg from degrees to a point on the
      *  complex plane */
-    int i = 0;
+    D_double i = 0;
     while(i < deg){
 
         /* Add one degree to degR and degC */
@@ -1806,7 +1811,7 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         degC = D_COMPLEXMULTC(degR, degC, pR, pC);
         degR = temp;
 
-        i++;
+        i += 0.01;
     };
 
 
