@@ -1878,10 +1878,31 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
 
+    /* Source pixel colour */
+    int sr = 0;
+    int sg = 0;
+    int sb = 0;
+    int sa = 0;
+
+    /* Destination pixel colour */
+    int dr = 0;
+    int dg = 0;
+    int db = 0;
+    int da = 0;
+
+    /* Result pixel colour */
+    int rr = 0;
+    int rg = 0;
+    int rb = 0;
+    int ra = 0;
+
 
     int dstX = 0;
     int dstY = toply;
     int lastDstY = toply;
+
+    int srcX = sr1.x;
+    int srcY = sr1.y;
 
     /* This is x progress, every time a pixel
      *  gets drawn, it increments. Think of it as
@@ -1913,10 +1934,18 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
         dstX = toplx + (-slope * yProg);
         xProg = 0;
+        srcY = (yProg * sr1.h) / (botly - toply);
         while(xProg < (toprx - toplx)){
 
             dstY = toply + (slope * xProg) + yProg;
 
+
+            srcX = (xProg * sr1.w) / (toprx - toplx);
+
+            D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
+                           s1->format, &sr, &sg, &sb, &sa);
+
+            col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
 
             if(dstY < s2->h && dstY >= 0 && dstX < s2->w && dstX >= 0){
                 *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
