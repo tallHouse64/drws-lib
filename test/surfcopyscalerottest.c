@@ -17,9 +17,9 @@ int main(int argc, char ** argv){
     D_Surf * img = D_LoadImage("img/folder.png");
     int running = 1;
     D_Event e = {0};
-    D_Rect rect = {40, 70, 153, 86};
+    D_Rect rect = {140, 70, 153, 86};
     D_Point cen = {30, 43};
-    D_double angle = 10;
+    D_double angle = -10;
     D_StartEvents();
 
     while(running){
@@ -31,12 +31,13 @@ int main(int argc, char ** argv){
                     running = 0;
                     break;
                 case D_MOUSEMOVE:
-                    //angle = e.mouse.x;
+                    angle = e.mouse.x - 180;
                     break;
             };
         };
 
-        angle += 1;
+        /*angle += 0.01;*/
+
 
         D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 0, 0, 0, 255));
         D_FillRect(out, &rect, D_rgbaToFormat(out->format, 70, 70, 90, 255));
