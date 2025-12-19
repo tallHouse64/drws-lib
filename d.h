@@ -2041,17 +2041,17 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
 
                 if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),
                                 s1->format, &sr, &sg, &sb, &sa);
 
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))),
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),
                                    s2->format, &dr, &dg, &db, &da);
 
                     D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
 
                     col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
 
-                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
 
                     /* Fill in missing pixels
                      *  (comment out the below
@@ -2061,11 +2061,11 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
                         if(deg <= 45 || (deg >= 180 && deg <= 225)){
                             if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * 4) + (s2->pitch * (dstY - 1)))) = col;
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;
                             };
                         }else{
                             if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX - 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX - 1) >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - 1)) * 4) + (s2->pitch * dstY))) = col;
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
                             };
                         };
                     };
@@ -2143,17 +2143,17 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
 
                 if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),
                                 s1->format, &sr, &sg, &sb, &sa);
 
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))),
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),
                                    s2->format, &dr, &dg, &db, &da);
 
                     D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
 
                     col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
 
-                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
+                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
 
 
                     /* Fill in missing pixels
@@ -2164,11 +2164,11 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
                         if(deg <= 90 || (deg >= 225 && deg <= 270)){
                             if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * 4) + (s2->pitch * (dstY - 1)))) = col;
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;
                             };
                         }else{
                             if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX + 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX + 1) >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX + 1)) * 4) + (s2->pitch * dstY))) = col;
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX + 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
                             };};
                     };
                 };
