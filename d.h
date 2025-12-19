@@ -1957,6 +1957,11 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     int lastDstY = toply;
     int lastDstX = 0;
 
+    /* Set to non-zero every time a line gets
+     *  drawn to the left of the previous one,
+     *  otherwise 0.*/
+    int lineShiftHappened = 0;
+
     int srcX = sr1.x;
     int srcY = sr1.y;
 
@@ -1974,22 +1979,14 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
      *  you would traditionally think. */
     D_double slope = (topry - toply) / (toprx - toplx);
 
-    /* Climb is -1 if slope is negative and 1 if
-     *  slope is positive or 0 if slope is 0. */
-    int climb = 0;
-
-    if(slope < 0){
-        climb = -1;
-    }else if(slope > 0){
-        climb = 1;
-    };
-
     D_uint32 col = 0;
+
 
     if((deg < 45) || (deg >= 135 && deg < 225) || (deg >= 315)){
         while(yProg < (botly - toply)){
 
             dstX = toplx + (-slope * yProg);
+
             xProg = 0;
             srcY = (yProg * sr1.h) / (botly - toply);
 
@@ -1998,6 +1995,9 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
             };
 
             srcY = srcY + sr1.y;
+
+            lineShiftHappened = lastDstX != dstX;
+            lastDstX = dstX;
 
 
             /* Two if statements to stop data
@@ -2044,15 +2044,32 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
                     D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
                                 s1->format, &sr, &sg, &sb, &sa);
 
-                    col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))),
+                                   s2->format, &dr, &dg, &db, &da);
+
+                    D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
+
+                    col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
 
                     *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
 
-                    if(dstY != lastDstY){
-                        if((dstY - climb) < (s2->safeArea.y + s2->safeArea.h) && (dstY - climb) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                            *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - climb) * s2->w) + dstX) * 4) + (s2->pitch * (dstY - climb)))) = col;
+                    /* Fill in missing pixels
+                     *  (comment out the below
+                     *  conditional code to see
+                     *  the holes). */
+                    if(dstY != lastDstY && lineShiftHappened){
+
+                        if(deg <= 45 || (deg >= 180 && deg <= 225)){
+                            if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * 4) + (s2->pitch * (dstY - 1)))) = col;
+                            };
+                        }else{
+                            if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX - 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX - 1) >= s2->safeArea.x){
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - 1)) * 4) + (s2->pitch * dstY))) = col;
+                            };
                         };
                     };
+
                 };
 
                 lastDstY = dstY;
@@ -2068,13 +2085,6 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
         /* Get the inverted slope */
         slope = (toprx - toplx) / (topry - toply);
 
-        /* Recalculate climb base on the new
-         *  slope. */
-        if(slope < 0){
-            climb = -1;
-        }else if(slope > 0){
-            climb = 1;
-        };
 
         while(xProg < (toplx - botlx)){
 
@@ -2099,6 +2109,10 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
 
 
             dstY = toply + (slope * xProg);
+
+            lineShiftHappened = (dstY != lastDstY);
+
+            lastDstY = dstY;
             yProg = 0;
             while(yProg < (topry - toply)){
 
@@ -2132,14 +2146,30 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
                     D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * 4) + (s1->pitch * srcY))),
                                 s1->format, &sr, &sg, &sb, &sa);
 
-                    col = D_rgbaToFormat(s2->format, sr, sg, sb, sa);
+                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))),
+                                   s2->format, &dr, &dg, &db, &da);
+
+                    D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
+
+                    col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
 
                     *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * 4) + (s2->pitch * dstY))) = col;
 
-                    if(dstX != lastDstX){
-                        if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX - climb) < (s2->safeArea.x + s2->safeArea.w) && (dstX - climb) >= s2->safeArea.x){
-                            *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - climb)) * 4) + (s2->pitch * dstY))) = col;
-                        };
+
+                    /* Fill in missing pixels
+                     *  (comment out the below
+                     *  conditional code to see
+                     *  the holes). */
+                    if(lineShiftHappened && dstX != lastDstX){
+
+                        if(deg <= 90 || (deg >= 225 && deg <= 270)){
+                            if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * 4) + (s2->pitch * (dstY - 1)))) = col;
+                            };
+                        }else{
+                            if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX + 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX + 1) >= s2->safeArea.x){
+                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX + 1)) * 4) + (s2->pitch * dstY))) = col;
+                            };};
                     };
                 };
 
