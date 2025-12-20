@@ -1887,6 +1887,18 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
  *  that is smaller that a hundredth 1/100.
  *
  * Note that centre is relative to r2.
+ *
+ * s1: The source surface to copy from.
+ * r1: Which part of s1 to copy.
+ * s2: The destination surface to copy to.
+ * r2: Which part of s2 to write to.
+ * centre: The centre of rotation to rotate the
+ *  image around while copying (this point is
+ *  relative to r2).
+ * deg: The number of degrees to rotate the
+ *  image.
+ * returns: 0 on success or a negative number on
+ *  failure.
  */
 int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * centre, D_double deg){
 
