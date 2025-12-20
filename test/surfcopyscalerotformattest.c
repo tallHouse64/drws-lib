@@ -11,6 +11,40 @@
 
 #define DELAY 1000/30
 
+/* This file tests the D_SurfCopyScaleRot()
+ *  function and weather it can copy between
+ *  surfaces with different bit depths/pixel
+ *  formats.
+ *
+ * Running the test, you should see 9 images that
+ *  rotate with mouse movement.
+ *
+ * The left-most column are images copied to a
+ *  target surface with a bit depth of 32.
+ *
+ * The middle column are images copied to a
+ *  surface with a bit depth of 16.
+ *
+ * The right most column are images copied to a
+ *  surface with a bit depth of 8.
+ *
+ *
+ * The top row of images have a source bit depth
+ *  of 32.
+ *
+ * The top middle of images have a source bit
+ *  depth of 16.
+ *
+ * The top bottom of images have a source bit
+ *  depth of 8.
+ *
+ *
+ * This way each combination of bit depths are
+ *  tested.
+ *
+ * You can also press any key to change the blend
+ *  mode of all the images.
+ */
 
 int main(int argc, char ** argv){
     D_Surf * out = D_GetOutSurf(50, 50, 640, 480, "D_SurfCopyScaleRot() Format Test", 0);
@@ -37,7 +71,7 @@ int main(int argc, char ** argv){
     D_Event e = {0};
     D_Rect resetRect = {30, 70, 153, 86};
     D_Rect rect = resetRect;
-    D_Point cen = {30, 43};
+    D_Point cen = {76, 43};
     D_double angle = -10;
     D_StartEvents();
 
@@ -55,6 +89,19 @@ int main(int argc, char ** argv){
                     break;
 
                 case D_KEYDOWN:
+
+                    /* Hackey way to cycle
+                     *  through blend modes,
+                     *  (this is just a test).*/
+
+                    img->blendMode += 1;
+                    if(img->blendMode > D_BLENDMODE_DIVIDE){
+                        img->blendMode = D_BLENDMODE_NONE;
+                    };
+
+                    img16->blendMode = img->blendMode;
+                    img8->blendMode = img->blendMode;
+
                     break;
             };
         };
