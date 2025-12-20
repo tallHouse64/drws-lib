@@ -1649,9 +1649,234 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
     return 0;
 };
 
-#define D_D_SCSRLOOP
+/* Similar to D_D_SCSLOOP(), this macro copies
+ *  data for D_SurfCopyScaleRot(). It's purpose
+ *  is to use any source and destination pixel
+ *  type, reducing code duplication (it would
+ *  otherwise have to be copied 9 times).
+ *
+ * This macro is clearly unreadable, instead edit
+ *  the commented code below this macro and
+ *  replace the macro removing all newlines and
+ *  comments.
+ *
+ * srcType: The type to cast source pixel data
+ *  to.
+ * dstType: The type to cast destination pixel
+ *  data to.
+ */
+#define D_D_SCSRLOOP(srcType, dstType) {if((deg < 45) || (deg >= 135 && deg < 225) || (deg >= 315)){while(yProg < (botly - toply)){dstX = toplx + (-slope * yProg);xProg = 0;srcY = (yProg * sr1.h) / (botly - toply);if(flipV){srcY = (sr1.h - srcY) - 1;};srcY = srcY + sr1.y;lineShiftHappened = lastDstX != dstX;lastDstX = dstX;if(srcY < s1->safeArea.y){yProg++;continue;};if(srcY >= s1->safeArea.y + s1->safeArea.h){yProg++;continue;};while(xProg < (toprx - toplx)){dstY = toply + (slope * xProg) + yProg;srcX = (xProg * sr1.w) / (toprx - toplx);if(flipH){srcX = (sr1.w - srcX) - 1;};srcX = srcX + sr1.x;if(srcX < s1->safeArea.x){dstX++;xProg++;continue;};if(srcX >= s1->safeArea.x + s1->safeArea.w){dstX++;xProg++;continue;};if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){D_FormatTorgba(*((srcType *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),s1->format, &sr, &sg, &sb, &sa);D_FormatTorgba(*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),s2->format, &dr, &dg, &db, &da);D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;if(dstY != lastDstY && lineShiftHappened){if(deg <= 45 || (deg >= 180 && deg <= 225)){if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){*((dstType *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;};}else{if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX - 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX - 1) >= s2->safeArea.x){*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;};};};};lastDstY = dstY;dstX++;xProg++;};yProg++;};}else{slope = (toprx - toplx) / (topry - toply);while(xProg < (toplx - botlx)){srcY = (xProg * sr1.h) / (toplx - botlx);if(flipV){srcY = (sr1.h - srcY) - 1;};srcY = srcY + sr1.y;if(srcY < s1->safeArea.y){xProg++;continue;};if(srcY >= s1->safeArea.y + s1->safeArea.h){xProg++;continue;};dstY = toply + (slope * xProg); lineShiftHappened = (dstY != lastDstY); lastDstY = dstY; yProg = 0; while(yProg < (topry - toply)){srcX = (yProg * sr1.w) / (topry - toply);if(flipH){srcX = (sr1.w - srcX) - 1;};srcX = srcX + sr1.x;if(srcX < s1->safeArea.x){dstY++;yProg++;continue;};if(srcX >= s1->safeArea.x + s1->safeArea.w){dstY++;yProg++;continue;};dstX = toplx + (slope * yProg) - xProg;if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){D_FormatTorgba(*((srcType *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),s1->format, &sr, &sg, &sb, &sa);D_FormatTorgba(*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),s2->format, &dr, &dg, &db, &da);D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;if(lineShiftHappened && dstX != lastDstX){if(deg <= 90 || (deg >= 225 && deg <= 270)){if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){*((dstType *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;};}else{if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX + 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX + 1) >= s2->safeArea.x){*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX + 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;};};};};lastDstX = dstX;dstY++;yProg++;};xProg++;};};}
 
 #if 0
+
+    /* The code below is the readable version of
+     *  the code above, to edit the above macro
+     *  edit this code below and replace the
+     *  macro with it removing any comments and
+     *  newlines. Read the comment above the
+     *  macro.*/
+
+    {if((deg < 45) || (deg >= 135 && deg < 225) || (deg >= 315)){
+        while(yProg < (botly - toply)){
+
+            dstX = toplx + (-slope * yProg);
+
+            xProg = 0;
+            srcY = (yProg * sr1.h) / (botly - toply);
+
+            if(flipV){
+                srcY = (sr1.h - srcY) - 1;
+            };
+
+            srcY = srcY + sr1.y;
+
+            lineShiftHappened = lastDstX != dstX;
+            lastDstX = dstX;
+
+
+            /* Two if statements to stop data
+             *  getting read unsafely. */
+            if(srcY < s1->safeArea.y){
+                yProg++;
+                continue;
+            };
+            if(srcY >= s1->safeArea.y + s1->safeArea.h){
+                yProg++;
+                continue;
+            };
+
+
+            while(xProg < (toprx - toplx)){
+
+                dstY = toply + (slope * xProg) + yProg;
+
+
+                srcX = (xProg * sr1.w) / (toprx - toplx);
+
+                if(flipH){
+                    srcX = (sr1.w - srcX) - 1;
+                };
+
+                srcX = srcX + sr1.x;
+
+
+                /* Two more if statements to stop
+                 *  data getting read unsafely.*/
+                if(srcX < s1->safeArea.x){
+                    dstX++;
+                    xProg++;
+                    continue;
+                };
+                if(srcX >= s1->safeArea.x + s1->safeArea.w){
+                    dstX++;
+                    xProg++;
+                    continue;
+                };
+
+
+                if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
+                    D_FormatTorgba(*((srcType *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),
+                                s1->format, &sr, &sg, &sb, &sa);
+
+                    D_FormatTorgba(*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),
+                                   s2->format, &dr, &dg, &db, &da);
+
+                    D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
+
+                    col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
+
+                    *((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
+
+                    /* Fill in missing pixels
+                     *  (comment out the below
+                     *  conditional code to see
+                     *  the holes). */
+                    if(dstY != lastDstY && lineShiftHappened){
+
+                        if(deg <= 45 || (deg >= 180 && deg <= 225)){
+                            if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
+                                *((dstType *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;
+                            };
+                        }else{
+                            if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX - 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX - 1) >= s2->safeArea.x){
+                                *((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
+                            };
+                        };
+                    };
+
+                };
+
+                lastDstY = dstY;
+
+                dstX++;
+                xProg++;
+            };
+
+            yProg++;
+        };
+    }else{
+
+        /* Get the inverted slope */
+        slope = (toprx - toplx) / (topry - toply);
+
+
+        while(xProg < (toplx - botlx)){
+
+            srcY = (xProg * sr1.h) / (toplx - botlx);
+
+            if(flipV){
+                srcY = (sr1.h - srcY) - 1;
+            };
+
+            srcY = srcY + sr1.y;
+
+            /* Two if statements to stop data
+             *  getting read unsafely. */
+            if(srcY < s1->safeArea.y){
+                xProg++;
+                continue;
+            };
+            if(srcY >= s1->safeArea.y + s1->safeArea.h){
+                xProg++;
+                continue;
+            };
+
+
+            dstY = toply + (slope * xProg);
+
+            lineShiftHappened = (dstY != lastDstY);
+
+            lastDstY = dstY;
+            yProg = 0;
+            while(yProg < (topry - toply)){
+
+                srcX = (yProg * sr1.w) / (topry - toply);
+
+                if(flipH){
+                    srcX = (sr1.w - srcX) - 1;
+                };
+
+                srcX = srcX + sr1.x;
+
+
+                /* Two more if statements to stop
+                 *  data getting read unsafely.*/
+                if(srcX < s1->safeArea.x){
+                    dstY++;
+                    yProg++;
+                    continue;
+                };
+                if(srcX >= s1->safeArea.x + s1->safeArea.w){
+                    dstY++;
+                    yProg++;
+                    continue;
+                };
+
+
+                dstX = toplx + (slope * yProg) - xProg;
+
+
+                if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
+                    D_FormatTorgba(*((srcType *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),
+                                s1->format, &sr, &sg, &sb, &sa);
+
+                    D_FormatTorgba(*((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),
+                                   s2->format, &dr, &dg, &db, &da);
+
+                    D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
+
+                    col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
+
+                    *((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
+
+
+                    /* Fill in missing pixels
+                     *  (comment out the below
+                     *  conditional code to see
+                     *  the holes). */
+                    if(lineShiftHappened && dstX != lastDstX){
+
+                        if(deg <= 90 || (deg >= 225 && deg <= 270)){
+                            if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
+                                *((dstType *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;
+                            };
+                        }else{
+                            if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX + 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX + 1) >= s2->safeArea.x){
+                                *((dstType *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX + 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
+                            };};
+                    };
+                };
+
+                lastDstX = dstX;
+
+                dstY++;
+                yProg++;
+            };
+
+            xProg++;
+        };
+    };}
+
 #endif
 
 /* This function does the same thing as
@@ -1982,205 +2207,52 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     D_uint32 col = 0;
 
 
-    if((deg < 45) || (deg >= 135 && deg < 225) || (deg >= 315)){
-        while(yProg < (botly - toply)){
+    switch(D_BITDEPTHTOBYTES(s1->format.bitDepth)){
+        case 4:
 
-            dstX = toplx + (-slope * yProg);
-
-            xProg = 0;
-            srcY = (yProg * sr1.h) / (botly - toply);
-
-            if(flipV){
-                srcY = (sr1.h - srcY) - 1;
+            switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
+                case 4:
+                    D_D_SCSRLOOP(D_uint32, D_uint32);
+                    break;
+                case 2:
+                    D_D_SCSRLOOP(D_uint32, D_uint16);
+                    break;
+                case 1:
+                    D_D_SCSRLOOP(D_uint32, D_uint8);
+                    break;
             };
 
-            srcY = srcY + sr1.y;
+            break;
+        case 2:
 
-            lineShiftHappened = lastDstX != dstX;
-            lastDstX = dstX;
-
-
-            /* Two if statements to stop data
-             *  getting read unsafely. */
-            if(srcY < s1->safeArea.y){
-                yProg++;
-                continue;
-            };
-            if(srcY >= s1->safeArea.y + s1->safeArea.h){
-                yProg++;
-                continue;
+            switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
+                case 4:
+                    D_D_SCSRLOOP(D_uint16, D_uint32);
+                    break;
+                case 2:
+                    D_D_SCSRLOOP(D_uint16, D_uint16);
+                    break;
+                case 1:
+                    D_D_SCSRLOOP(D_uint16, D_uint8);
+                    break;
             };
 
+            break;
+        case 1:
 
-            while(xProg < (toprx - toplx)){
-
-                dstY = toply + (slope * xProg) + yProg;
-
-
-                srcX = (xProg * sr1.w) / (toprx - toplx);
-
-                if(flipH){
-                    srcX = (sr1.w - srcX) - 1;
-                };
-
-                srcX = srcX + sr1.x;
-
-
-                /* Two more if statements to stop
-                 *  data getting read unsafely.*/
-                if(srcX < s1->safeArea.x){
-                    dstX++;
-                    xProg++;
-                    continue;
-                };
-                if(srcX >= s1->safeArea.x + s1->safeArea.w){
-                    dstX++;
-                    xProg++;
-                    continue;
-                };
-
-
-                if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),
-                                s1->format, &sr, &sg, &sb, &sa);
-
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),
-                                   s2->format, &dr, &dg, &db, &da);
-
-                    D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
-
-                    col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
-
-                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
-
-                    /* Fill in missing pixels
-                     *  (comment out the below
-                     *  conditional code to see
-                     *  the holes). */
-                    if(dstY != lastDstY && lineShiftHappened){
-
-                        if(deg <= 45 || (deg >= 180 && deg <= 225)){
-                            if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;
-                            };
-                        }else{
-                            if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX - 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX - 1) >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX - 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
-                            };
-                        };
-                    };
-
-                };
-
-                lastDstY = dstY;
-
-                dstX++;
-                xProg++;
+            switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
+                case 4:
+                    D_D_SCSRLOOP(D_uint8, D_uint32);
+                    break;
+                case 2:
+                    D_D_SCSRLOOP(D_uint8, D_uint16);
+                    break;
+                case 1:
+                    D_D_SCSRLOOP(D_uint8, D_uint8);
+                    break;
             };
 
-            yProg++;
-        };
-    }else{
-
-        /* Get the inverted slope */
-        slope = (toprx - toplx) / (topry - toply);
-
-
-        while(xProg < (toplx - botlx)){
-
-            srcY = (xProg * sr1.h) / (toplx - botlx);
-
-            if(flipV){
-                srcY = (sr1.h - srcY) - 1;
-            };
-
-            srcY = srcY + sr1.y;
-
-            /* Two if statements to stop data
-             *  getting read unsafely. */
-            if(srcY < s1->safeArea.y){
-                xProg++;
-                continue;
-            };
-            if(srcY >= s1->safeArea.y + s1->safeArea.h){
-                xProg++;
-                continue;
-            };
-
-
-            dstY = toply + (slope * xProg);
-
-            lineShiftHappened = (dstY != lastDstY);
-
-            lastDstY = dstY;
-            yProg = 0;
-            while(yProg < (topry - toply)){
-
-                srcX = (yProg * sr1.w) / (topry - toply);
-
-                if(flipH){
-                    srcX = (sr1.w - srcX) - 1;
-                };
-
-                srcX = srcX + sr1.x;
-
-
-                /* Two more if statements to stop
-                 *  data getting read unsafely.*/
-                if(srcX < s1->safeArea.x){
-                    dstY++;
-                    yProg++;
-                    continue;
-                };
-                if(srcX >= s1->safeArea.x + s1->safeArea.w){
-                    dstY++;
-                    yProg++;
-                    continue;
-                };
-
-
-                dstX = toplx + (slope * yProg) - xProg;
-
-
-                if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s1->pix) + (((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))),
-                                s1->format, &sr, &sg, &sb, &sa);
-
-                    D_FormatTorgba(*((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))),
-                                   s2->format, &dr, &dg, &db, &da);
-
-                    D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
-
-                    col = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
-
-                    *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
-
-
-                    /* Fill in missing pixels
-                     *  (comment out the below
-                     *  conditional code to see
-                     *  the holes). */
-                    if(lineShiftHappened && dstX != lastDstX){
-
-                        if(deg <= 90 || (deg >= 225 && deg <= 270)){
-                            if((dstY - 1) < (s2->safeArea.y + s2->safeArea.h) && (dstY - 1) >= s2->safeArea.y && dstX < (s2->safeArea.x + s2->safeArea.w) && dstX >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + ((((dstY - 1) * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * (dstY - 1)))) = col;
-                            };
-                        }else{
-                            if(dstY < (s2->safeArea.y + s2->safeArea.h) && dstY >= s2->safeArea.y && (dstX + 1) < (s2->safeArea.x + s2->safeArea.w) && (dstX + 1) >= s2->safeArea.x){
-                                *((D_uint32 *)(((D_uint8 *)s2->pix) + (((dstY * s2->w) + (dstX + 1)) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))) = col;
-                            };};
-                    };
-                };
-
-                lastDstX = dstX;
-
-                dstY++;
-                yProg++;
-            };
-
-            xProg++;
-        };
+            break;
     };
 
 
