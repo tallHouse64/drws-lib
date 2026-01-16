@@ -2084,8 +2084,8 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     toply = toply + (sr2.y + scen.y);
 
     /* Uncomment to see where toplx, toply are */
-    D_Rect testtopl = {(int)(toplx - 4), (int)(toply - 4), 8, 8};
-    D_FillRect(s2, &testtopl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));
+    /*D_Rect testtopl = {(int)(toplx - 4), (int)(toply - 4), 8, 8};
+    D_FillRect(s2, &testtopl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
 
 
@@ -2120,8 +2120,8 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     topry = topry + (sr2.y + scen.y);
 
     /* Uncomment to see where toprx, topry are */
-    D_Rect testtopr = {(int)(toprx - 4), (int)(topry - 4), 8, 8};
-    D_FillRect(s2, &testtopr, D_rgbaToFormat(s2->format, 255, 240, 200, 255));
+    /*D_Rect testtopr = {(int)(toprx - 4), (int)(topry - 4), 8, 8};
+    D_FillRect(s2, &testtopr, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
 
 
@@ -2156,8 +2156,8 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     botly = botly + (sr2.y + scen.y);
 
     /* Uncomment to see where botlx, botly are */
-    D_Rect testbotl = {(int)(botlx - 4), (int)(botly - 4), 8, 8};
-    D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));
+    /*D_Rect testbotl = {(int)(botlx - 4), (int)(botly - 4), 8, 8};
+    D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
 
     int flipH = 0;
