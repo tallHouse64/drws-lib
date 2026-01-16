@@ -1897,10 +1897,16 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
  *  relative to r2).
  * deg: The number of degrees to rotate the
  *  image.
+ * flipV: Pass 1 (or any non-zero) to flip the
+ *  image vertically, pass 0 for no vertical
+ *  flip.
+ * flipH: Pass 1 (or any non-zero) to flip the
+ *  image horizontally, pass 0 for no horizontal
+ *  flip.
  * returns: 0 on success or a negative number on
  *  failure.
  */
-int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * centre, D_double deg){
+int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Point * centre, D_double deg, int flipV, int flipH){
 
     /* This function does not use trigonometry
      *  functions, instead it can rotate points
@@ -2159,9 +2165,6 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     /*D_Rect testbotl = {(int)(botlx - 4), (int)(botly - 4), 8, 8};
     D_FillRect(s2, &testbotl, D_rgbaToFormat(s2->format, 255, 240, 200, 255));*/
 
-
-    int flipH = 0;
-    int flipV = 0;
 
     /* In case the rectangle is upside-down, flip
      *  the rectangle. */
