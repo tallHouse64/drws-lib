@@ -11,6 +11,33 @@
 
 #define DELAY 1000/30
 
+/* This file tests D_SurfCopyScaleRot().
+ *
+ * When running the test, moving the mouse left
+ *  and right should increase and decrease the
+ *  angle the image is rotated.
+ *
+ * Try using WASD to move where the image is
+ *  drawn on the window.
+ *
+ * Press "v" to flip the image vertically and "h"
+ *  to flip it horizontally.
+ *
+ * You can also hold "i" to increase the height
+ *  of the image rect (r1 parameter). Hold "o" to
+ *  decrease it.
+ *
+ * You can hold "k" to move imgR down, which is
+ *  increasing it's y position (of the r1
+ *  parameter). Hold "l" to move it up.
+ *
+ * You can hold "p" to increase the width of the
+ *  image rect (r1 parameter). Hold "[" to decrease it.
+ *
+ * Hold ";" to move the image rect right (r1
+ *  parameter) increasing it's x position. Hold
+ *  "'" to move it left.
+ */
 
 int main(int argc, char ** argv){
     D_Surf * out = D_GetOutSurf(50, 50, 640, 480, "D_SurfCopyScaleRot() Test", 0);
@@ -26,6 +53,8 @@ int main(int argc, char ** argv){
     D_Rect rect = {140, 70, 153, 86};
     D_Point cen = {30, 43};
     D_double angle = -10;
+    int flipV = 0;
+    int flipH = 0;
     D_StartEvents();
 
     while(running){
@@ -69,6 +98,11 @@ int main(int argc, char ** argv){
                         imgR.x = imgR.x + 10;
                     }else if(e.keyboard.key == D_KQuote){
                         imgR.x = imgR.x - 10;
+
+                    }else if(e.keyboard.key == D_Kv){
+                        flipV = !flipV;
+                    }else if(e.keyboard.key == D_Kh){
+                        flipH = !flipH;
                     };
 
                     break;
@@ -80,7 +114,7 @@ int main(int argc, char ** argv){
 
         D_FillRect(sub, D_NULL, D_rgbaToFormat(out->format, 50, 50, 50, 255));
         D_FillRect(sub, &rect, D_rgbaToFormat(out->format, 70, 70, 90, 255));
-        D_SurfCopyScaleRot(img, &imgR, sub, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img, &imgR, sub, &rect, &cen, angle, flipV, flipH);
 
         D_FlipOutSurf(out);
 
