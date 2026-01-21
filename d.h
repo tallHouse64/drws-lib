@@ -1404,6 +1404,100 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
     return 0;
 };
 
+/* This function draws a line between two points
+ *  on a surface.
+ *
+ * Note that thickness is not implemented and the
+ *  line always gets drawn with a thickness of 1.
+ *
+ * At the moment, this function only supports
+ *  surfaces with a bit depth of 32.
+ *
+ * The example below draws a green line on a
+ *  surface.
+ *
+ * Example:
+ *  D_Surf * surf = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32));
+ *  D_Point a = {10, 10};
+ *  D_Point b = {100, 70};
+ *  D_DrawLine(surf, &a, &b, 1, D_rgbaToFormat(surf->format, 0, 255, 0, 255));
+ *
+ * Like D_FillRect(), to pass a colour into this
+ *  function you need D_rgbaToFormat(). Its
+ *  return value can be passed into col.
+ *
+ * s: The surface to draw onto.
+ * a: A point on the surface to draw between.
+ * b: Another point on the surface to draw
+ *  between.
+ * thickness: The thickness to draw the line.
+ * col: The colour to draw the line.
+ */
+int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col){
+
+    if(s == D_NULL || a == D_NULL || b == D_NULL){
+        return -1;
+    };
+
+    int x = 0;
+    int y = 0;
+    int segmentLength = (b->x - a->x) / (b->y - a->y);
+    int longSegments =  (b->x - a->x) % (b->y - a->y);
+    int segmentEnd = 0;
+
+    /* For every columb */
+    for(; y < b->y - a->y; y++){
+
+        /* Note that x does not reset to 0  or
+         *  something before running the inner
+         *  loop. */
+
+        /* If this segment is a long segment */
+        if((y % longSegments) == 0){
+
+            /* Prepare to draw a long segment */
+            segmentEnd = x + segmentLength + 1;
+        }else{
+
+            /*Prepare to draw a normal segment*/
+            segmentEnd = x + segmentLength;
+        };
+
+        /* Don't draw pixels on this row if
+         *  they're above the safe area. */
+        if(y < s->safeArea.y){
+            continue;
+        };
+
+        /* Don't draw pixels on this row if
+         *  they're below the safe area. */
+        if(y >= s->safeArea.y + s->safeArea.h){
+            continue;
+        };
+
+        for(; x < segmentEnd; x++){
+
+            /* Don't draw the pixel if it's
+             *  outside the safe area (to the
+             *  left). */
+            if(x < s->safeArea.x){
+                continue;
+            };
+
+            /* Don't draw the pixel if it's
+             *  outside the safe area (to the
+             *  rigth). */
+            if(x >= s->safeArea.x + s->safeArea.w){
+                continue;
+            };
+
+            *(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y)) = col;
+        };
+    };
+
+    return 0;
+};
+
 /* This macro is for the D_SurfCopyScale()
  *  function. It's the loop that copies pixels.
  *  The reason it's a macro is to stop code
