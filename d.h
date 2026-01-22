@@ -1426,6 +1426,12 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
  *  function you need D_rgbaToFormat(). Its
  *  return value can be passed into col.
  *
+ * It is safe to pass null for s, a, and b. The
+ *  function would do nothing and return -1.
+ *
+ * If thickness is less than 1, the function does
+ *  nothing and returns -2.
+ *
  * s: The surface to draw onto.
  * a: A point on the surface to draw between.
  * b: Another point on the surface to draw
@@ -1435,11 +1441,33 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
  */
 int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col){
 
+    int x = 0;
+    int y = 0;
+
+    int xLimit = 0;
+    int yLimit = 0;
+
+    /* Thickness counter */
+    int thickCount = 0;
+
+    D_Point * temp = D_NULL;
+
+    /* We need to make copies of a and b that can
+     *  be changed without affecting the original
+     *  values passed into the function. They get
+     *  copied later in the function. Bear in
+     *  mind the pointers may get swaped (read
+     *  below). */
+    D_Point a2 = {0};
+    D_Point b2 = {0};
+
     if(s == D_NULL || a == D_NULL || b == D_NULL){
         return -1;
     };
 
-    D_Point * temp = D_NULL;
+    if(thickness < 1){
+        return -2;
+    };
 
     /* Swap pointers to A and B if the line is
      *  more than 45 degrees anticlockwise from
@@ -1452,32 +1480,34 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
         b = temp;
     };
 
-    int x = 0;
-    int y = 0;
-
-    int xLimit = 0;
-    int yLimit = 0;
-
     if((b->x - a->x) > (b->y - a->y)){
+
+        /* Copy Points a and b, while moving them
+         *  down by half the thickness. */
+        a2.x = a->x;
+        a2.y = a->y + (thickness / 2);
+
+        b2.x = b->x;
+        b2.y = b->y + (thickness / 2);
 
         /* Edge case which would involve a
          *  division by 0 */
-        if(b->x == a->x){
+        if(b2.x == a2.x){
             /* Do nothing */
             return 0;
         };
 
-        if(a->x >= s->safeArea.x){
-            x = a->x;
+        if(a2.x >= s->safeArea.x){
+            x = a2.x;
         }else{
             x = s->safeArea.x;
         };
 
-        /* Set the xLimit to b->x or the right
+        /* Set the xLimit to b2.x or the right
          *  edge of the safe area, whichever is
          *  smaller (leftmost). */
-        if(b->x < s->safeArea.x + s->safeArea.w){
-            xLimit = b->x;
+        if(b2.x < s->safeArea.x + s->safeArea.w){
+            xLimit = b2.x;
         }else{
             xLimit = s->safeArea.x + s->safeArea.w;
         };
@@ -1492,17 +1522,22 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
          *  and B. */
         for(; x < xLimit; x++){
 
-            y = ((((x - a->x) * (b->y - a->y)) / (b->x - a->x)) + a->y);
+            y = ((((x - a2.x) * (b2.y - a2.y)) / (b2.x - a2.x)) + a2.y);
 
             /* If the pixel is outside the safe
-             *  area then don't draw it (skip to
-             *  the next one). */
-            if(y < s->safeArea.y || y >= s->safeArea.y + s->safeArea.h){
-                continue;
+             *  area (off the bottom) then set
+             *  thickCount so it never draws
+             *  below the safe area.*/
+            if(y >= s->safeArea.y + s->safeArea.h){
+                thickCount = (y - (s->safeArea.y + s->safeArea.h)) + 1;
+            }else{
+                thickCount = 0;
             };
 
-            /* Draw the pixel */
-            *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y))) = col;
+            /* Draw the pixels for this column */
+            for(; thickCount < thickness && y - thickCount >= s->safeArea.y; thickCount++){
+                *((D_uint32 *)(((D_uint8 *)(s->pix)) + ((((y - thickCount) * s->w) + x) * 4) + (s->pitch * (y - thickCount)))) = col;
+            };
         };
 
     }else{
