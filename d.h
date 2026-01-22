@@ -1439,52 +1439,117 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
         return -1;
     };
 
-    /* Edge case which would involve a division
-     *  by 0 */
-    if(b->x - a->x == 0){
-        /* Do nothing for now */
-        return 0;
+    D_Point * temp = D_NULL;
+
+    /* Swap pointers to A and B if the line is
+     *  more than 45 degrees anticlockwise from
+     *  the x axis (comment out the statement to
+     *  see what happens and understand it
+     *  better). */
+    if(-(b->y - a->y) > (b->x - a->x)){
+        temp = a;
+        a = b;
+        b = temp;
     };
 
     int x = 0;
     int y = 0;
 
-    if(a->x >= s->safeArea.x){
-        x = a->x;
-    }else{
-        x = s->safeArea.x;
-    };
-
-    /* A pixel should not be drawn to the right
-     *  of the x limit for memory safety. (Also
-     *  don't draw on the xLimit). */
     int xLimit = 0;
+    int yLimit = 0;
 
-    /* Set the xLimit to b->x or the right edge
-     *  of the safe area, whichever is smaller
-     *  (leftmost). */
-    if(b->x < s->safeArea.x + s->safeArea.w){
-        xLimit = b->x;
-    }else{
-        xLimit = s->safeArea.x + s->safeArea.w;
-    };
+    if((b->x - a->x) > (b->y - a->y)){
 
-
-    /* For each column of pixels between A and B.
-     */
-    for(; x < xLimit; x++){
-
-        y = ((((x - a->x) * (b->y - a->y)) / (b->x - a->x)) + a->y);
-
-        /* If the pixel is outside the safe area
-         *  then don't draw it (skip to the next
-         *  one). */
-        if(y < s->safeArea.y || y >= s->safeArea.y + s->safeArea.h){
-            continue;
+        /* Edge case which would involve a
+         *  division by 0 */
+        if(b->x == a->x){
+            /* Do nothing */
+            return 0;
         };
 
-        /* Draw the pixel */
-        *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y))) = col;
+        if(a->x >= s->safeArea.x){
+            x = a->x;
+        }else{
+            x = s->safeArea.x;
+        };
+
+        /* Set the xLimit to b->x or the right
+         *  edge of the safe area, whichever is
+         *  smaller (leftmost). */
+        if(b->x < s->safeArea.x + s->safeArea.w){
+            xLimit = b->x;
+        }else{
+            xLimit = s->safeArea.x + s->safeArea.w;
+        };
+
+        /* At this point, a pixel should not be
+         *  drawn to the right of the x limit for
+         *  memory safety but yLimit can be
+         *  ignored. (Also don't draw on the
+         *  xLimit). */
+
+        /* For each column of pixels between A
+         *  and B. */
+        for(; x < xLimit; x++){
+
+            y = ((((x - a->x) * (b->y - a->y)) / (b->x - a->x)) + a->y);
+
+            /* If the pixel is outside the safe
+             *  area then don't draw it (skip to
+             *  the next one). */
+            if(y < s->safeArea.y || y >= s->safeArea.y + s->safeArea.h){
+                continue;
+            };
+
+            /* Draw the pixel */
+            *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y))) = col;
+        };
+
+    }else{
+
+        /* Edge case which would involve a
+         *  division by 0 */
+        if(b->y == a->y){
+            /* Do nothing */
+            return 0;
+        };
+
+        if(a->y >= s->safeArea.y){
+            y = a->y;
+        }else{
+            y = s->safeArea.y;
+        };
+
+        /* Set the yLimit to b->y or the bottom
+         *  edge of the safe area, whichever is
+         *  smaller (above). */
+        if(b->y < s->safeArea.y + s->safeArea.h){
+            yLimit = b->y;
+        }else{
+            yLimit = s->safeArea.y + s->safeArea.h;
+        };
+
+        /* At this point, a pixel should not be
+         *  drawn below the y limit for memory
+         *  safety but xLimit can be ignored.
+         *  (Also don't draw on the yLimit). */
+
+        /* For each row of pixels between A
+         *  and B. */
+        for(; y < yLimit; y++){
+
+            x = ((((y - a->y) * (b->x - a->x)) / (b->y - a->y)) + a->x);
+
+            /* If the pixel is outside the safe
+             *  area then don't draw it (skip to
+             *  the next one). */
+            if(x < s->safeArea.x || x >= s->safeArea.x + s->safeArea.w){
+                continue;
+            };
+
+            /* Draw the pixel */
+            *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y))) = col;
+        };
     };
 
     return 0;
