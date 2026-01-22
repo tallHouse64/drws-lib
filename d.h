@@ -1439,60 +1439,23 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
         return -1;
     };
 
-    int x = 0;
-    int y = 0;
-    int segmentLength = (b->x - a->x) / (b->y - a->y);
-    int longSegments =  (b->x - a->x) % (b->y - a->y);
-    int segmentEnd = 0;
+    /* Edge case which would involve a division
+     *  by 0 */
+    if(b->x - a->x == 0){
+        /* Do nothing for now */
+        return 0;
+    };
 
-    /* For every columb */
-    for(; y < b->y - a->y; y++){
+    int x = a->x;
+    int y = a->y;
 
-        /* Note that x does not reset to 0  or
-         *  something before running the inner
-         *  loop. */
+    /* For each column of pixels between A and B.
+     */
+    for(; x < b->x; x++){
 
-        /* If this segment is a long segment */
-        if((y % longSegments) == 0){
+        y = ((x * (b->y - a->y)) / (b->x - a->x));
 
-            /* Prepare to draw a long segment */
-            segmentEnd = x + segmentLength + 1;
-        }else{
-
-            /*Prepare to draw a normal segment*/
-            segmentEnd = x + segmentLength;
-        };
-
-        /* Don't draw pixels on this row if
-         *  they're above the safe area. */
-        if(y < s->safeArea.y){
-            continue;
-        };
-
-        /* Don't draw pixels on this row if
-         *  they're below the safe area. */
-        if(y >= s->safeArea.y + s->safeArea.h){
-            continue;
-        };
-
-        for(; x < segmentEnd; x++){
-
-            /* Don't draw the pixel if it's
-             *  outside the safe area (to the
-             *  left). */
-            if(x < s->safeArea.x){
-                continue;
-            };
-
-            /* Don't draw the pixel if it's
-             *  outside the safe area (to the
-             *  rigth). */
-            if(x >= s->safeArea.x + s->safeArea.w){
-                continue;
-            };
-
-            *(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y)) = col;
-        };
+        *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * D_BITDEPTHTOBYTES(s->format.bitDepth)) + (s->pitch * s->w))) = col;
     };
 
     return 0;
