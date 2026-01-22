@@ -1446,16 +1446,45 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
         return 0;
     };
 
-    int x = a->x;
-    int y = a->y;
+    int x = 0;
+    int y = 0;
+
+    if(a->x >= s->safeArea.x){
+        x = a->x;
+    }else{
+        x = s->safeArea.x;
+    };
+
+    /* A pixel should not be drawn to the right
+     *  of the x limit for memory safety. (Also
+     *  don't draw on the xLimit). */
+    int xLimit = 0;
+
+    /* Set the xLimit to b->x or the right edge
+     *  of the safe area, whichever is smaller
+     *  (leftmost). */
+    if(b->x < s->safeArea.x + s->safeArea.w){
+        xLimit = b->x;
+    }else{
+        xLimit = s->safeArea.x + s->safeArea.w;
+    };
+
 
     /* For each column of pixels between A and B.
      */
-    for(; x < b->x; x++){
+    for(; x < xLimit; x++){
 
-        y = ((x * (b->y - a->y)) / (b->x - a->x));
+        y = ((((x - a->x) * (b->y - a->y)) / (b->x - a->x)) + a->y);
 
-        *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * D_BITDEPTHTOBYTES(s->format.bitDepth)) + (s->pitch * s->w))) = col;
+        /* If the pixel is outside the safe area
+         *  then don't draw it (skip to the next
+         *  one). */
+        if(y < s->safeArea.y || y >= s->safeArea.y + s->safeArea.h){
+            continue;
+        };
+
+        /* Draw the pixel */
+        *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y))) = col;
     };
 
     return 0;
