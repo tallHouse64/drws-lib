@@ -1404,11 +1404,91 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
     return 0;
 };
 
+/* The macros below are the loops for
+ *  D_DrawLine(). The are only intended for use
+ *  by that function.
+ *
+ * The macros below are a mess. Don't try to edit
+ *  them directly. Instead edit the code below
+ *  which is commented out (which is the readable
+ *  version), then delete the macro code
+ *  replacing it with a copy of the readable
+ *  version removing all newlines and comments.
+ *
+ * The reason this is necessary is because in C
+ *  you can only pass data types to macros, you
+ *  can't pass a data type to a function. The
+ *  pixel data needs to be dereferenced using the
+ *  correct pointer type so that writing to a
+ *  pixel doesn't corrupt any neighbour pixels.
+ *  Also multi-line macros usually cause gcc to
+ *  give the wrong line number when there is an
+ *  error.
+ *
+ * The same thing is done for D_SurfCopyScale()
+ *  and D_SurfCopyScaleRot().
+ *
+ * dstType: The data type to cast pixel data to.
+ */
+
+#define D_D_DRAWLINELOOP1(dstType) {for(; x < xLimit; x++){y = ((((x - a2.x) * (b2.y - a2.y)) / (b2.x - a2.x)) + a2.y);if(y >= s->safeArea.y + s->safeArea.h){thickCount = (y - (s->safeArea.y + s->safeArea.h)) + 1;}else{thickCount = 0;};for(; thickCount < thickness && y - thickCount >= s->safeArea.y; thickCount++){*((dstType *)(((D_uint8 *)(s->pix)) + ((((y - thickCount) * s->w) + x) * (D_BITDEPTHTOBYTES(s->format.bitDepth))) + (s->pitch * (y - thickCount)))) = col;};};}
+
+#define D_D_DRAWLINELOOP2(dstType) {for(; y < yLimit; y++){x = ((((y - a2.y) * (b2.x - a2.x)) / (b2.y - a2.y)) + a2.x);if(x >= s->safeArea.x + s->safeArea.w){thickCount = (x - (s->safeArea.x + s->safeArea.w)) + 1;}else{thickCount = 0;};for(; thickCount < thickness && x - thickCount >= s->safeArea.x; thickCount++){*((dstType *)(((D_uint8 *)(s->pix)) + (((y * s->w) + (x - thickCount)) * (D_BITDEPTHTOBYTES(s->format.bitDepth))) + (s->pitch * y))) = col;};};}
+
+#if 0
+
+/* Loop 1 */
+{
+    /* For each column of pixels between A and B.
+     */
+    for(; x < xLimit; x++){
+
+        y = ((((x - a2.x) * (b2.y - a2.y)) / (b2.x - a2.x)) + a2.y);
+
+        /* If the pixel is outside the safe area
+         *  (off the bottom) then set thickCount
+         *  so it never draws below the safe
+         *  area.*/
+        if(y >= s->safeArea.y + s->safeArea.h){
+            thickCount = (y - (s->safeArea.y + s->safeArea.h)) + 1;
+        }else{
+            thickCount = 0;
+        };
+
+        /* Draw the pixels for this column */
+        for(; thickCount < thickness && y - thickCount >= s->safeArea.y; thickCount++){
+            *((dstType *)(((D_uint8 *)(s->pix)) + ((((y - thickCount) * s->w) + x) * (D_BITDEPTHTOBYTES(s->format.bitDepth))) + (s->pitch * (y - thickCount)))) = col;
+        };
+    };
+}
+
+/* Loop 2 */
+{
+    /* For each row of pixels between A and B. */
+    for(; y < yLimit; y++){
+
+        x = ((((y - a2.y) * (b2.x - a2.x)) / (b2.y - a2.y)) + a2.x);
+
+        /* If the pixel is outside the safe area
+         *  (to the right) then set thickCount so
+         *  it only draws inside the safe area.*/
+        if(x >= s->safeArea.x + s->safeArea.w){
+            thickCount = (x - (s->safeArea.x + s->safeArea.w)) + 1;
+        }else{
+            thickCount = 0;
+        };
+
+        /* Draw the pixels for this row (right to
+         *  left) */
+        for(; thickCount < thickness && x - thickCount >= s->safeArea.x; thickCount++){
+            *((dstType *)(((D_uint8 *)(s->pix)) + (((y * s->w) + (x - thickCount)) * (D_BITDEPTHTOBYTES(s->format.bitDepth))) + (s->pitch * y))) = col;
+        };
+    };
+}
+#endif
+
 /* This function draws a line between two points
  *  on a surface.
- *
- * At the moment, this function only supports
- *  surfaces with a bit depth of 32.
  *
  * The example below draws a green line on a
  *  surface.
@@ -1517,26 +1597,18 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
          *  ignored. (Also don't draw on the
          *  xLimit). */
 
-        /* For each column of pixels between A
-         *  and B. */
-        for(; x < xLimit; x++){
+        switch(D_BITDEPTHTOBYTES(s->format.bitDepth)){
+            case 4:
+                D_D_DRAWLINELOOP1(D_uint32);
+                break;
 
-            y = ((((x - a2.x) * (b2.y - a2.y)) / (b2.x - a2.x)) + a2.y);
+            case 2:
+                D_D_DRAWLINELOOP1(D_uint16);
+                break;
 
-            /* If the pixel is outside the safe
-             *  area (off the bottom) then set
-             *  thickCount so it never draws
-             *  below the safe area.*/
-            if(y >= s->safeArea.y + s->safeArea.h){
-                thickCount = (y - (s->safeArea.y + s->safeArea.h)) + 1;
-            }else{
-                thickCount = 0;
-            };
-
-            /* Draw the pixels for this column */
-            for(; thickCount < thickness && y - thickCount >= s->safeArea.y; thickCount++){
-                *((D_uint32 *)(((D_uint8 *)(s->pix)) + ((((y - thickCount) * s->w) + x) * 4) + (s->pitch * (y - thickCount)))) = col;
-            };
+            case 1:
+                D_D_DRAWLINELOOP1(D_uint8);
+                break;
         };
 
     }else{
@@ -1576,27 +1648,18 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
          *  safety but xLimit can be ignored.
          *  (Also don't draw on the yLimit). */
 
-        /* For each row of pixels between A
-         *  and B. */
-        for(; y < yLimit; y++){
+        switch(D_BITDEPTHTOBYTES(s->format.bitDepth)){
+            case 4:
+                D_D_DRAWLINELOOP2(D_uint32);
+                break;
 
-            x = ((((y - a2.y) * (b2.x - a2.x)) / (b2.y - a2.y)) + a2.x);
+            case 2:
+                D_D_DRAWLINELOOP2(D_uint16);
+                break;
 
-            /* If the pixel is outside the safe
-             *  area (to the right) then set
-             *  thickCount so it only draws
-             *  inside the safe area. */
-            if(x >= s->safeArea.x + s->safeArea.w){
-                thickCount = (x - (s->safeArea.x + s->safeArea.w)) + 1;
-            }else{
-                thickCount = 0;
-            };
-
-            /* Draw the pixels for this row
-             *  (right to left) */
-            for(; thickCount < thickness && x - thickCount >= s->safeArea.x; thickCount++){
-                *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + (x - thickCount)) * 4) + (s->pitch * y))) = col;
-            };
+            case 1:
+                D_D_DRAWLINELOOP2(D_uint8);
+                break;
         };
     };
 
