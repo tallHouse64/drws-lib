@@ -10,6 +10,9 @@
 #define DELAY 1000/30
 
 /* This file tests the D_DrawLine() function.
+ *  This test is to make sure that D_DrawLine()
+ *  can draw to 3 different pixel formats with
+ *  different bit depths.
  *
  * Hold left click and drag to move point A
  *  (red), hold right click and drag to move
