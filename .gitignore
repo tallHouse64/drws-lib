@@ -73,6 +73,8 @@ test/surfcopyscalerotformattest
 test/surfcopyscalerotformattest.exe
 test/drawlinetest
 test/drawlinetest.exe
+test/drawlineformattest
+test/drawlineformattest.exe
 test/a.out
 test/a.exe
 
