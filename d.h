@@ -1407,9 +1407,6 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
 /* This function draws a line between two points
  *  on a surface.
  *
- * Note that thickness is not implemented and the
- *  line always gets drawn with a thickness of 1.
- *
  * At the moment, this function only supports
  *  surfaces with a bit depth of 32.
  *
@@ -1438,6 +1435,8 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
  *  between.
  * thickness: The thickness to draw the line.
  * col: The colour to draw the line.
+ * returns: 0 on success or a negative number on
+ *  failure.
  */
 int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col){
 
@@ -1542,24 +1541,32 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
 
     }else{
 
+        /* Copy Points a and b, while moving them
+         *  right by half the thickness. */
+        a2.x = a->x + (thickness / 2);
+        a2.y = a->y;
+
+        b2.x = b->x + (thickness / 2);
+        b2.y = b->y;
+
         /* Edge case which would involve a
          *  division by 0 */
-        if(b->y == a->y){
+        if(b2.y == a2.y){
             /* Do nothing */
             return 0;
         };
 
-        if(a->y >= s->safeArea.y){
-            y = a->y;
+        if(a2.y >= s->safeArea.y){
+            y = a2.y;
         }else{
             y = s->safeArea.y;
         };
 
-        /* Set the yLimit to b->y or the bottom
+        /* Set the yLimit to b2.y or the bottom
          *  edge of the safe area, whichever is
          *  smaller (above). */
-        if(b->y < s->safeArea.y + s->safeArea.h){
-            yLimit = b->y;
+        if(b2.y < s->safeArea.y + s->safeArea.h){
+            yLimit = b2.y;
         }else{
             yLimit = s->safeArea.y + s->safeArea.h;
         };
@@ -1573,17 +1580,23 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
          *  and B. */
         for(; y < yLimit; y++){
 
-            x = ((((y - a->y) * (b->x - a->x)) / (b->y - a->y)) + a->x);
+            x = ((((y - a2.y) * (b2.x - a2.x)) / (b2.y - a2.y)) + a2.x);
 
             /* If the pixel is outside the safe
-             *  area then don't draw it (skip to
-             *  the next one). */
-            if(x < s->safeArea.x || x >= s->safeArea.x + s->safeArea.w){
-                continue;
+             *  area (to the right) then set
+             *  thickCount so it only draws
+             *  inside the safe area. */
+            if(x >= s->safeArea.x + s->safeArea.w){
+                thickCount = (x - (s->safeArea.x + s->safeArea.w)) + 1;
+            }else{
+                thickCount = 0;
             };
 
-            /* Draw the pixel */
-            *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + x) * 4) + (s->pitch * y))) = col;
+            /* Draw the pixels for this row
+             *  (right to left) */
+            for(; thickCount < thickness && x - thickCount >= s->safeArea.x; thickCount++){
+                *((D_uint32 *)(((D_uint8 *)(s->pix)) + (((y * s->w) + (x - thickCount)) * 4) + (s->pitch * y))) = col;
+            };
         };
     };
 
