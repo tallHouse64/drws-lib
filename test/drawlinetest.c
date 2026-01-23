@@ -14,6 +14,16 @@
  * Hold left click and drag to move point A
  *  (red), hold right click and drag to move
  *  point B (blue).
+ *
+ * You can also press "q" to quit the program
+ *  now.
+ *
+ * This test also uses a subsurf to make it
+ *  visible when the function draws outside a
+ *  surface (which would mean the function is
+ *  unsafe and may write to memory it shouldn't).
+ *  While running the test, the line should never
+ *  cover the red boarder around the window.
  */
 
 /* This function draws a point as a small
@@ -29,7 +39,10 @@ int drawPoint(D_Surf * s, D_Point * p, D_uint32 col){
 
 int main(int argc, char ** argv){
 
-    D_Surf * out = D_GetOutSurf(50, 50, 640, 480, "Testing D_DrawLine()", 0);
+    D_Surf * realOut = D_GetOutSurf(50, 50, 640, 480, "Testing D_DrawLine()", 0);
+    D_Rect rect = {1, 1, 638, 478};
+    D_Surf * out = D_CreateSubsurf(realOut, &rect);
+
     D_Event e = {0};
     D_Point a = {100, 100};
     D_Point b = {300, 170};
@@ -55,6 +68,12 @@ int main(int argc, char ** argv){
 
                     break;
 
+                case D_KEYDOWN:
+                    if(e.keyboard.key == D_Kq){
+                        running = 0;
+                    };
+                    break;
+
                 case D_QUIT:
                     running = 0;
                     break;
@@ -62,6 +81,8 @@ int main(int argc, char ** argv){
             };
         };
 
+        /* Clear the real window to red */
+        D_FillRect(realOut, D_NULL, D_rgbaToFormat(out->format, 255, 0, 0, 255));
 
         /* Clear the window to black */
         D_FillRect(out, D_NULL, D_rgbaToFormat(out->format, 0, 0, 0, 255));
@@ -73,10 +94,10 @@ int main(int argc, char ** argv){
         drawPoint(out, &b, D_rgbaToFormat(out->format, 0, 0, 255, 255));
 
         /* Draw the line as white */
-        D_DrawLine(out, &a, &b, 1, D_rgbaToFormat(out->format, 255, 255, 255, 255));
+        D_DrawLine(out, &a, &b, 10, D_rgbaToFormat(out->format, 255, 255, 255, 255));
 
         /* Show the frame onscreen */
-        D_FlipOutSurf(out);
+        D_FlipOutSurf(realOut);
 
 
         D_Delay(DELAY);
@@ -84,8 +105,11 @@ int main(int argc, char ** argv){
 
     D_StopEvents();
 
-    D_FreeOutSurf(out);
+    D_FreeSurf(out);
     out = D_NULL;
+
+    D_FreeOutSurf(realOut);
+    realOut = D_NULL;
 
     return 0;
 };
