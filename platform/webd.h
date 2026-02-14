@@ -166,7 +166,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
         D_D_Buffer2 = D_CALLOC(w * h, sizeof(D_uint32));
     };
 
-    D_Surf * surf = D_CreateSurfFrom(w, h, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32), D_D_Buffer1);
+    D_Surf * surf = D_CreateSurfFrom(w, h, 0, D_NULL, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32), D_D_Buffer1);
 
     surf->outId = 1;
 
