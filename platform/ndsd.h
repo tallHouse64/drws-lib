@@ -48,7 +48,7 @@ D_Surf * D_GetOutSurf(int x, int y, int w, int h, char * title, D_OutSurfFlags f
 
         lcdMainOnBottom();
 
-        D_Surf * s1 = D_CreateSurfFrom(SCREEN_WIDTH, SCREEN_HEIGHT, D_NDS_FORMAT, VRAM_A);
+        D_Surf * s1 = D_CreateSurfFrom(SCREEN_WIDTH, SCREEN_HEIGHT, 0, D_NULL, D_NDS_FORMAT, VRAM_A);
 
         if(s1 == D_NULL){
             return D_NULL;
