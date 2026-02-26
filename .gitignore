@@ -92,6 +92,7 @@ platform/test/a.exe
 platform/ndstest/getoutsurftest
 platform/ndstest/delaytest
 platform/ndstest/pumpeventstest
+platform/ndsTest/surfcopyscalerotspeedtest
 
 #ignore all platform web tests
 platform/webTest/getoutsurftest

@@ -35,5 +35,17 @@ pumpeventstest: pumpeventstest.c ../ndsd.h ../../d.h ../../devents.h ../../dplat
 	cp -f exampleMakefile pumpeventstest/Makefile
 	$(MAKE) -C pumpeventstest
 
+surfcopyscalerotspeedtest: surfcopyscalerotspeedtest.c
+	-mkdir surfcopyscalerotspeedtest
+	-mkdir surfcopyscalerotspeedtest/source
+	-mkdir surfcopyscalerotspeedtest/source/platform
+	cp -f surfcopyscalerotspeedtest.c surfcopyscalerotspeedtest/source/main.c
+	cp -f ../ndsd.h surfcopyscalerotspeedtest/source/platform
+	cp -f ../../d.h surfcopyscalerotspeedtest/source
+	cp -f ../../devents.h surfcopyscalerotspeedtest/source
+	cp -f ../../dplatform.h surfcopyscalerotspeedtest/source
+	cp -f exampleMakefile surfcopyscalerotspeedtest/Makefile
+	$(MAKE) -C surfcopyscalerotspeedtest
+
 clean:
-	-rm -r getoutsurftest delaytest pumpeventstest
+	-rm -r getoutsurftest delaytest pumpeventstest surfcopyscalerotspeedtest
