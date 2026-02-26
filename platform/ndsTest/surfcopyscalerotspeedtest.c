@@ -25,6 +25,15 @@
  *  Test 4 8518 ticks
  *  Test 5 13713 ticks
  *
+ * After optimising D_SurfCopyScaleRot(), these
+ *  are the results:
+ *  Test 0 879 ticks
+ *  Test 1 945 ticks
+ *  Test 2 919 ticks
+ *  Test 3 1221 ticks
+ *  Test 4 747 ticks
+ *  Test 5 1307 ticks
+ *
  * This is the nds version of the test, the
  *  function seems to run slower on nds.
  *

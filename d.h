@@ -2299,9 +2299,14 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     };
 
     /* Note that this pR and pC rotate a point by
-     *  0.01 degrees, not 1 degree. */
-    const D_double pR = 0.999999984769;
-    const D_double pC = 0.000174532924313;
+     *  1 degree. */
+    const D_double pR = 0.999847695156;
+    const D_double pC = 0.0174524064373;
+
+    /* Note that this pRSmall and pCSmall rotate
+     *  a point by 0.01 degrees, not 1 degree. */
+    const D_double pRSmall = 0.999999984769;
+    const D_double pCSmall = 0.000174532924313;
 
     D_double temp = 0;
 
@@ -2313,9 +2318,19 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     D_double i = 0;
     while(i < deg){
 
-        /* Add one degree to degR and degC */
+        /* Add 1 degree to degR and degC */
         temp = D_COMPLEXMULTR(degR, degC, pR, pC);
         degC = D_COMPLEXMULTC(degR, degC, pR, pC);
+        degR = temp;
+
+        i += 1;
+    };
+
+    while(i < deg){
+
+        /* Add 0.01 degrees to degR and degC */
+        temp = D_COMPLEXMULTR(degR, degC, pRSmall, pCSmall);
+        degC = D_COMPLEXMULTC(degR, degC, pRSmall, pCSmall);
         degR = temp;
 
         i += 0.01;
