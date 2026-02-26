@@ -75,6 +75,8 @@ test/drawlinetest
 test/drawlinetest.exe
 test/drawlineformattest
 test/drawlineformattest.exe
+test/surfcopyscalerotspeedtest
+test/surfcopyscalerotspeedtest.exe
 test/a.out
 test/a.exe
 
