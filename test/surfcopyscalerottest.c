@@ -13,9 +13,13 @@
 
 /* This file tests D_SurfCopyScaleRot().
  *
- * When running the test, moving the mouse left
- *  and right should increase and decrease the
- *  angle the image is rotated.
+ * When running the test, moving the mouse up and
+ *  down should increase and decrease the angle
+ *  the image is rotated. Moving the mouse left
+ *  and right changes the angle with more precise
+ *  control. Putting the mouse in the top left
+ *  pixel of the output surface sets the angle to
+ *  -180.
  *
  * Try using WASD to move where the image is
  *  drawn on the window.
@@ -67,7 +71,7 @@ int main(int argc, char ** argv){
                     break;
 
                 case D_MOUSEMOVE:
-                    angle = e.mouse.x - 180;
+                    angle = ((((double)e.mouse.x) / 10) - 180) + e.mouse.y;
                     break;
 
                 case D_KEYDOWN:
