@@ -2316,7 +2316,10 @@ int D_SurfCopyScaleRot(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2, D_Poi
     /* Convert deg from degrees to a point on the
      *  complex plane */
     D_double i = 0;
-    while(i < deg){
+    D_double degInt = ((int)deg);
+    while(i < degInt){
+        /* This loop is an optimisation and can
+         *  be removed. */
 
         /* Add 1 degree to degR and degC */
         temp = D_COMPLEXMULTR(degR, degC, pR, pC);
