@@ -487,66 +487,6 @@ int D_PumpEvents(){
     return 0;
 };
 
-/* This function returns the number of devices
- *  that can be used to output sound.
- *
- * Because this file uses SDL2 as a backend, this
- *  function just calls SDL_GetNumAudioDevices().
- *  Look up the documentation about this function
- *  for more information, bear in mind that other
- *  backends would not use this function.
- *
- * returns: The number of audio devices.
- */
-int D_GetNumAudioOutputs(void){
-    return SDL_GetNumAudioDevices(0);
-};
-
-/* This function returns a string with the name
- *  an audio device.
- *
- * Because SDL2 is used as a backend, this
- *  function calls SDL_GetAudioDeviceName(). You
- *  can look up the documentation for that
- *  function but bear in mind that other backends
- *  would have a different implementation.
- *
- * which: Which output to get the name of
- *  (starting at 0), use D_GetNumAudioOutputs()
- *  to find the total number of outputs.
- * returns: A pointer to a string that should not
- *  be freed.
- */
-const char * D_GetAudioOutputName(int which){
-    return SDL_GetAudioDeviceName(which, 0);
-};
-
-D_AudioOutputId D_OpenAudioOutput(int which, D_SoundFormat * desired, D_SoundFormat * obtained){
-
-    SDL_AudioSpec desired2;
-    if(desired != D_NULL){
-        desired2->freq = desired->freq;
-        /* Format */
-        desired2->channels = desired->channels;
-        desired2->silence = desired->silence;
-        desired2->samples = desired->samples;
-        desired2->padding = 0;
-        desired2->size = desired->
-        //desired2->size = desired->samples * desired->channels * ((desired->bitsPerSample) / 8);
-        desired2->callback = D_NULL;
-        desired2->userdata = D_NULL;
-
-    };
-
-    return SDL_OpenAudioDevice(SDL_GetAudioDeviceName(which, 0),
-                               0,
-                               );
-};
-
-int D_SendAudio(D_Sound * sound){
-
-};
-
 /* This stops the thread from running
  *  for ms millisecon.
  *
