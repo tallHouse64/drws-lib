@@ -16,6 +16,7 @@ add c++ support.
 add D_GetError().
 add a "do nothing" D_LoadImage() function for when D_ALLOW_STB_IMAGE is not defined, using D_GetError().
 make a project that makes heavier use of drws-lib to see if it needs optimisation.
+add support for more bit depths so RGB888 can work for Linux 3ds.
 
 done:
 add keyboard support. done.
