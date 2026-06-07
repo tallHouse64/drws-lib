@@ -4,12 +4,16 @@
 
 /* This file tests the D_FillRect() function.
  *
- * If the function works, 3 windows should
+ * If the function works, 4 windows should
  *  appear, one at a time. A green rectangle
  *  should appear covering the entire window
  *  except for a 1 pixel thick black line in each
- *  window. The third window has a grey rectangle
- *  instead of green.
+ *  window at all four sides. The third window
+ *  has a grey rectangle instead of green.
+ *
+ * The thin, black line shows that the function
+ *  is only drawing inside the rectangle and not
+ *  writing to memory it shouldn't.
  */
 
 int showSurf(D_Surf * s){
@@ -82,6 +86,17 @@ int main(){
     //printf("Colour: %#x\n", D_rgbaToFormat(s->format, 200, 255, 200, 255));
 
     showSurf(s); //You should see a window open with a light green box in the middle and black around the sides
+
+    D_FreeSurf(s);
+    s = D_NULL;
+
+
+    //RGB888 fill test
+    s = D_CreateSurf(640, 480, D_FindPixFormat(0xFF0000, 0xFF00, 0xFF, 0x0, 24));
+
+    D_FillRect(s, &r, D_rgbaToFormat(s->format, 200, 255, 200, 255));
+
+    showSurf(s);
 
     D_FreeSurf(s);
     s = D_NULL;
