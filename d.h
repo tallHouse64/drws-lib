@@ -109,33 +109,42 @@
 #define D_NULL 0x0
 #endif
 
-/* This converts a bit depth number
- *  to a number of bytes needed to
- *  store a pixel, it only returns
- *  4, 2 and 1 as succesful results
- *  because the this lib only supports
- *  surfaces with a bpp (bit per pixel)
- *  of 32, 16 and 8. You can still
- *  have a surface use 24 bpp, it just
- *  means that you have to use the
- *  next biggest supported bpp which
- *  would be 32 and just not use the
- *  other 8.
+/* This macro converts a bit depth number to a
+ *  number of bytes needed to store a pixel, it
+ *  only returns 4, 3, 2 and 1 as successful
+ *  results because this library only supports
+ *  surfaces with a bpp (bits per pixel) of 32,
+ *  24, 16 and 8. You can still have a surface
+ *  use 1 bpp, it just means that you have to use
+ *  the next biggest supported bpp value which
+ *  would be 8 and leave the other 7 bits in each
+ *  pixel unused (this essentially means you
+ *  would have padding in each pixel, which would
+ *  only be a problem when low on memory or for
+ *  drawing to something like a game boy screen).
  *
- * If you pass a bitdepth that is bigger
- *  than 32 it returns a -1 (meaning
- *  error). If you pass a bitdepth of
- *  0 or less it returns -2 for error.
+ * Note that, when an unsupported bit depth gets
+ *  passed in, this macro 'snaps' the bit depth
+ *  value to the next biggest supported value
+ *  (like when passing in 31, 4 bytes per pixel
+ *  would be returned).
  *
- * If this needs optimising for speed,
- *  you can remove the error checks for
- *  bigger than 32 and less than 0.
+ * The limitation where a surface's bpp can only
+ *  be a set number of values may be lifted in
+ *  the future to support hardware like game boy
+ *  displays, tiles or to reduce memory usage.
  *
- * bitDepth: The bitDepth to convert to bytes (not exactly, read above)
- * returns: The bitDepth converted to bytes.
+ * If you pass a bit depth that is bigger than
+ *  32, -1 is returned. If you pass a bit depth
+ *  of 0 or less, -2 is returned.
+ *
+ * bitDepth: The bitDepth to convert to bytes
+ *  (only the supported sizes, read above).
+ * returns: The bitDepth converted to bytes or a
+ *  negative number on error.
  */
-#define D_BITDEPTHTOBYTES(bitDepth) ((bitDepth) > 32) ? -1 : (((bitDepth) > 16) ? 4 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))
-/*                                                                            32bits                  16bits                 8bits*/
+#define D_BITDEPTHTOBYTES(bitDepth) (((bitDepth) > 32) ? -1 : ((bitDepth) > 24 ? 4 : (((bitDepth) > 16) ? 3 : (((bitDepth) > 8) ? 2 : ((bitDepth) > 0) ? 1 : -2 ))))
+/*                                                                            32bits                   24bits                  16bits                  8bits*/
 
 
 /* This macro multiplies two complex numbers and
