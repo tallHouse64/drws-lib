@@ -1388,6 +1388,12 @@ int D_FillRect(D_Surf * s, D_Rect * rect, D_uint32 col){
                     *((D_uint32 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 4) + (s->pitch * y)))) = col;
                     /*printf("32 bitdepth\n");*/
                     break;
+                case 3:
+                    *(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 3) + (s->pitch * y))    ) = ((col      ) & 0xFF);
+                    *(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 3) + (s->pitch * y)) + 1) = ((col >> 8 ) & 0xFF);
+                    *(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 3) + (s->pitch * y)) + 2) = ((col >> 16) & 0xFF);
+                    /*printf("24 bitdepth\n");*/
+                    break;
                 case 2:
                     /*((D_uint16 *)(s->pix))[(y * s->w) + x] = col;*/
                     *((D_uint16 *)(((D_uint8 *)(s->pix)) + ((((y * s->w) + x) * 2) + (s->pitch * y)))) = col;
