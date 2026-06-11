@@ -5,9 +5,9 @@
 
 #define WAIT 1000
 
-/* This file tests D_SurfCopyScale() between 3
+/* This file tests D_SurfCopyScale() between 4
  *  different pixel formats. Copying to and from
- *  each format meaning there are 9 tests.
+ *  each format meaning there are 16 tests.
  */
 
 int showSurf(D_Surf * s){
@@ -117,6 +117,16 @@ int main(){
     d = D_NULL;
 
 
+    printf("Scale RGBA8888 to RGB888 format test.\n");
+    d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF0000, 0xFF00, 0xFF, 0x0, 24));
+    D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 200, 100, 200, 255));
+    D_SurfCopyScale(s, D_NULL, d, &rd);
+    showSurf(d);
+
+    D_FreeSurf(d);
+    d = D_NULL;
+
+
     printf("Scale RGBA8888 to NDS format test.\n");
     d = D_CreateSurf(640, 480, D_FindPixFormat(0x001F, 0x03E0, 0x7C00, 0x8000, 16));
     D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 100, 200, 100, 255));
@@ -128,6 +138,59 @@ int main(){
 
 
     printf("Scale RGBA8888 to B&W format test.\n");
+    d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF, 0xFF, 0, 8));
+    D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 100, 100, 200, 255));
+    D_SurfCopyScale(s, D_NULL, d, &rd);
+    show8BitSurf(d);
+
+    D_FreeSurf(d);
+    d = D_NULL;
+
+
+
+    printf("\nScale from RGB888 tests.\n");
+
+    D_FreeSurf(s);
+    s = D_NULL;
+    s = D_CreateSurf(640, 480, D_FindPixFormat(0xFF0000, 0xFF00, 0xFF, 0x0, 24)); //src
+
+    //Draw to s
+    drawToSurf(s);
+    printf("Showing src surf now in RGB888 format.\n");
+    showSurf(s);
+
+
+    printf("Scale RGB888 to RGBA8888 test.\n");
+    d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32)); //dst
+    D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 200, 100, 100, 255));
+    D_SurfCopyScale(s, D_NULL, d, &rd);
+    showSurf(d);
+
+    D_FreeSurf(d);
+    d = D_NULL;
+
+
+    printf("Scale RGB888 to RGB888 format test.\n");
+    d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF0000, 0xFF00, 0xFF, 0x0, 24));
+    D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 200, 100, 200, 255));
+    D_SurfCopyScale(s, D_NULL, d, &rd);
+    showSurf(d);
+
+    D_FreeSurf(d);
+    d = D_NULL;
+
+
+    printf("Scale RGB888 to NDS format test.\n");
+    d = D_CreateSurf(640, 480, D_FindPixFormat(0x001F, 0x03E0, 0x7C00, 0x8000, 16));
+    D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 100, 200, 100, 255));
+    D_SurfCopyScale(s, D_NULL, d, &rd);
+    showSurf(d);
+
+    D_FreeSurf(d);
+    d = D_NULL;
+
+
+    printf("Scale RGB888 to B&W format test.\n");
     d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF, 0xFF, 0, 8));
     D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 100, 100, 200, 255));
     D_SurfCopyScale(s, D_NULL, d, &rd);
@@ -159,6 +222,15 @@ int main(){
     D_FreeSurf(d);
     d = D_NULL;
 
+
+    printf("Scale NDS to RGB888 format test.\n");
+    d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF0000, 0xFF00, 0xFF, 0x0, 24));
+    D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 200, 100, 200, 255));
+    D_SurfCopyScale(s, D_NULL, d, &rd);
+    showSurf(d);
+
+    D_FreeSurf(d);
+    d = D_NULL;
 
 
     printf("Scale NDS to NDS format test.\n");
@@ -197,6 +269,16 @@ int main(){
     printf("Scale B&W to RGBA8888 format test.\n");
     d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF, 0xFF00, 0xFF0000, 0xFF000000, 32));
     D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 200, 100, 100, 255));
+    D_SurfCopyScale(s, D_NULL, d, &rd);
+    showSurf(d);
+
+    D_FreeSurf(d);
+    d = D_NULL;
+
+
+    printf("Scale B&W to RGB888 format test.\n");
+    d = D_CreateSurf(640, 480, D_FindPixFormat(0xFF0000, 0xFF00, 0xFF, 0x0, 24));
+    D_FillRect(d, D_NULL, D_rgbaToFormat(d->format, 200, 100, 200, 255));
     D_SurfCopyScale(s, D_NULL, d, &rd);
     showSurf(d);
 
