@@ -1715,7 +1715,7 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
  *  pixel data to (read above).
  * returns: Void.
  */
-#define D_D_SCSLOOP(srcType, dstType) {while(dstY < lr2.y + lr2.h){srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);if(srcY < lr1.y){dstY++;continue;}else if(srcY >= lr1.y + lr1.h){break;};dstX = lr2.x;while(dstX < lr2.x + lr2.w){srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);if(srcX < lr1.x){dstX++;continue;}else if(srcX >= lr1.x + lr1.w){break;};D_FormatTorgba(*((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),s1->format,&sr, &sg, &sb, &sa);D_FormatTorgba(*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),s2->format,&dr, &dg, &db, &da);sa = (sa * s1->alphaMod) / 255;D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) = D_rgbaToFormat(s2->format, rr, rg, rb, ra);dstX++;};dstY++;};}
+#define D_D_SCSLOOP(srcType, dstType) {while(dstY < lr2.y + lr2.h){srcY = ((((dstY - sr2.y) * sr1.h) / sr2.h) + sr1.y);if(srcY < lr1.y){dstY++;continue;}else if(srcY >= lr1.y + lr1.h){break;};dstX = lr2.x;while(dstX < lr2.x + lr2.w){srcX = ((((dstX - sr2.x) * sr1.w) / sr2.w) + sr1.x);if(srcX < lr1.x){dstX++;continue;}else if(srcX >= lr1.x + lr1.w){break;};if(D_BITDEPTHTOBYTES(s1->format.bitDepth) == 3){D_FormatTorgba((((D_uint32) *(((D_uint8 *)(s1->pix)) +((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))    ))      ) |(((D_uint32) *(((D_uint8 *)(s1->pix)) +((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)) + 1)) << 8 ) |(((D_uint32) *(((D_uint8 *)(s1->pix)) +((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)) + 2)) << 16),s1->format,&sr, &sg, &sb, &sa);}else{D_FormatTorgba(*((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),s1->format,&sr, &sg, &sb, &sa);};if(D_BITDEPTHTOBYTES(s2->format.bitDepth) == 3){D_FormatTorgba((((D_uint32) *(((D_uint8 *)(s2->pix)) +((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))    ))      ) |(((D_uint32) *(((D_uint8 *)(s2->pix)) +((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 1)) << 8 ) |(((D_uint32) *(((D_uint8 *)(s2->pix)) +((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 2)) << 16),s2->format,&dr, &dg, &db, &da);}else{D_FormatTorgba(*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),s2->format,&dr, &dg, &db, &da);};sa = (sa * s1->alphaMod) / 255;D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);if(D_BITDEPTHTOBYTES(s2->format.bitDepth) == 3){tempColour = D_rgbaToFormat(s2->format, rr, rg, rb, ra);*(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))    ) = ((tempColour      ) & 0xFF);*(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 1) = ((tempColour >> 8 ) & 0xFF);*(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 2) = ((tempColour >> 16) & 0xFF);}else{*((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =D_rgbaToFormat(s2->format, rr, rg, rb, ra);};dstX++;};dstY++;};}
 
 #if 0
 
@@ -1755,19 +1755,61 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
             };
 
             /* Get source colour from pixel */
-            D_FormatTorgba(
-                *((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),
-                s1->format,
-                &sr, &sg, &sb, &sa
-            );
+            if(D_BITDEPTHTOBYTES(s1->format.bitDepth) == 3){
+                /* If the source bpp is 24 */
 
-            /* Get destination colour from pixel
-             */
-            D_FormatTorgba(
-                *((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),
-                s2->format,
-                &dr, &dg, &db, &da
-            );
+                D_FormatTorgba(
+                    (((D_uint32) *(((D_uint8 *)(s1->pix)) +
+                    ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY))    ))      ) |
+
+                    (((D_uint32) *(((D_uint8 *)(s1->pix)) +
+                    ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)) + 1)) << 8 ) |
+
+                    (((D_uint32) *(((D_uint8 *)(s1->pix)) +
+                    ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)) + 2)) << 16),
+
+                    s1->format,
+                    &sr, &sg, &sb, &sa
+                );
+
+            }else{
+                /* For all other source bpps */
+
+                D_FormatTorgba(
+                    *((srcType *)(((D_uint8 *)(s1->pix)) + ((((srcY * s1->w) + srcX) * (D_BITDEPTHTOBYTES(s1->format.bitDepth))) + (s1->pitch * srcY)))),
+                    s1->format,
+                    &sr, &sg, &sb, &sa
+                );
+            };
+
+            /* Get destination colour from the
+             *  pixel */
+            if(D_BITDEPTHTOBYTES(s2->format.bitDepth) == 3){
+                /* If the destination bpp is 24*/
+
+                D_FormatTorgba(
+                    (((D_uint32) *(((D_uint8 *)(s2->pix)) +
+                    ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))    ))      ) |
+
+                    (((D_uint32) *(((D_uint8 *)(s2->pix)) +
+                    ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 1)) << 8 ) |
+
+                    (((D_uint32) *(((D_uint8 *)(s2->pix)) +
+                    ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 2)) << 16),
+
+                    s2->format,
+                    &dr, &dg, &db, &da
+                );
+            }else{
+                /* For all other destination bpps
+                 */
+
+                D_FormatTorgba(
+                    *((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))),
+                    s2->format,
+                    &dr, &dg, &db, &da
+                );
+            };
 
             /* Multiply in alpha mod */
             sa = (sa * s1->alphaMod) / 255;
@@ -1775,8 +1817,21 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
             D_Blend(s1->blendMode, sr, sg, sb, sa, dr, dg, db, da, &rr, &rg, &rb, &ra);
 
             /* Write the result colour to s2 */
-            *((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
-            D_rgbaToFormat(s2->format, rr, rg, rb, ra);
+            if(D_BITDEPTHTOBYTES(s2->format.bitDepth) == 3){
+                /* If the destination bpp is 24*/
+
+                tempColour = D_rgbaToFormat(s2->format, rr, rg, rb, ra);
+
+                *(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY))    ) = ((tempColour      ) & 0xFF);
+                *(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 1) = ((tempColour >> 8 ) & 0xFF);
+                *(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)) + 2) = ((tempColour >> 16) & 0xFF);
+            }else{
+                /* For all other destination bpps
+                 */
+
+                *((dstType *)(((D_uint8 *)(s2->pix)) + ((((dstY * s2->w) + dstX) * (D_BITDEPTHTOBYTES(s2->format.bitDepth))) + (s2->pitch * dstY)))) =
+                D_rgbaToFormat(s2->format, rr, rg, rb, ra);
+            };
 
             dstX++;
         };
@@ -1788,12 +1843,8 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
 
 
 /* This function copies one surface onto another,
- *  it can copy part of the source to part of the
- *  destination.
- *
- * For now, this function can only copy between
- *  surfaces with the same format and must have a
- *  bit depth of 32.
+ *  it can copy part or all of the source to part
+ *  or all of the destination.
  *
  * It is safe to pass null for s1 and s2, the
  *  function would do nothing and return -1.
@@ -1808,6 +1859,8 @@ int D_DrawLine(D_Surf * s, D_Point * a, D_Point * b, int thickness, D_uint32 col
  *  failure.
  */
 int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
+
+    D_uint32 tempColour = 0;
 
     if(s1 == D_NULL || s2 == D_NULL){
         return -1;
@@ -1885,6 +1938,22 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
         case 4:
             switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
                 case 4:
+                case 3:
+                    D_D_SCSLOOP(D_uint32, D_uint32);
+                    break;
+                case 2:
+                    D_D_SCSLOOP(D_uint32, D_uint16);
+                    break;
+                case 1:
+                    D_D_SCSLOOP(D_uint32, D_uint8);
+                    break;
+            };
+            break;
+
+        case 3:
+            switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
+                case 4:
+                case 3:
                     D_D_SCSLOOP(D_uint32, D_uint32);
                     break;
                 case 2:
@@ -1899,6 +1968,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
         case 2:
             switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
                 case 4:
+                case 3:
                     D_D_SCSLOOP(D_uint16, D_uint32);
                     break;
                 case 2:
@@ -1913,6 +1983,7 @@ int D_SurfCopyScale(D_Surf * s1, D_Rect * r1, D_Surf * s2, D_Rect * r2){
         case 1:
             switch(D_BITDEPTHTOBYTES(s2->format.bitDepth)){
                 case 4:
+                case 3:
                     D_D_SCSLOOP(D_uint8, D_uint32);
                     break;
                 case 2:
