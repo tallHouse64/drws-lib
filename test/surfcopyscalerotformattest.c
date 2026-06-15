@@ -116,13 +116,13 @@ int main(int argc, char ** argv){
         D_FillRect(target32, D_NULL, D_rgbaToFormat(target32->format, 20, 50, 50, 255));
         D_FillRect(target32, &rect, D_rgbaToFormat(target32->format, 70, 70, 90, 255));
 
-        D_SurfCopyScaleRot(img, D_NULL, target32, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img, D_NULL, target32, &rect, &cen, angle, 0, 0);
 
         rect.y += rect.h + 50;
-        D_SurfCopyScaleRot(img16, D_NULL, target32, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img16, D_NULL, target32, &rect, &cen, angle, 0, 0);
 
         rect.y += rect.h + 50;
-        D_SurfCopyScaleRot(img8, D_NULL, target32, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img8, D_NULL, target32, &rect, &cen, angle, 0, 0);
 
         D_SurfCopyScale(target32, D_NULL, out, &targetRect);
 
@@ -134,13 +134,13 @@ int main(int argc, char ** argv){
         D_FillRect(target16, D_NULL, D_rgbaToFormat(target16->format, 50, 20, 50, 255));
         D_FillRect(target16, &rect, D_rgbaToFormat(target16->format, 70, 70, 90, 255));
 
-        D_SurfCopyScaleRot(img, D_NULL, target16, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img, D_NULL, target16, &rect, &cen, angle, 0, 0);
 
         rect.y += rect.h + 50;
-        D_SurfCopyScaleRot(img16, D_NULL, target16, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img16, D_NULL, target16, &rect, &cen, angle, 0, 0);
 
         rect.y += rect.h + 50;
-        D_SurfCopyScaleRot(img8, D_NULL, target16, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img8, D_NULL, target16, &rect, &cen, angle, 0, 0);
 
         targetRect.x += out->w / 3;
         D_SurfCopyScale(target16, D_NULL, out, &targetRect);
@@ -153,13 +153,13 @@ int main(int argc, char ** argv){
         D_FillRect(target8, D_NULL, D_rgbaToFormat(target8->format, 50, 50, 20, 255));
         D_FillRect(target8, &rect, D_rgbaToFormat(target8->format, 70, 70, 90, 255));
 
-        D_SurfCopyScaleRot(img, D_NULL, target8, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img, D_NULL, target8, &rect, &cen, angle, 0, 0);
 
         rect.y += rect.h + 50;
-        D_SurfCopyScaleRot(img16, D_NULL, target8, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img16, D_NULL, target8, &rect, &cen, angle, 0, 0);
 
         rect.y += rect.h + 50;
-        D_SurfCopyScaleRot(img8, D_NULL, target8, &rect, &cen, angle);
+        D_SurfCopyScaleRot(img8, D_NULL, target8, &rect, &cen, angle, 0, 0);
 
         targetRect.x += out->w / 3;
         D_SurfCopyScale(target8, D_NULL, out, &targetRect);
