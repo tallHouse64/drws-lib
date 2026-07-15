@@ -77,6 +77,8 @@ test/drawlineformattest
 test/drawlineformattest.exe
 test/surfcopyscalerotspeedtest
 test/surfcopyscalerotspeedtest.exe
+platform/3DSLinuxTest/screenTest
+platform/3DSLinuxTest/screenTest.exe
 test/a.out
 test/a.exe
 
